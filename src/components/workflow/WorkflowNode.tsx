@@ -157,10 +157,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
     <Card 
       className={cn(
         "transition-all duration-300 cursor-pointer hover:shadow-lg",
-        isExpanded && "ring-2 ring-primary",
-        isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm"
+        isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
-      style={isWebsiteSignupStart && isExpanded ? {
+      style={isExpanded ? {
         height: 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
@@ -168,7 +167,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       onClick={onToggle}
     >
       <CardHeader className={cn(
-        isWebsiteSignupStart && isExpanded && "py-5 flex-shrink-0"
+        isExpanded && "py-5 flex-shrink-0"
       )}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -205,10 +204,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       {isExpanded && (
         <CardContent 
           className={cn(
-            "pt-0",
-            isWebsiteSignupStart ? "flex flex-col pb-6 overflow-hidden" : "space-y-4"
+            "pt-0 flex flex-col pb-0 overflow-hidden"
           )}
-          style={isWebsiteSignupStart ? {
+          style={isExpanded ? {
             flex: '1',
             minHeight: '0',
             display: 'flex',
@@ -216,6 +214,14 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           } : undefined}
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Scrollable Body Zone - Script, CRM, Context */}
+          <div 
+            className="overflow-y-auto space-y-4 pr-2"
+            style={{ 
+              flex: '1',
+              minHeight: '0'
+            }}
+          >
           {/* Lead Overview for Website Signup Start Node */}
           {isWebsiteSignupStart && (
             <LeadOverview
@@ -438,11 +444,12 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               </div>
             </div>
           )}
+          </div>
 
-          {/* Only show Next Steps if no inline replies are present and not the Website Signup Start node */}
+          {/* Fixed Footer Zone - Next Steps always visible */}
           {!inlineReplies && !isWebsiteSignupStart && (
-            <div className="space-y-3 pt-3 border-t">
-              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+            <div className="flex-shrink-0 pt-4 pb-6 border-t border-border/30 bg-background">
+              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3">
                 Next Steps
               </h4>
               
