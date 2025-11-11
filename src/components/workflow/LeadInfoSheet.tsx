@@ -19,6 +19,7 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
+import { ConversationHistory } from "./ConversationHistory";
 
 interface LeadInfoSheetProps {
   open: boolean;
@@ -72,9 +73,6 @@ export const LeadInfoSheet = ({ open, onOpenChange, lead }: LeadInfoSheetProps) 
     const magnet = lead?.lead_magnet_name || "website signup";
     return `Website lead from ${magnet}. Currently in Entry Point stage. Moderate curiosity level — may need clarity on what Local AI actually does.`;
   };
-
-  // Parse conversation history
-  const conversationHistory = lead?.conversation_history || [];
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -271,36 +269,11 @@ export const LeadInfoSheet = ({ open, onOpenChange, lead }: LeadInfoSheetProps) 
             </CardContent>
           </Card>
 
-          {/* Conversation History Card */}
-          {conversationHistory.length > 0 && (
-            <Card className="bg-secondary/30 border-border/50 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-semibold">
-                  🗂 Conversation History
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2 max-h-[200px] overflow-y-auto">
-                  {conversationHistory.map((entry: any, index: number) => (
-                    <div
-                      key={index}
-                      className="text-xs border-b border-border/30 pb-2 last:border-0"
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-muted-foreground">
-                          {entry.date || "—"}
-                        </span>
-                        <Badge variant="outline" className="text-[10px] py-0 px-1.5">
-                          {entry.channel || "Call"}
-                        </Badge>
-                      </div>
-                      <p className="text-foreground/80">{entry.summary || "—"}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Conversation History */}
+          <ConversationHistory
+            leadId={lead?.id}
+            conversationHistory={lead?.conversation_history as any[] || []}
+          />
 
           {/* Conversation Notes */}
           <Card className="bg-secondary/30 border-border/50 shadow-sm">

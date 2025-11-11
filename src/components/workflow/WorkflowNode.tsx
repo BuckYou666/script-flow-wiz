@@ -12,6 +12,7 @@ import { replaceScriptPlaceholders, getReplacementValues } from "@/lib/scriptPla
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { LeadOverview } from "./LeadOverview";
 import { LeadInfoSheet } from "./LeadInfoSheet";
+import { ConversationHistory } from "./ConversationHistory";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -34,10 +35,18 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   
   // Use the most recent lead for demo purposes, or create a mock lead
   const currentLead = leads?.[0] || { 
+    id: "mock-lead-id",
     first_name: "Sarah", 
     full_name: "Sarah Johnson",
     business_name: "Acme Corp",
-    lead_magnet_name: "Local AI System Demo"
+    lead_magnet_name: "Local AI System Demo",
+    conversation_history: [],
+    email: "",
+    phone: "",
+    status: "",
+    conversation_notes: "",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
   
   // Get replacement values for display
@@ -243,11 +252,19 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           >
           {/* Lead Overview for Website Signup Start Node */}
           {isWebsiteSignupStart && (
-            <LeadOverview
-              lead={currentLead}
-              onNavigate={onSelectChild}
-              nextNodeId={childNodes[0]?.node_id}
-            />
+            <>
+              <LeadOverview
+                lead={currentLead}
+                onNavigate={onSelectChild}
+                nextNodeId={childNodes[0]?.node_id}
+              />
+              
+              {/* Conversation History */}
+              <ConversationHistory
+                leadId={currentLead.id}
+                conversationHistory={currentLead.conversation_history as any[] || []}
+              />
+            </>
           )}
 
           {/* Script Section - Full Width with optional CRM toggle */}
