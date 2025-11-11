@@ -164,6 +164,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   const showChildCards = childNodes.length > 0;
   
   const isWebsiteSignupStart = node.node_id === "WEBSITE_SIGNUP_START";
+  const isChooseContactMethod = node.scenario_title === "Choose Contact Method";
 
   return (
     <Card 
@@ -172,7 +173,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isExpanded ? {
-        height: 'calc(100vh - 12rem)',
+        maxHeight: isChooseContactMethod ? 'none' : 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
@@ -245,11 +246,14 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         >
           {/* Scrollable Body Zone - Script, CRM, Context */}
           <div 
-            className="overflow-y-auto space-y-4 pr-2"
-            style={{ 
+            className={cn(
+              "space-y-4 pr-2",
+              isChooseContactMethod ? "overflow-visible" : "overflow-y-auto"
+            )}
+            style={!isChooseContactMethod ? { 
               flex: '1',
               minHeight: '0'
-            }}
+            } : undefined}
           >
           {/* Lead Overview for Website Signup Start Node */}
           {isWebsiteSignupStart && (
