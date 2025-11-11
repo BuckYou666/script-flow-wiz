@@ -6,7 +6,8 @@ import { WorkflowBreadcrumb } from "@/components/workflow/WorkflowBreadcrumb";
 import { WorkflowHeader } from "@/components/workflow/WorkflowHeader";
 import { StageLegend } from "@/components/workflow/StageLegend";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info } from "lucide-react";
 import { toast } from "sonner";
 
 const getSourceIcon = (nodeId: string) => {
@@ -28,6 +29,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<StageType | "all">("all");
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
+  const [showGuide, setShowGuide] = useState(false);
 
   const currentNode = workflowNodes.find(node => node.node_id === currentNodeId);
   
@@ -156,16 +158,34 @@ const Index = () => {
                   )}
                 </div>
               )}
-              {currentNodeId !== "START" && (
-                <div className="flex-1 max-w-md">
-                  <WorkflowHeader
-                    searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
-                    stageFilter={stageFilter}
-                    onStageFilterChange={setStageFilter}
-                  />
-                </div>
-              )}
+              <div className="flex items-center gap-3 flex-1 justify-end">
+                {currentNodeId !== "START" && (
+                  <div className="flex-1 max-w-md">
+                    <WorkflowHeader
+                      searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
+                      stageFilter={stageFilter}
+                      onStageFilterChange={setStageFilter}
+                    />
+                  </div>
+                )}
+                <Sheet open={showGuide} onOpenChange={setShowGuide}>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Info className="h-4 w-4" />
+                      Stage Guide
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-[400px] sm:w-[540px] overflow-y-auto">
+                    <SheetHeader>
+                      <SheetTitle>Stage Guide</SheetTitle>
+                    </SheetHeader>
+                    <div className="mt-6">
+                      <StageLegend />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
             </div>
             {navigationPath.length > 0 && (
               <div className="mt-2">
@@ -180,9 +200,8 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-4 py-6 pb-40 max-w-7xl min-h-full">
-            <div className="grid lg:grid-cols-[1fr_300px] gap-6 items-start">
-              <div className="w-full max-w-4xl mx-auto lg:mx-0 space-y-6">
+          <div className="container mx-auto px-4 py-6 pb-40 max-w-5xl min-h-full">
+            <div className="w-full space-y-6">
                 {currentNodeId === "START" ? (
                   <div className="space-y-4">
                     <div className="text-center mb-8 animate-in fade-in duration-500">
@@ -317,13 +336,6 @@ const Index = () => {
                     </div>
                   )
                 )}
-              </div>
-
-              <div className="hidden lg:block">
-                <div className="sticky top-6">
-                  <StageLegend />
-                </div>
-              </div>
             </div>
           </div>
         </div>
