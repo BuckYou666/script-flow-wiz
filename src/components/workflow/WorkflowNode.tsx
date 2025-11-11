@@ -11,11 +11,15 @@ interface WorkflowNodeProps {
   onNavigate: (nextNodeId: string, action: "yes" | "no" | "no_response") => void;
   isExpanded: boolean;
   onToggle: () => void;
+  childNodes?: WorkflowNodeType[];
+  onSelectChild?: (nodeId: string) => void;
 }
 
-export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle }: WorkflowNodeProps) => {
+export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNodes = [], onSelectChild }: WorkflowNodeProps) => {
   const stageColor = getStageColor(node.stage);
   const stageLightColor = getStageLightColor(node.stage);
+  const hasActionButtons = node.on_yes_next_node || node.on_no_next_node || node.on_no_response_next_node;
+  const hasChildCards = childNodes.length > 0;
 
   return (
     <Card 
@@ -91,50 +95,96 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle }: Workflo
             <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
               Next Steps
             </h4>
-            <div className="grid gap-1.5">
-              {node.on_yes_next_node && (
-                <Button
-                  onClick={() => onNavigate(node.on_yes_next_node!, "yes")}
-                  variant="outline"
-                  size="sm"
-                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-close hover:bg-stage-close-light transition-colors"
-                >
-                  <CheckCircle2 className="h-4 w-4 text-stage-close flex-shrink-0" />
-                  <span className="text-left">
-                    <div className="font-semibold text-xs">Prospect says YES</div>
-                    <div className="text-xs text-muted-foreground">Continue to next step</div>
-                  </span>
-                </Button>
-              )}
-              {node.on_no_next_node && (
-                <Button
-                  onClick={() => onNavigate(node.on_no_next_node!, "no")}
-                  variant="outline"
-                  size="sm"
-                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-destructive hover:bg-destructive/10 transition-colors"
-                >
-                  <XCircle className="h-4 w-4 text-destructive flex-shrink-0" />
-                  <span className="text-left">
-                    <div className="font-semibold text-xs">Prospect says NO</div>
-                    <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
-                  </span>
-                </Button>
-              )}
-              {node.on_no_response_next_node && (
-                <Button
-                  onClick={() => onNavigate(node.on_no_response_next_node!, "no_response")}
-                  variant="outline"
-                  size="sm"
-                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-contact hover:bg-stage-contact-light transition-colors"
-                >
-                  <Clock className="h-4 w-4 text-stage-contact flex-shrink-0" />
-                  <span className="text-left">
-                    <div className="font-semibold text-xs">No Response</div>
-                    <div className="text-xs text-muted-foreground">Follow-up sequence</div>
-                  </span>
-                </Button>
-              )}
-            </div>
+            
+            {hasActionButtons && (
+              <div className="grid gap-1.5">
+                {node.on_yes_next_node && (
+                  <Button
+                    onClick={() => onNavigate(node.on_yes_next_node!, "yes")}
+                    variant="outline"
+                    size="sm"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-close hover:bg-stage-close-light transition-colors"
+                  >
+                    <CheckCircle2 className="h-4 w-4 text-stage-close flex-shrink-0" />
+                    <span className="text-left">
+                      <div className="font-semibold text-xs">Prospect says YES</div>
+                      <div className="text-xs text-muted-foreground">Continue to next step</div>
+                    </span>
+                  </Button>
+                )}
+                {node.on_no_next_node && (
+                  <Button
+                    onClick={() => onNavigate(node.on_no_next_node!, "no")}
+                    variant="outline"
+                    size="sm"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    <XCircle className="h-4 w-4 text-destructive flex-shrink-0" />
+                    <span className="text-left">
+                      <div className="font-semibold text-xs">Prospect says NO</div>
+                      <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
+                    </span>
+                  </Button>
+                )}
+                {node.on_no_response_next_node && (
+                  <Button
+                    onClick={() => onNavigate(node.on_no_response_next_node!, "no_response")}
+                    variant="outline"
+                    size="sm"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-contact hover:bg-stage-contact-light transition-colors"
+                  >
+                    <Clock className="h-4 w-4 text-stage-contact flex-shrink-0" />
+                    <span className="text-left">
+                      <div className="font-semibold text-xs">No Response</div>
+                      <div className="text-xs text-muted-foreground">Follow-up sequence</div>
+                    </span>
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {hasChildCards && (
+              <div className="space-y-2 mt-3">
+                {childNodes.map((childNode, index) => (
+                  <button
+                    key={childNode.node_id}
+                    onClick={() => onSelectChild?.(childNode.node_id)}
+                    className="w-full text-left group animate-in fade-in duration-300"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <div className="border-2 rounded-lg p-3 transition-all duration-300 hover:shadow-md hover:border-primary/50 cursor-pointer bg-card">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <Badge 
+                              variant="outline" 
+                              className={cn(
+                                "font-medium border text-xs",
+                                `bg-${getStageLightColor(childNode.stage)} text-${getStageColor(childNode.stage)} border-${getStageColor(childNode.stage)}`
+                              )}
+                            >
+                              {childNode.stage}
+                            </Badge>
+                            {childNode.script_name && (
+                              <Badge variant="secondary" className="text-xs">
+                                {childNode.script_name}
+                              </Badge>
+                            )}
+                          </div>
+                          <h4 className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">
+                            {childNode.scenario_title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {childNode.scenario_description}
+                          </p>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </CardContent>
       )}
