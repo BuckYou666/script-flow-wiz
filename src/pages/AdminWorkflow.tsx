@@ -16,6 +16,7 @@ import {
 import { WorkflowNode } from "@/types/workflow";
 import { LogOut, Plus, Upload, Pencil, Trash2, Search } from "lucide-react";
 import { workflowNodes as staticData } from "@/data/workflowData";
+import { outboundWorkflowNodes } from "@/data/outboundWorkflowData";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const AdminWorkflow = () => {
@@ -74,6 +75,25 @@ const AdminWorkflow = () => {
     bulkImport.mutate(nodesToImport);
   };
 
+  const handleImportOutbound = () => {
+    const nodesToImport = outboundWorkflowNodes.map(({ node_id, parent_id, stage, scenario_title, scenario_description, script_name, script_section, script_content, on_yes_next_node, on_no_next_node, on_no_response_next_node, crm_actions, display_order }) => ({
+      node_id,
+      parent_id,
+      stage,
+      scenario_title,
+      scenario_description,
+      script_name,
+      script_section,
+      script_content,
+      on_yes_next_node,
+      on_no_next_node,
+      on_no_response_next_node,
+      crm_actions,
+      display_order: display_order || 0
+    }));
+    bulkImport.mutate(nodesToImport);
+  };
+
   const filteredNodes = nodes?.filter(node => 
     node.scenario_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     node.node_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -101,8 +121,12 @@ const AdminWorkflow = () => {
             <div className="flex justify-between items-center">
               <CardTitle>Workflow Nodes ({nodes?.length || 0})</CardTitle>
               <div className="flex gap-2">
+                <Button onClick={handleImportOutbound} variant="secondary" className="gap-2">
+                  <Upload className="h-4 w-4" />
+                  Import Outbound Script
+                </Button>
                 {nodes?.length === 0 && (
-                  <Button onClick={handleImportStatic} variant="secondary" className="gap-2">
+                  <Button onClick={handleImportStatic} variant="outline" className="gap-2">
                     <Upload className="h-4 w-4" />
                     Import Initial Data
                   </Button>
