@@ -57,6 +57,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        stage: {
+          source: "hsl(var(--stage-source))",
+          "source-light": "hsl(var(--stage-source-light))",
+          contact: "hsl(var(--stage-contact))",
+          "contact-light": "hsl(var(--stage-contact-light))",
+          close: "hsl(var(--stage-close))",
+          "close-light": "hsl(var(--stage-close-light))",
+          followup: "hsl(var(--stage-followup))",
+          "followup-light": "hsl(var(--stage-followup-light))",
+          outcome: "hsl(var(--stage-outcome))",
+          "outcome-light": "hsl(var(--stage-outcome-light))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
