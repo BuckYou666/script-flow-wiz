@@ -1,4 +1,5 @@
 import { WorkflowNode } from "@/types/workflow";
+import { websiteSignupWorkflowData } from "./websiteSignupWorkflowData";
 
 export const workflowNodes: WorkflowNode[] = [
   {
@@ -465,4 +466,5 @@ export const workflowNodes: WorkflowNode[] = [
     crm_actions: "Log reactivation attempt; Update stage",
     workflow_name: "Initial Workflow",
   },
+  ...websiteSignupWorkflowData
 ];
