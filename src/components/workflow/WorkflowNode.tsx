@@ -18,8 +18,15 @@ interface WorkflowNodeProps {
 export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNodes = [], onSelectChild }: WorkflowNodeProps) => {
   const stageColor = getStageColor(node.stage);
   const stageLightColor = getStageLightColor(node.stage);
-  const hasActionButtons = node.on_yes_next_node || node.on_no_next_node || node.on_no_response_next_node;
-  const hasChildCards = childNodes.length > 0;
+  
+  // Determine if we should show action buttons or child cards
+  // If child nodes exist that match the next node IDs, show cards instead of buttons
+  const nextNodeIds = [node.on_yes_next_node, node.on_no_next_node, node.on_no_response_next_node].filter(Boolean);
+  const childNodeIds = childNodes.map(child => child.node_id);
+  const childrenMatchNextNodes = nextNodeIds.length > 0 && nextNodeIds.every(id => childNodeIds.includes(id!));
+  
+  const showActionButtons = !childrenMatchNextNodes && (node.on_yes_next_node || node.on_no_next_node || node.on_no_response_next_node);
+  const showChildCards = childNodes.length > 0;
 
   return (
     <Card 
@@ -96,7 +103,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               Next Steps
             </h4>
             
-            {hasActionButtons && (
+            {showActionButtons && (
               <div className="grid gap-1.5">
                 {node.on_yes_next_node && (
                   <Button
@@ -143,7 +150,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               </div>
             )}
 
-            {hasChildCards && (
+            {showChildCards && (
               <div className="space-y-2 mt-3">
                 {childNodes.map((childNode, index) => (
                   <button
