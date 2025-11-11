@@ -1,15 +1,18 @@
 import { useState, useMemo } from "react";
 import { useWorkflowNodes } from "@/hooks/useWorkflowNodes";
-import { WorkflowNode as WorkflowNodeType, StageType } from "@/types/workflow";
+import { WorkflowNode as WorkflowNodeType, StageType, getStageColor, getStageLightColor } from "@/types/workflow";
 import { WorkflowNode } from "@/components/workflow/WorkflowNode";
 import { WorkflowBreadcrumb } from "@/components/workflow/WorkflowBreadcrumb";
 import { WorkflowHeader } from "@/components/workflow/WorkflowHeader";
 import { StageLegend } from "@/components/workflow/StageLegend";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info } from "lucide-react";
+import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const getSourceIcon = (nodeId: string) => {
   const iconMap: Record<string, React.ComponentType<any>> = {
@@ -291,7 +294,8 @@ const Index = () => {
                   </div>
                 ) : (
                   currentNode && (
-                    <div className="space-y-3">
+                    <div className="space-y-4 animate-in fade-in duration-500">
+                      {/* Current Node - Main Focus */}
                       <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                         <p className="text-xs text-muted-foreground mb-1">Currently Learning:</p>
                         <h2 className="text-xl font-bold text-primary">{currentNode.scenario_title}</h2>
@@ -305,30 +309,54 @@ const Index = () => {
                       />
                       
                       {filteredNodes.length > 0 && (
-                        <div className="space-y-3">
-                          <div className="border-t pt-3">
-                            <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                              <span className="inline-block w-1 h-5 bg-primary rounded-full" />
-                              Next Steps Available
-                            </h3>
-                            <div className="space-y-3">
-                              {filteredNodes.map((node, index) => (
-                                <div
-                                  key={node.node_id}
-                                  className="animate-in fade-in slide-in-from-bottom-2 duration-500"
-                                  style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                  <WorkflowNode
-                                    node={node}
-                                    onNavigate={handleNavigate}
-                                    isExpanded={expandedNodeId === node.node_id}
-                                    onToggle={() => setExpandedNodeId(
-                                      expandedNodeId === node.node_id ? null : node.node_id
-                                    )}
-                                  />
-                                </div>
-                              ))}
-                            </div>
+                        <div className="space-y-3 pt-4 border-t">
+                          <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
+                            <span className="inline-block w-1 h-5 bg-primary rounded-full" />
+                            Next Steps Available
+                          </h3>
+                          <div className="grid gap-3">
+                            {filteredNodes.map((node, index) => (
+                              <button
+                                key={node.node_id}
+                                onClick={() => {
+                                  handleSelectSource(node.node_id);
+                                }}
+                                className="w-full text-left group animate-in fade-in slide-in-from-bottom-2 duration-500"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                              >
+                                <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/50 cursor-pointer">
+                                  <CardHeader className="p-4">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <Badge 
+                                            variant="outline" 
+                                            className={cn(
+                                              "font-medium border-2 text-xs",
+                                              `bg-${getStageLightColor(node.stage)} text-${getStageColor(node.stage)} border-${getStageColor(node.stage)}`
+                                            )}
+                                          >
+                                            {node.stage}
+                                          </Badge>
+                                          {node.script_name && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              {node.script_name}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        <CardTitle className="text-base mb-1 group-hover:text-primary transition-colors">
+                                          {node.scenario_title}
+                                        </CardTitle>
+                                        <CardDescription className="text-sm line-clamp-2">
+                                          {node.scenario_description}
+                                        </CardDescription>
+                                      </div>
+                                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />
+                                    </div>
+                                  </CardHeader>
+                                </Card>
+                              </button>
+                            ))}
                           </div>
                         </div>
                       )}
