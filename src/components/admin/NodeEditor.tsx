@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WorkflowNode, StageType } from "@/types/workflow";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 interface NodeEditorProps {
   node: WorkflowNode | null;
@@ -17,27 +18,68 @@ interface NodeEditorProps {
 const stages: StageType[] = ["Source", "First Contact", "Appointment", "Pre-Call", "Close", "Objection", "Follow-Up", "Outcome"];
 
 export const NodeEditor = ({ node, open, onClose, onSave }: NodeEditorProps) => {
-  const [formData, setFormData] = useState<Partial<WorkflowNode>>(
-    node || {
-      node_id: "",
-      parent_id: "",
-      stage: "Source",
-      scenario_title: "",
-      scenario_description: "",
-      script_name: "",
-      script_section: "",
-      script_content: "",
-      on_yes_next_node: "",
-      on_no_next_node: "",
-      on_no_response_next_node: "",
-      crm_actions: "",
-      workflow_name: "Default Workflow",
+  const { toast } = useToast();
+  const [formData, setFormData] = useState<Partial<WorkflowNode>>({
+    node_id: "",
+    parent_id: "",
+    stage: "Source",
+    scenario_title: "",
+    scenario_description: "",
+    script_name: "",
+    script_section: "",
+    script_content: "",
+    on_yes_next_node: "",
+    on_no_next_node: "",
+    on_no_response_next_node: "",
+    crm_actions: "",
+    workflow_name: "Default Workflow",
+  });
+
+  // Update formData whenever node changes
+  useEffect(() => {
+    if (node) {
+      setFormData({
+        node_id: node.node_id || "",
+        parent_id: node.parent_id || "",
+        stage: node.stage || "Source",
+        scenario_title: node.scenario_title || "",
+        scenario_description: node.scenario_description || "",
+        script_name: node.script_name || "",
+        script_section: node.script_section || "",
+        script_content: node.script_content || "",
+        on_yes_next_node: node.on_yes_next_node || "",
+        on_no_next_node: node.on_no_next_node || "",
+        on_no_response_next_node: node.on_no_response_next_node || "",
+        crm_actions: node.crm_actions || "",
+        workflow_name: node.workflow_name || "Default Workflow",
+      });
+    } else {
+      // Reset to empty form for creating new node
+      setFormData({
+        node_id: "",
+        parent_id: "",
+        stage: "Source",
+        scenario_title: "",
+        scenario_description: "",
+        script_name: "",
+        script_section: "",
+        script_content: "",
+        on_yes_next_node: "",
+        on_no_next_node: "",
+        on_no_response_next_node: "",
+        crm_actions: "",
+        workflow_name: "Default Workflow",
+      });
     }
-  );
+  }, [node, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
+    toast({
+      title: node ? "Node Updated" : "Node Created",
+      description: `Successfully ${node ? "updated" : "created"} workflow node.`,
+    });
     onClose();
   };
 
