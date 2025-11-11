@@ -3,8 +3,9 @@ import { getStageColor, getStageLightColor } from "@/types/workflow";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, ChevronRight, XCircle, Clock } from "lucide-react";
+import { CheckCircle2, ChevronRight, XCircle, Clock, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -18,6 +19,7 @@ interface WorkflowNodeProps {
 export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNodes = [], onSelectChild }: WorkflowNodeProps) => {
   const stageColor = getStageColor(node.stage);
   const stageLightColor = getStageLightColor(node.stage);
+  const [showCrmActions, setShowCrmActions] = useState(false);
   
   // Determine if we should show action buttons or child cards
   // If child nodes exist that match the next node IDs, show cards instead of buttons
@@ -69,95 +71,26 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
 
       {isExpanded && (
         <CardContent className="space-y-4 pt-0" onClick={(e) => e.stopPropagation()}>
-          <div className="flex gap-4">
-            {/* Script Section - 70% width */}
-            {node.script_content && (
-              <div className="flex-[7] space-y-2">
+          {/* Script Section - Full Width with optional CRM toggle */}
+          {node.script_content && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
                 <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
                   Script to Use
                 </h4>
-                <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm min-h-[200px]">
-                  <div className="prose prose-sm max-w-none">
-                    <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-3">
-                      {node.script_content.split('\n').map((line, index) => {
-                        // Check if line starts with a quote or common dialogue patterns
-                        const isDialogue = line.trim().startsWith('"') || line.includes('": "');
-                        const isInstruction = line.includes('(') && line.includes(')') && !line.includes('"');
-                        const isQuestion = line.trim().startsWith('If ') || line.trim().startsWith('Then') || line.includes('→');
-                        
-                        if (isInstruction) {
-                          return (
-                            <p key={index} className="text-muted-foreground italic pl-4 text-sm">
-                              ✏️ {line}
-                            </p>
-                          );
-                        } else if (isQuestion) {
-                          return (
-                            <p key={index} className="font-medium text-primary/90 pl-2">
-                              {line}
-                            </p>
-                          );
-                        } else if (isDialogue || line.trim()) {
-                          return (
-                            <p key={index} className="text-foreground">
-                              {isDialogue && <span className="inline-block mr-2">🗣️</span>}
-                              {line}
-                            </p>
-                          );
-                        }
-                        return <br key={index} />;
-                      })}
-                    </div>
-                  </div>
-                </div>
-                {node.script_section && (
-                  <p className="text-xs text-muted-foreground italic pl-1">
-                    📋 Section: {node.script_section}
-                  </p>
+                {node.crm_actions && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCrmActions(!showCrmActions)}
+                    className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                    {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
+                  </Button>
                 )}
               </div>
-            )}
-
-            {/* CRM Actions Section - 30% width */}
-            {node.crm_actions && (
-              <div className="flex-[3] space-y-2">
-                <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-                  CRM Actions
-                </h4>
-                <div className="bg-amber-50/50 dark:bg-amber-950/10 rounded-lg p-4 border-2 border-amber-200/40 dark:border-amber-800/30 shadow-sm min-h-[200px]">
-                  <div className="text-sm leading-relaxed whitespace-pre-line space-y-2">
-                    {node.crm_actions.split('\n').map((line, index) => {
-                      if (!line.trim()) return <br key={index} />;
-                      const isField = line.includes('Field:') || line.includes('Input:');
-                      const isUpdate = line.includes('Update') || line.includes('Create') || line.includes('Tag');
-                      
-                      if (isField) {
-                        return (
-                          <p key={index} className="text-xs bg-amber-100/50 dark:bg-amber-900/20 rounded px-2 py-1 font-mono">
-                            {line}
-                          </p>
-                        );
-                      } else if (isUpdate) {
-                        return (
-                          <p key={index} className="font-medium text-amber-900 dark:text-amber-100">
-                            ✓ {line}
-                          </p>
-                        );
-                      }
-                      return <p key={index}>{line}</p>;
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* If only script exists without CRM, make it full width */}
-          {node.script_content && !node.crm_actions && (
-            <div className="space-y-2">
-              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-                Script to Use
-              </h4>
+              
               <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
                 <div className="prose prose-sm max-w-none">
                   <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-3">
@@ -191,6 +124,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                   </div>
                 </div>
               </div>
+              
               {node.script_section && (
                 <p className="text-xs text-muted-foreground italic pl-1">
                   📋 Section: {node.script_section}
@@ -199,7 +133,40 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
           )}
 
-          {/* If only CRM exists without script */}
+          {/* CRM Actions - Collapsible */}
+          {node.crm_actions && showCrmActions && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+                CRM Actions
+              </h4>
+              <div className="bg-amber-50/50 dark:bg-amber-950/10 rounded-lg p-4 border-2 border-amber-200/40 dark:border-amber-800/30 shadow-sm">
+                <div className="text-sm leading-relaxed whitespace-pre-line space-y-2">
+                  {node.crm_actions.split('\n').map((line, index) => {
+                    if (!line.trim()) return <br key={index} />;
+                    const isField = line.includes('Field:') || line.includes('Input:');
+                    const isUpdate = line.includes('Update') || line.includes('Create') || line.includes('Tag');
+                    
+                    if (isField) {
+                      return (
+                        <p key={index} className="text-xs bg-amber-100/50 dark:bg-amber-900/20 rounded px-2 py-1 font-mono">
+                          {line}
+                        </p>
+                      );
+                    } else if (isUpdate) {
+                      return (
+                        <p key={index} className="font-medium text-amber-900 dark:text-amber-100">
+                          ✓ {line}
+                        </p>
+                      );
+                    }
+                    return <p key={index}>{line}</p>;
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* If no script but has CRM actions */}
           {!node.script_content && node.crm_actions && (
             <div className="space-y-2">
               <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
