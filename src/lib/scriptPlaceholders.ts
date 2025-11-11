@@ -66,3 +66,33 @@ export const extractFirstName = (fullName: string): string => {
   if (!fullName) return '';
   return fullName.split(' ')[0].trim();
 };
+
+/**
+ * Get the actual replacement values that will be used
+ * @param data The replacement data
+ * @returns Object with the actual values that will be used
+ */
+export const getReplacementValues = (data: ScriptReplacementData) => {
+  // Lead first name logic
+  let leadFirstName = "there";
+  if (data.leadFirstName) {
+    leadFirstName = data.leadFirstName;
+  } else if (data.leadFullName) {
+    leadFirstName = data.leadFullName.split(' ')[0];
+  }
+
+  // Rep name logic
+  let repName = "someone from A-Tech Technologies";
+  if (data.repFirstName) {
+    repName = data.repFirstName;
+  } else if (data.repFullName) {
+    repName = data.repFullName;
+  }
+
+  return {
+    leadFirstName,
+    repName,
+    businessName: data.businessName || null,
+    leadMagnetName: data.leadMagnetName || null,
+  };
+};

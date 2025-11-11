@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 import { useState, useMemo } from "react";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import { useLeads } from "@/hooks/useLeads";
-import { replaceScriptPlaceholders } from "@/lib/scriptPlaceholders";
+import { replaceScriptPlaceholders, getReplacementValues } from "@/lib/scriptPlaceholders";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -36,19 +37,82 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
     lead_magnet_name: "Local AI System Demo"
   };
   
-  // Replace placeholders in script content
+  // Get replacement values for display
+  const replacementData = useMemo(() => ({
+    leadFirstName: currentLead.first_name,
+    leadFullName: currentLead.full_name,
+    repFirstName: profile?.first_name,
+    repFullName: profile?.full_name,
+    businessName: currentLead.business_name,
+    leadMagnetName: currentLead.lead_magnet_name,
+  }), [currentLead, profile]);
+
+  const replacementValues = useMemo(() => 
+    getReplacementValues(replacementData),
+    [replacementData]
+  );
+
+  // Replace placeholders in script content and track positions
   const processedScriptContent = useMemo(() => {
     if (!node.script_content) return null;
-    
-    return replaceScriptPlaceholders(node.script_content, {
-      leadFirstName: currentLead.first_name,
-      leadFullName: currentLead.full_name,
-      repFirstName: profile?.first_name,
-      repFullName: profile?.full_name,
-      businessName: currentLead.business_name,
-      leadMagnetName: currentLead.lead_magnet_name,
+    return replaceScriptPlaceholders(node.script_content, replacementData);
+  }, [node.script_content, replacementData]);
+
+  // Function to render script line with highlighted dynamic fields
+  const renderScriptLine = (line: string) => {
+    const parts: (string | { value: string; tooltip: string })[] = [];
+    let lastIndex = 0;
+
+    // Find all dynamic values in the line
+    const patterns = [
+      { value: replacementValues.leadFirstName, tooltip: "Auto-filled from lead record", original: "{LeadFirstName}" },
+      { value: replacementValues.repName, tooltip: "Auto-filled from user profile", original: "{RepName}" },
+      ...(replacementValues.businessName ? [{ value: replacementValues.businessName, tooltip: "Auto-filled from lead record", original: "{BusinessName}" }] : []),
+      ...(replacementValues.leadMagnetName ? [{ value: replacementValues.leadMagnetName, tooltip: "Auto-filled from lead record", original: "{lead_magnet_name}" }] : []),
+    ];
+
+    patterns.forEach(pattern => {
+      let index = line.indexOf(pattern.value, lastIndex);
+      while (index !== -1) {
+        // Add text before the match
+        if (index > lastIndex) {
+          parts.push(line.substring(lastIndex, index));
+        }
+        // Add the dynamic value
+        parts.push({ value: pattern.value, tooltip: pattern.tooltip });
+        lastIndex = index + pattern.value.length;
+        index = line.indexOf(pattern.value, lastIndex);
+      }
     });
-  }, [node.script_content, currentLead, profile]);
+
+    // Add remaining text
+    if (lastIndex < line.length) {
+      parts.push(line.substring(lastIndex));
+    }
+
+    return (
+      <>
+        {parts.map((part, i) => 
+          typeof part === 'string' ? (
+            <span key={i}>{part}</span>
+          ) : (
+            <TooltipProvider key={i}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 border-dashed text-sm font-medium mx-0.5">
+                    {part.value}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">{part.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )
+        )}
+      </>
+    );
+  };
   
   // Determine if we should show action buttons or child cards
   // If child nodes exist that match the next node IDs, show cards instead of buttons
@@ -119,6 +183,31 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                   </Button>
                 )}
               </div>
+
+              {/* Call Context Bar */}
+              <div className="flex flex-wrap items-center gap-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+                <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
+                <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+                  <span className="text-xs text-muted-foreground">Lead:</span>
+                  <span className="font-medium">{replacementValues.leadFirstName}</span>
+                </Badge>
+                <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+                  <span className="text-xs text-muted-foreground">Rep:</span>
+                  <span className="font-medium">{replacementValues.repName}</span>
+                </Badge>
+                {replacementValues.leadMagnetName && (
+                  <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+                    <span className="text-xs text-muted-foreground">Lead Magnet:</span>
+                    <span className="font-medium">{replacementValues.leadMagnetName}</span>
+                  </Badge>
+                )}
+                {replacementValues.businessName && (
+                  <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+                    <span className="text-xs text-muted-foreground">Business:</span>
+                    <span className="font-medium">{replacementValues.businessName}</span>
+                  </Badge>
+                )}
+              </div>
               
               <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
                 <div className="prose prose-sm max-w-none">
@@ -140,7 +229,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       
                       return (
                         <p key={index} className="text-foreground leading-relaxed">
-                          {line}
+                          {renderScriptLine(line)}
                         </p>
                       );
                     })}
