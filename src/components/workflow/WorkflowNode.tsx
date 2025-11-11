@@ -13,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { LeadOverview } from "./LeadOverview";
 import { LeadInfoSheet } from "./LeadInfoSheet";
 import { ConversationHistory } from "./ConversationHistory";
+import { ScriptStepper } from "./ScriptStepper";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -267,7 +268,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </>
           )}
 
-          {/* Script Section - Full Width with optional CRM toggle */}
+          {/* Script Section - Step-by-step Navigation */}
           {processedScriptContent && !isWebsiteSignupStart && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -287,85 +288,18 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 )}
               </div>
 
-              {/* Call Context Bar */}
-              <div className="flex flex-wrap items-center gap-2 p-3 bg-muted/30 rounded-lg border border-border/50">
-                <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
-                <Badge variant="secondary" className="gap-1.5 px-3 py-1">
-                  <span className="text-xs text-muted-foreground">Lead:</span>
-                  <span className="font-medium">{replacementValues.leadFirstName}</span>
-                </Badge>
-                <Badge variant="secondary" className="gap-1.5 px-3 py-1">
-                  <span className="text-xs text-muted-foreground">Rep:</span>
-                  <span className="font-medium">{replacementValues.repName}</span>
-                </Badge>
-                {replacementValues.leadMagnetName && (
-                  <Badge variant="secondary" className="gap-1.5 px-3 py-1">
-                    <span className="text-xs text-muted-foreground">Lead Magnet:</span>
-                    <span className="font-medium">{replacementValues.leadMagnetName}</span>
-                  </Badge>
-                )}
-                {replacementValues.businessName && (
-                  <Badge variant="secondary" className="gap-1.5 px-3 py-1">
-                    <span className="text-xs text-muted-foreground">Business:</span>
-                    <span className="font-medium">{replacementValues.businessName}</span>
-                  </Badge>
-                )}
-              </div>
-              
-              <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
-                  <div className="prose prose-sm max-w-none">
-                    <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
-                      {processedScriptContent.split('\n').map((line, index) => {
-                        // Check for instruction text: lines with parentheses or wrapped in asterisks
-                        const isInstruction = (line.includes('(') && line.includes(')')) || 
-                                            (line.trim().startsWith('*') && line.trim().endsWith('*'));
-                        
-                        // Check for spoken dialogue: lines starting with quotes
-                        const isSpokenDialogue = line.trim().startsWith('"');
-                        
-                        // Check for separator line
-                        const isSeparator = line.trim().startsWith('---');
-                        
-                        if (!line.trim()) {
-                          return <div key={index} className="h-2" />;
-                        }
-                        
-                        if (isSeparator) {
-                          return (
-                            <div key={index} className="border-t border-border/30 my-4" />
-                          );
-                        }
-                        
-                        if (isInstruction) {
-                          return (
-                            <p key={index} className="text-muted-foreground italic text-xs leading-snug">
-                              {line.replace(/^\*|\*$/g, '')}
-                            </p>
-                          );
-                        }
-                        
-                        if (isSpokenDialogue) {
-                          return (
-                            <p key={index} className="text-foreground font-medium text-[16px] leading-relaxed">
-                              {renderScriptLine(line)}
-                            </p>
-                          );
-                        }
-                        
-                        return (
-                          <p key={index} className="text-foreground leading-relaxed">
-                            {renderScriptLine(line)}
-                          </p>
-                        );
-                      })}
-                  </div>
-                </div>
+              {/* Script Stepper Component */}
+              <ScriptStepper
+                scriptContent={processedScriptContent}
+                renderScriptLine={renderScriptLine}
+                replacementValues={replacementValues}
+              />
 
-                {/* Inline Replies Section */}
-                {inlineReplies && inlineReplies.length > 0 && (
-                  <div className="mt-6 pt-4 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50">
-                    <div className="flex flex-col gap-2.5">
-                      {inlineReplies.map((reply: any, idx: number) => {
+              {/* Inline Replies Section */}
+              {inlineReplies && inlineReplies.length > 0 && (
+                <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-4 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
+                  <div className="flex flex-col gap-2.5">
+                    {inlineReplies.map((reply: any, idx: number) => {
                         const isYes = reply.type === 'yes';
                         const isNo = reply.type === 'no';
                         const isUnsure = reply.type === 'unsure';
@@ -422,12 +356,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                               </div>
                             </div>
                           </button>
-                        );
-                      })}
-                    </div>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
               
               {node.script_section && (
                 <p className="text-xs text-muted-foreground italic pl-1">
