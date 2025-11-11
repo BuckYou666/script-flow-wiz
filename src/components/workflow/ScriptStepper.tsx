@@ -15,6 +15,8 @@ interface ScriptStepperProps {
     leadMagnetName?: string;
   };
   contactMethod?: string; // "Call", "Text", "Email", etc.
+  hideStepIndicator?: boolean; // Hide progress bar for single-step stages
+  centerContent?: boolean; // Center content vertically and horizontally
 }
 
 export const ScriptStepper = ({
@@ -22,6 +24,8 @@ export const ScriptStepper = ({
   renderScriptLine,
   replacementValues,
   contactMethod,
+  hideStepIndicator = false,
+  centerContent = false,
 }: ScriptStepperProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showFullScript, setShowFullScript] = useState(false);
@@ -204,27 +208,28 @@ export const ScriptStepper = ({
 
   return (
     <div className="space-y-3">
-      {/* Top Bar: Mode Badge, Progress + Full Script Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* Contact Method Badge */}
-          {contactMethod && (
-            <Badge variant="secondary" className="text-xs gap-1.5">
-              Mode: {contactMethod.toLowerCase().includes("call") || contactMethod.toLowerCase().includes("phone") ? "📞" : 
-                     contactMethod.toLowerCase().includes("text") || contactMethod.toLowerCase().includes("sms") ? "💬" : 
-                     contactMethod.toLowerCase().includes("email") ? "📧" : "📋"} {contactMethod}
+      {/* Top Bar: Mode Badge, Progress + Full Script Toggle - Hidden for single-step stages */}
+      {!hideStepIndicator && (
+        <div className="flex items-center justify-between mb-3 pb-3 border-b border-border/30">
+          <div className="flex items-center gap-3">
+            {/* Contact Method Badge */}
+            {contactMethod && (
+              <Badge variant="secondary" className="text-xs gap-1.5">
+                Mode: {contactMethod.toLowerCase().includes("call") || contactMethod.toLowerCase().includes("phone") ? "📞" : 
+                       contactMethod.toLowerCase().includes("text") || contactMethod.toLowerCase().includes("sms") ? "💬" : 
+                       contactMethod.toLowerCase().includes("email") ? "📧" : "📋"} {contactMethod}
+              </Badge>
+            )}
+            <Badge variant="secondary" className="text-xs font-mono">
+              Step {currentStep + 1} of {totalSteps}
             </Badge>
-          )}
-          <Badge variant="secondary" className="text-xs font-mono">
-            Step {currentStep + 1} of {totalSteps}
-          </Badge>
-          <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden w-32">
-            <div
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
-            />
+            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden w-32">
+              <div
+                className="h-full bg-primary transition-all duration-300"
+                style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
+              />
+            </div>
           </div>
-        </div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -243,10 +248,12 @@ export const ScriptStepper = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </div>
+        </div>
+      )}
 
       {/* Call Context Bar */}
-      <div className="flex flex-wrap items-center gap-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+      {!hideStepIndicator && (
+        <div className="flex flex-wrap items-center gap-2 p-3 bg-muted/30 rounded-lg border border-border/50">
         <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
         <Badge variant="secondary" className="gap-1.5 px-3 py-1">
           <span className="text-xs text-muted-foreground">Lead:</span>
@@ -268,14 +275,22 @@ export const ScriptStepper = ({
             <span className="font-medium">{replacementValues.businessName}</span>
           </Badge>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Script Content with Animation - Click Anywhere to Advance */}
       <div 
         ref={scriptBoxRef}
         onClick={handleScriptBoxClick}
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl p-8 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
-        style={{ maxHeight: "60vh", minHeight: "240px" }}
+        style={{ 
+          maxHeight: centerContent ? "50vh" : "60vh", 
+          minHeight: centerContent ? "300px" : "240px",
+          display: centerContent ? "flex" : "block",
+          flexDirection: centerContent ? "column" : undefined,
+          justifyContent: centerContent ? "center" : undefined,
+          alignItems: centerContent ? "center" : undefined
+        }}
       >
         {/* Auto-Fading Tip Overlay - Only for Call-Based Interactions */}
         {shouldShowWaitTip && (
@@ -296,11 +311,18 @@ export const ScriptStepper = ({
           key={currentStep}
           className={cn(
             "prose prose-lg max-w-none flex flex-col justify-center min-h-[180px]",
+            centerContent ? "w-full" : "",
             animationDirection === "forward" ? "animate-fade-in" : "animate-fade-in"
           )}
         >
-          <div className="text-center">
-            {renderSegmentContent(currentSegment)}
+          <div className={cn(centerContent ? "text-center" : "text-center")}>
+            {centerContent ? (
+              <p className="text-foreground font-medium text-[1.2rem] leading-relaxed">
+                {renderScriptLine(currentSegment)}
+              </p>
+            ) : (
+              renderSegmentContent(currentSegment)
+            )}
           </div>
         </div>
 

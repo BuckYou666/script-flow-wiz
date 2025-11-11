@@ -294,6 +294,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 renderScriptLine={renderScriptLine}
                 replacementValues={replacementValues}
                 contactMethod={node.scenario_title}
+                hideStepIndicator={node.scenario_title === "Choose Contact Method"}
+                centerContent={node.scenario_title === "Choose Contact Method"}
               />
 
               {/* Inline Replies Section */}
@@ -501,7 +503,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     className="w-full text-left group animate-in fade-in duration-300"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <div className="border-2 rounded-lg p-3.5 transition-all duration-300 hover:shadow-md hover:border-primary/50 cursor-pointer bg-card">
+                    <div className="border-2 rounded-lg p-3.5 transition-all duration-150 ease-in-out hover:shadow-md hover:border-primary/50 hover:bg-accent/5 hover:-translate-y-0.5 cursor-pointer bg-card">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
