@@ -180,7 +180,7 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-4 py-6 max-w-7xl min-h-full">
+          <div className="container mx-auto px-4 py-6 pb-24 max-w-7xl min-h-full">
             <div className="grid lg:grid-cols-[1fr_300px] gap-6 items-start">
               <div className="w-full max-w-4xl mx-auto lg:mx-0">
                 {currentNodeId === "START" ? (
