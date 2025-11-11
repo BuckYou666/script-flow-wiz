@@ -282,8 +282,9 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "55vh" : "65vh", 
-          minHeight: centerContent ? "320px" : "280px"
+          maxHeight: centerContent ? "280px" : "65vh", 
+          minHeight: centerContent ? "280px" : "280px",
+          height: centerContent ? "280px" : "auto"
         }}
       >
         {/* Auto-Fading Tip Overlay - Only for Call-Based Interactions */}
@@ -305,7 +306,10 @@ export const ScriptStepper = ({
         <div 
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
-          className="flex-1 overflow-y-auto px-8 pt-8 pb-4 cursor-pointer"
+          className={cn(
+            "flex-1 px-8 pt-8 pb-4 cursor-pointer",
+            centerContent ? "overflow-hidden" : "overflow-y-auto"
+          )}
           style={{
             display: "flex",
             flexDirection: "column",
