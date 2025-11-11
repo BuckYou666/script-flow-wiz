@@ -51,6 +51,9 @@ const Index = () => {
       nodes = nodes.filter(node => node.workflow_name === selectedWorkflow);
     }
     
+    // Sort by display_order
+    nodes.sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    
     return nodes;
   }, [workflowNodes, currentNodeId, selectedWorkflow]);
 
