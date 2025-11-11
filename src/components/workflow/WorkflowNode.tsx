@@ -161,7 +161,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isWebsiteSignupStart && isExpanded ? {
-        height: 'calc(100vh - 8rem)',
+        height: 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
