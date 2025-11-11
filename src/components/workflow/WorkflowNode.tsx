@@ -57,48 +57,51 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle }: Workflo
       </CardHeader>
 
       {isExpanded && (
-        <CardContent className="space-y-6" onClick={(e) => e.stopPropagation()}>
-          {node.script_content && (
-            <div className="space-y-2">
-              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                Script to Use
-              </h4>
-              <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
-                <p className="text-sm whitespace-pre-line leading-relaxed">{node.script_content}</p>
+        <CardContent className="space-y-3 pt-0" onClick={(e) => e.stopPropagation()}>
+          <div className="grid gap-3 md:grid-cols-2">
+            {node.script_content && (
+              <div className="space-y-1.5">
+                <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
+                  Script to Use
+                </h4>
+                <div className="bg-muted/50 rounded-md p-2.5 border-l-2 border-primary max-h-32 overflow-y-auto">
+                  <p className="text-xs whitespace-pre-line leading-relaxed">{node.script_content}</p>
+                </div>
+                {node.script_section && (
+                  <p className="text-xs text-muted-foreground">
+                    Section: {node.script_section}
+                  </p>
+                )}
               </div>
-              {node.script_section && (
-                <p className="text-xs text-muted-foreground">
-                  Section: {node.script_section}
-                </p>
-              )}
-            </div>
-          )}
+            )}
 
-          {node.crm_actions && (
-            <div className="space-y-2">
-              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                CRM Actions
-              </h4>
-              <div className="bg-secondary/50 rounded-lg p-3 border">
-                <p className="text-sm">{node.crm_actions}</p>
+            {node.crm_actions && (
+              <div className="space-y-1.5">
+                <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
+                  CRM Actions
+                </h4>
+                <div className="bg-secondary/50 rounded-md p-2.5 border max-h-32 overflow-y-auto">
+                  <p className="text-xs">{node.crm_actions}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div className="space-y-2 pt-4 border-t">
-            <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">
+          <div className="space-y-2 pt-2 border-t">
+            <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
               Next Steps
             </h4>
-            <div className="grid gap-2">
+            <div className="grid gap-1.5">
               {node.on_yes_next_node && (
                 <Button
                   onClick={() => onNavigate(node.on_yes_next_node!, "yes")}
                   variant="outline"
-                  className="justify-start gap-2 h-auto py-3 px-4 border-2 hover:border-stage-close hover:bg-stage-close-light transition-colors"
+                  size="sm"
+                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-close hover:bg-stage-close-light transition-colors"
                 >
-                  <CheckCircle2 className="h-5 w-5 text-stage-close" />
+                  <CheckCircle2 className="h-4 w-4 text-stage-close flex-shrink-0" />
                   <span className="text-left">
-                    <div className="font-semibold">Prospect says YES</div>
+                    <div className="font-semibold text-xs">Prospect says YES</div>
                     <div className="text-xs text-muted-foreground">Continue to next step</div>
                   </span>
                 </Button>
@@ -107,11 +110,12 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle }: Workflo
                 <Button
                   onClick={() => onNavigate(node.on_no_next_node!, "no")}
                   variant="outline"
-                  className="justify-start gap-2 h-auto py-3 px-4 border-2 hover:border-destructive hover:bg-destructive/10 transition-colors"
+                  size="sm"
+                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-destructive hover:bg-destructive/10 transition-colors"
                 >
-                  <XCircle className="h-5 w-5 text-destructive" />
+                  <XCircle className="h-4 w-4 text-destructive flex-shrink-0" />
                   <span className="text-left">
-                    <div className="font-semibold">Prospect says NO</div>
+                    <div className="font-semibold text-xs">Prospect says NO</div>
                     <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
                   </span>
                 </Button>
@@ -120,11 +124,12 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle }: Workflo
                 <Button
                   onClick={() => onNavigate(node.on_no_response_next_node!, "no_response")}
                   variant="outline"
-                  className="justify-start gap-2 h-auto py-3 px-4 border-2 hover:border-stage-contact hover:bg-stage-contact-light transition-colors"
+                  size="sm"
+                  className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-contact hover:bg-stage-contact-light transition-colors"
                 >
-                  <Clock className="h-5 w-5 text-stage-contact" />
+                  <Clock className="h-4 w-4 text-stage-contact flex-shrink-0" />
                   <span className="text-left">
-                    <div className="font-semibold">No Response</div>
+                    <div className="font-semibold text-xs">No Response</div>
                     <div className="text-xs text-muted-foreground">Follow-up sequence</div>
                   </span>
                 </Button>

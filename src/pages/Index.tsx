@@ -202,8 +202,8 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-4 py-6 pb-40 max-w-5xl min-h-full">
-            <div className="w-full space-y-6">
+          <div className="container mx-auto px-4 py-4 pb-20 max-w-5xl min-h-full">
+            <div className="w-full space-y-4">
                 {currentNodeId === "START" ? (
                   <div className="space-y-4">
                     <div className="text-center mb-8 animate-in fade-in duration-500">
@@ -291,10 +291,10 @@ const Index = () => {
                   </div>
                 ) : (
                   currentNode && (
-                    <div className="space-y-6">
-                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-                        <p className="text-sm text-muted-foreground mb-1">Currently Learning:</p>
-                        <h2 className="text-2xl font-bold text-primary">{currentNode.scenario_title}</h2>
+                    <div className="space-y-3">
+                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Currently Learning:</p>
+                        <h2 className="text-xl font-bold text-primary">{currentNode.scenario_title}</h2>
                       </div>
                       
                       <WorkflowNode
@@ -305,13 +305,13 @@ const Index = () => {
                       />
                       
                       {filteredNodes.length > 0 && (
-                        <div className="space-y-4">
-                          <div className="border-t pt-6">
-                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                              <span className="inline-block w-1 h-6 bg-primary rounded-full" />
+                        <div className="space-y-3">
+                          <div className="border-t pt-3">
+                            <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
+                              <span className="inline-block w-1 h-5 bg-primary rounded-full" />
                               Next Steps Available
                             </h3>
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                               {filteredNodes.map((node, index) => (
                                 <div
                                   key={node.node_id}
