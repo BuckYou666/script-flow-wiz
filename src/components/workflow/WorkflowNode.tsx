@@ -93,33 +93,27 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               
               <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
                 <div className="prose prose-sm max-w-none">
-                  <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-3">
+                  <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
                     {node.script_content.split('\n').map((line, index) => {
-                      const isDialogue = line.trim().startsWith('"') || line.includes('": "');
-                      const isInstruction = line.includes('(') && line.includes(')') && !line.includes('"');
-                      const isQuestion = line.trim().startsWith('If ') || line.trim().startsWith('Then') || line.includes('→');
+                      const isInstruction = line.includes('(') && line.includes(')');
+                      
+                      if (!line.trim()) {
+                        return <div key={index} className="h-2" />;
+                      }
                       
                       if (isInstruction) {
                         return (
-                          <p key={index} className="text-muted-foreground italic pl-4 text-sm">
-                            ✏️ {line}
-                          </p>
-                        );
-                      } else if (isQuestion) {
-                        return (
-                          <p key={index} className="font-medium text-primary/90 pl-2">
-                            {line}
-                          </p>
-                        );
-                      } else if (isDialogue || line.trim()) {
-                        return (
-                          <p key={index} className="text-foreground">
-                            {isDialogue && <span className="inline-block mr-2">🗣️</span>}
+                          <p key={index} className="text-muted-foreground italic text-sm pl-4">
                             {line}
                           </p>
                         );
                       }
-                      return <br key={index} />;
+                      
+                      return (
+                        <p key={index} className="text-foreground leading-relaxed">
+                          {line}
+                        </p>
+                      );
                     })}
                   </div>
                 </div>
@@ -252,7 +246,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             )}
 
             {showChildCards && (
-              <div className="space-y-2 mt-3">
+              <div className="space-y-2.5 mt-3">
                 {childNodes.map((childNode, index) => (
                   <button
                     key={childNode.node_id}
@@ -260,33 +254,33 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     className="w-full text-left group animate-in fade-in duration-300"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <div className="border-2 rounded-lg p-3 transition-all duration-300 hover:shadow-md hover:border-primary/50 cursor-pointer bg-card">
+                    <div className="border-2 rounded-lg p-3.5 transition-all duration-300 hover:shadow-md hover:border-primary/50 cursor-pointer bg-card">
                       <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1.5">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
                             <Badge 
                               variant="outline" 
                               className={cn(
-                                "font-medium border text-xs",
+                                "font-medium border text-[10px] px-2 py-0.5",
                                 `bg-${getStageLightColor(childNode.stage)} text-${getStageColor(childNode.stage)} border-${getStageColor(childNode.stage)}`
                               )}
                             >
                               {childNode.stage}
                             </Badge>
                             {childNode.script_name && (
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
                                 {childNode.script_name}
                               </Badge>
                             )}
                           </div>
-                          <h4 className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">
+                          <h4 className="font-semibold text-base mb-1.5 group-hover:text-primary transition-colors">
                             {childNode.scenario_title}
                           </h4>
-                          <p className="text-xs text-muted-foreground line-clamp-2">
+                          <p className="text-sm text-muted-foreground line-clamp-2 leading-snug">
                             {childNode.scenario_description}
                           </p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
+                        <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
                       </div>
                     </div>
                   </button>
