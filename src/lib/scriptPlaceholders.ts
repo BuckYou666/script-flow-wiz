@@ -40,8 +40,8 @@ export const replaceScriptPlaceholders = (
     // Use full name as fallback
     result = result.replace(/{RepName}/g, data.repFullName);
   } else {
-    // Fallback to company name
-    result = result.replace(/{RepName}/g, "someone from A-Tech Technologies");
+    // Fallback to default rep name
+    result = result.replace(/{RepName}/g, "Jacob");
   }
 
   // Replace {BusinessName}
@@ -82,7 +82,7 @@ export const getReplacementValues = (data: ScriptReplacementData) => {
   }
 
   // Rep name logic
-  let repName = "someone from A-Tech Technologies";
+  let repName = "Jacob";
   if (data.repFirstName) {
     repName = data.repFirstName;
   } else if (data.repFullName) {
