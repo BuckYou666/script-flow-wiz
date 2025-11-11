@@ -1,6 +1,7 @@
 export type StageType = "Source" | "First Contact" | "Appointment" | "Pre-Call" | "Close" | "Objection" | "Follow-Up" | "Outcome";
 
 export interface WorkflowNode {
+  id?: string;
   node_id: string;
   parent_id: string | null;
   stage: StageType;
@@ -13,6 +14,9 @@ export interface WorkflowNode {
   on_no_next_node?: string;
   on_no_response_next_node?: string;
   crm_actions: string;
+  display_order?: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export const getStageColor = (stage: StageType): string => {

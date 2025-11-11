@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { workflowNodes } from "@/data/workflowData";
+import { useWorkflowNodes } from "@/hooks/useWorkflowNodes";
 import { WorkflowNode as WorkflowNodeType, StageType } from "@/types/workflow";
 import { WorkflowNode } from "@/components/workflow/WorkflowNode";
 import { WorkflowBreadcrumb } from "@/components/workflow/WorkflowBreadcrumb";
@@ -23,6 +23,7 @@ const getSourceIcon = (nodeId: string) => {
 };
 
 const Index = () => {
+  const { data: workflowNodes = [], isLoading } = useWorkflowNodes();
   const [currentNodeId, setCurrentNodeId] = useState<string>("START");
   const [expandedNodeId, setExpandedNodeId] = useState<string | null>("START");
   const [navigationPath, setNavigationPath] = useState<WorkflowNodeType[]>([]);
@@ -35,7 +36,7 @@ const Index = () => {
   
   const childNodes = useMemo(() => {
     return workflowNodes.filter(node => node.parent_id === currentNodeId);
-  }, [currentNodeId]);
+  }, [workflowNodes, currentNodeId]);
 
   const filteredNodes = useMemo(() => {
     let nodes = childNodes;
@@ -126,6 +127,17 @@ const Index = () => {
       description: "Back to lead source selection"
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Loading workflow...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-background via-background to-secondary/20 overflow-hidden">
