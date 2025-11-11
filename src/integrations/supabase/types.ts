@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      workflow_nodes: {
+        Row: {
+          created_at: string
+          crm_actions: string
+          display_order: number | null
+          id: string
+          node_id: string
+          on_no_next_node: string | null
+          on_no_response_next_node: string | null
+          on_yes_next_node: string | null
+          parent_id: string | null
+          scenario_description: string
+          scenario_title: string
+          script_content: string | null
+          script_name: string
+          script_section: string
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          crm_actions: string
+          display_order?: number | null
+          id?: string
+          node_id: string
+          on_no_next_node?: string | null
+          on_no_response_next_node?: string | null
+          on_yes_next_node?: string | null
+          parent_id?: string | null
+          scenario_description: string
+          scenario_title: string
+          script_content?: string | null
+          script_name: string
+          script_section: string
+          stage: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          crm_actions?: string
+          display_order?: number | null
+          id?: string
+          node_id?: string
+          on_no_next_node?: string | null
+          on_no_response_next_node?: string | null
+          on_yes_next_node?: string | null
+          parent_id?: string | null
+          scenario_description?: string
+          scenario_title?: string
+          script_content?: string | null
+          script_name?: string
+          script_section?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
