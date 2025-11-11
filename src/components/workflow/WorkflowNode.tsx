@@ -193,7 +193,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       </CardHeader>
 
       {isExpanded && (
-        <CardContent className="space-y-4 pt-0" onClick={(e) => e.stopPropagation()}>
+        <CardContent 
+          className={cn(
+            "pt-0",
+            node.node_id === "WEBSITE_SIGNUP_START" ? "h-[calc(100vh-12rem)] flex flex-col" : "space-y-4"
+          )} 
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Lead Overview for Website Signup Start Node */}
           {node.node_id === "WEBSITE_SIGNUP_START" && (
             <LeadOverview
@@ -417,8 +423,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
           )}
 
-          {/* Only show Next Steps if no inline replies are present */}
-          {!inlineReplies && (
+          {/* Only show Next Steps if no inline replies are present and not the Website Signup Start node */}
+          {!inlineReplies && node.node_id !== "WEBSITE_SIGNUP_START" && (
             <div className="space-y-3 pt-3 border-t">
               <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
                 Next Steps
