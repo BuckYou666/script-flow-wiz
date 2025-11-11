@@ -280,16 +280,10 @@ export const ScriptStepper = ({
 
       {/* Script Content with Animation - Click Anywhere to Advance */}
       <div 
-        ref={scriptBoxRef}
-        onClick={handleScriptBoxClick}
-        className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl p-8 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
+        className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "50vh" : "60vh", 
-          minHeight: centerContent ? "300px" : "240px",
-          display: centerContent ? "flex" : "block",
-          flexDirection: centerContent ? "column" : undefined,
-          justifyContent: centerContent ? "center" : undefined,
-          alignItems: centerContent ? "center" : undefined
+          maxHeight: centerContent ? "55vh" : "65vh", 
+          minHeight: centerContent ? "320px" : "280px"
         }}
       >
         {/* Auto-Fading Tip Overlay - Only for Call-Based Interactions */}
@@ -307,81 +301,97 @@ export const ScriptStepper = ({
           <div className="absolute inset-0 bg-primary/5 rounded-xl animate-ping pointer-events-none" />
         )}
 
-        <div
-          key={currentStep}
-          className={cn(
-            "prose prose-lg max-w-none flex flex-col justify-center min-h-[180px]",
-            centerContent ? "w-full" : "",
-            animationDirection === "forward" ? "animate-fade-in" : "animate-fade-in"
-          )}
+        {/* Scrollable Content Area */}
+        <div 
+          ref={scriptBoxRef}
+          onClick={handleScriptBoxClick}
+          className="flex-1 overflow-y-auto px-8 pt-8 pb-4 cursor-pointer"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: centerContent ? "center" : "flex-start",
+            alignItems: centerContent ? "center" : "stretch"
+          }}
         >
-          <div className={cn(centerContent ? "text-center" : "text-center")}>
-            {centerContent ? (
-              <p className="text-foreground font-medium text-[1.2rem] leading-relaxed">
-                {renderScriptLine(currentSegment)}
-              </p>
-            ) : (
-              renderSegmentContent(currentSegment)
+          <div
+            key={currentStep}
+            className={cn(
+              "prose prose-lg max-w-none",
+              centerContent ? "w-full" : "",
+              animationDirection === "forward" ? "animate-fade-in" : "animate-fade-in"
             )}
+          >
+            <div className={cn(centerContent ? "text-center" : "text-center")}>
+              {centerContent ? (
+                <p className="text-foreground font-medium text-[1.2rem] leading-relaxed">
+                  {renderScriptLine(currentSegment)}
+                </p>
+              ) : (
+                renderSegmentContent(currentSegment)
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Navigation Buttons - Centered Layout */}
-        <div className="flex flex-col items-center gap-3 mt-6 pt-5 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50">
-          {/* Progress Dots */}
-          <div className="flex items-center gap-1.5">
-            {Array.from({ length: totalSteps }).map((_, idx) => (
-              <div
-                key={idx}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  idx === currentStep
-                    ? "w-8 bg-primary"
-                    : idx < currentStep
-                    ? "w-2 bg-primary/60"
-                    : "w-2 bg-muted"
-                )}
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center justify-center gap-4 w-full max-w-md">
-            <Button
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleBack();
-              }}
-              disabled={currentStep === 0}
-              className="gap-2 min-w-[120px] hover:scale-105 transition-transform"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back
-            </Button>
-
-            <div className="text-xs text-muted-foreground flex items-center gap-2 px-3">
-              <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
-                ←
-              </kbd>
-              <span>/</span>
-              <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
-                →
-              </kbd>
-              <span className="hidden sm:inline">or click text</span>
+        {/* Fixed Navigation Controls at Bottom */}
+        <div className="flex-shrink-0 px-8 pb-6 pt-4 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
+          <div className="flex flex-col items-center gap-3">
+            {/* Progress Dots */}
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: totalSteps }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    idx === currentStep
+                      ? "w-8 bg-primary"
+                      : idx < currentStep
+                      ? "w-2 bg-primary/60"
+                      : "w-2 bg-muted"
+                  )}
+                />
+              ))}
             </div>
 
-            <Button
-              variant="default"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext();
-              }}
-              disabled={currentStep === totalSteps - 1}
-              className="gap-2 min-w-[120px] hover:scale-105 transition-transform shadow-md"
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            {/* Navigation Buttons */}
+            <div className="flex items-center justify-center gap-4 w-full max-w-md">
+              <Button
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleBack();
+                }}
+                disabled={currentStep === 0}
+                className="gap-2 min-w-[120px] hover:scale-105 transition-transform"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Back
+              </Button>
+
+              <div className="text-xs text-muted-foreground flex items-center gap-2 px-3">
+                <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
+                  ←
+                </kbd>
+                <span>/</span>
+                <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
+                  →
+                </kbd>
+                <span className="hidden sm:inline">or click text</span>
+              </div>
+
+              <Button
+                variant="default"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                disabled={currentStep === totalSteps - 1}
+                className="gap-2 min-w-[120px] hover:scale-105 transition-transform shadow-md"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
