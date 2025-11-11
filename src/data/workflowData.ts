@@ -13,6 +13,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Identify and tag lead source",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_SKOOL",
@@ -27,6 +28,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_SKOOL",
     on_no_response_next_node: "PIPELINE_SKOOL",
     crm_actions: "Tag source = Skool; Log initial outreach",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "APPT_SET_SKOOL",
@@ -41,6 +43,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_SKOOL",
     on_no_response_next_node: "PIPELINE_SKOOL",
     crm_actions: "Create calendar event; Stage = Call Booked",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_WEBSITE",
@@ -55,6 +58,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Tag source = Website; Set initial outreach task",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "FC_CALL_WEBSITE",
@@ -69,6 +73,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_WEBSITE",
     on_no_response_next_node: "TXT_NO_PICKUP",
     crm_actions: "Log call outcome; Note interest level",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "TXT_NO_PICKUP",
@@ -83,6 +88,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_WEBSITE",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Send text; Set follow-up task for 2 days",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_INBOUND",
@@ -97,6 +103,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Tag source = Inbound; Confirm booking",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_OUTBOUND",
@@ -111,6 +118,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Tag source = Outbound; Log connection source",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "FC_CALL_OUTBOUND",
@@ -125,6 +133,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_OUTBOUND",
     on_no_response_next_node: "TXT_NO_PICKUP_OUTBOUND",
     crm_actions: "Log call; Note connection quality",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "TXT_NO_PICKUP_OUTBOUND",
@@ -139,6 +148,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_OUTBOUND",
     on_no_response_next_node: "PIPELINE_OUTBOUND",
     crm_actions: "Send text; Follow up in 2 days",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "APPT_SET_OUTBOUND",
@@ -153,6 +163,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_OUTBOUND",
     on_no_response_next_node: "PIPELINE_OUTBOUND",
     crm_actions: "Create calendar event; Stage = Call Booked",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_REFERRAL",
@@ -167,6 +178,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Tag source = Referral; Note referring client",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "APPT_SET_REFERRAL",
@@ -181,6 +193,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_REFERRAL",
     on_no_response_next_node: "PIPELINE_REFERRAL",
     crm_actions: "Create calendar event; Stage = Call Booked",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SRC_PIPELINE",
@@ -195,6 +208,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Tag source = Pipeline; Review past notes",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "APPT_SET_WEBSITE",
@@ -209,6 +223,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_WEBSITE",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Create calendar event; Stage = Call Booked",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PRECALL_REMINDERS",
@@ -223,6 +238,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Log reminders sent; Check show status day of",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "SALES_CALL",
@@ -237,6 +253,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "OBJECTION_ROUTER",
     on_no_response_next_node: "",
     crm_actions: "Log detailed call notes; Record objections",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "OBJECTION_ROUTER",
@@ -251,6 +268,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "MONEY_OBJ",
     on_no_response_next_node: "STALL_OBJ",
     crm_actions: "Tag objection type; Log response",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "TIMING_OBJ",
@@ -265,6 +283,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_STEP",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Mark objection resolved; Update stage",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "MONEY_OBJ",
@@ -279,6 +298,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_STEP",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Mark objection resolved; Update stage",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "DECISION_OBJ",
@@ -293,6 +313,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_STEP",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Mark objection resolved; Schedule follow-up if needed",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PREFERENCE_OBJ",
@@ -307,6 +328,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_STEP",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Mark objection resolved; Update stage",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "STALL_OBJ",
@@ -321,6 +343,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_STEP",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Mark objection resolved; Set follow-up",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "BAMFAM_STEP",
@@ -335,6 +358,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_WEBSITE",
     on_no_response_next_node: "PIPELINE_WEBSITE",
     crm_actions: "Stage = Follow-Up Booked; Send resources",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "CLOSED_WON",
@@ -349,6 +373,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Trigger onboarding workflow; Send welcome email",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "REFERRAL_FLOW",
@@ -363,6 +388,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Log referral; Create new lead from referral",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PIPELINE_SKOOL",
@@ -377,6 +403,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Stage = Nurture; Set next touch date",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PIPELINE_WEBSITE",
@@ -391,6 +418,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Stage = Nurture; Set next touch date",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PIPELINE_OUTBOUND",
@@ -405,6 +433,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Stage = Nurture; Set next touch date",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PIPELINE_REFERRAL",
@@ -419,6 +448,7 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Stage = Nurture; Set next touch date",
+    workflow_name: "Initial Workflow",
   },
   {
     node_id: "PIPELINE_ENGAGE",
@@ -433,5 +463,6 @@ export const workflowNodes: WorkflowNode[] = [
     on_no_next_node: "",
     on_no_response_next_node: "",
     crm_actions: "Log reactivation attempt; Update stage",
+    workflow_name: "Initial Workflow",
   },
 ];

@@ -31,6 +31,7 @@ export const NodeEditor = ({ node, open, onClose, onSave }: NodeEditorProps) => 
       on_no_next_node: "",
       on_no_response_next_node: "",
       crm_actions: "",
+      workflow_name: "Default Workflow",
     }
   );
 
@@ -66,6 +67,17 @@ export const NodeEditor = ({ node, open, onClose, onSave }: NodeEditorProps) => 
                 onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
               />
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="workflow_name">Workflow Name *</Label>
+            <Input
+              id="workflow_name"
+              value={formData.workflow_name || ""}
+              onChange={(e) => setFormData({ ...formData, workflow_name: e.target.value })}
+              required
+              placeholder="e.g., Initial Workflow, A-Tech Outbound Script"
+            />
           </div>
 
           <div>

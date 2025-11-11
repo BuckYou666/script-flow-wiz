@@ -15,6 +15,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Create new call record, log call start time, set status to 'Calling'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 1
   },
 
@@ -32,6 +33,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log contact attempt, update 'First Contact Made' field, record lead magnet source",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 2
   },
   {
@@ -47,6 +49,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "DISCOVERY_START",
     on_no_response_next_node: "BAMFAM_RESCHEDULE",
     crm_actions: "Log time check response, update call disposition",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 3
   },
 
@@ -64,6 +67,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "DISCOVERY_DECISION_MAKER",
     on_no_response_next_node: "DISCOVERY_DECISION_MAKER",
     crm_actions: "Update 'Decision Maker Status' field, log role confirmation",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 4
   },
   {
@@ -79,6 +83,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_OWNER_CONNECT",
     on_no_response_next_node: "BAMFAM_OWNER_CONNECT",
     crm_actions: "Update decision-making authority notes, tag as gatekeeper if no authority",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 5
   },
   {
@@ -94,6 +99,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log lead magnet interest reason, update engagement notes",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 6
   },
   {
@@ -109,6 +115,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log current AI tools in use, tag as 'AI Experienced' or 'AI New', update tech stack field",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 7
   },
 
@@ -126,6 +133,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log primary business focus, create note with exact language used",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 8
   },
   {
@@ -141,6 +149,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Tag focus category (Internal/Opportunities/Growth), update priority field",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 9
   },
 
@@ -158,6 +167,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "PROBLEM_MULTIPLE",
     on_no_response_next_node: null,
     crm_actions: "Log primary problem statement, tag problem type",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 10
   },
   {
@@ -173,6 +183,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log all mentioned problems as separate notes, tag as 'Multiple Pain Points'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 11
   },
   {
@@ -188,6 +199,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Tag constraint type (Marketing/Process/Strategy), update qualification score",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 12
   },
   {
@@ -203,6 +215,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log top priority problem, create custom field 'Primary Pain Point', increase lead score",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 13
   },
 
@@ -220,6 +233,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Create detailed note with challenge description, tag urgency level",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 14
   },
   {
@@ -235,6 +249,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log previous solutions attempted, tag 'Tried Competitors' if applicable",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 15
   },
   {
@@ -250,6 +265,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log urgency trigger, update 'Deal Priority' field, set timeline expectations",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 16
   },
   {
@@ -265,6 +281,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log expected ROI/impact, create 'Success Metrics' field, calculate potential deal value",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 17
   },
   {
@@ -280,6 +297,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log problem duration, tag 'Chronic Issue' or 'New Problem'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 18
   },
   {
@@ -295,6 +313,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_NURTURE",
     on_no_response_next_node: "PIPELINE_NURTURE",
     crm_actions: "Update 'Open to External Help' field, adjust lead temperature",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 19
   },
   {
@@ -310,6 +329,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log team size, update company employee count, tag organizational structure",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 20
   },
   {
@@ -325,6 +345,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log current tech stack and process maturity, tag 'Manual' or 'Partially Automated'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 21
   },
   {
@@ -340,6 +361,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Log brand awareness level, tag 'Aware' or 'Not Aware'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 22
   },
   {
@@ -355,6 +377,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_NURTURE",
     on_no_response_next_node: "PIPELINE_NURTURE",
     crm_actions: "Update stage to 'Presentation Phase', log permission granted",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 23
   },
 
@@ -372,6 +395,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "PIPELINE_NURTURE",
     on_no_response_next_node: null,
     crm_actions: "Update stage to 'Offer Presented', log interest level, create appointment opportunity",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 24
   },
   {
@@ -387,6 +411,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Update time zone field, prepare calendar availability",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 25
   },
   {
@@ -402,6 +427,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "CLOSE_SCHEDULE_ALT",
     on_no_response_next_node: "CLOSE_SCHEDULE_ALT",
     crm_actions: "Create appointment record, set to 'Scheduling' status",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 26
   },
   {
@@ -417,6 +443,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "BAMFAM_RESCHEDULE",
     on_no_response_next_node: "BAMFAM_RESCHEDULE",
     crm_actions: "Log alternative time preferences, create follow-up task",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 27
   },
   {
@@ -432,6 +459,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "CLOSE_SCHEDULE_ALT",
     on_no_response_next_node: null,
     crm_actions: "Log environment confirmation",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 28
   },
   {
@@ -447,6 +475,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "CLOSE_SCHEDULE_ALT",
     on_no_response_next_node: null,
     crm_actions: "Update commitment level, increase show probability score",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 29
   },
 
@@ -464,6 +493,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Assign to closer, notify closer of appointment, update appointment owner",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 30
   },
   {
@@ -479,6 +509,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "HANDOFF_VSL_SEND",
     on_no_response_next_node: null,
     crm_actions: "Update mobile number field, log SMS consent, update preferred contact method",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 31
   },
   {
@@ -494,6 +525,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: "HANDOFF_FINAL_CONFIRM",
     on_no_response_next_node: null,
     crm_actions: "Send VSL link via SMS, create follow-up task to check video view, tag 'VSL Sent'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 32
   },
   {
@@ -509,6 +541,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Send calendar invite, send confirmation SMS, send confirmation email, update stage to 'Appointment Set', create closer prep notes",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 33
   },
   {
@@ -524,6 +557,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Mark call as 'Success', update conversion metrics, add to appointment show reminder sequence, log as won opportunity",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 34
   },
 
@@ -541,6 +575,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Create callback task with specified time, update status to 'Callback Scheduled', set reminder",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 35
   },
   {
@@ -556,6 +591,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Create task to get owner contact info, tag as 'Gatekeeper Contact', create new lead record for owner, set follow-up for owner outreach",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 36
   },
   {
@@ -571,6 +607,7 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
     on_no_next_node: null,
     on_no_response_next_node: null,
     crm_actions: "Add to long-term nurture sequence, set 2-week follow-up task, update stage to 'Nurture', tag 'Not Ready Now'",
+    workflow_name: "A-Tech Outbound Script",
     display_order: 37
   }
 ];

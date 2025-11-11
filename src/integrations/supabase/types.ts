@@ -32,6 +32,7 @@ export type Database = {
           script_section: string
           stage: string
           updated_at: string
+          workflow_name: string | null
         }
         Insert: {
           created_at?: string
@@ -50,6 +51,7 @@ export type Database = {
           script_section: string
           stage: string
           updated_at?: string
+          workflow_name?: string | null
         }
         Update: {
           created_at?: string
@@ -68,6 +70,7 @@ export type Database = {
           script_section?: string
           stage?: string
           updated_at?: string
+          workflow_name?: string | null
         }
         Relationships: []
       }
