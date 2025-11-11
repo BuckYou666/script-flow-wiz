@@ -277,21 +277,11 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "65vh", 
-          minHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "280px",
-          height: centerContent ? "220px" : hideStepIndicator ? "380px" : "auto"
+          maxHeight: hideStepIndicator ? "380px" : "65vh", 
+          minHeight: hideStepIndicator ? "380px" : "280px",
+          height: hideStepIndicator ? "380px" : "auto"
         }}
       >
-        {/* Static Wait Instruction - Only for Call-Based Interactions */}
-        {isCallBasedInteraction && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10">
-            <p className="text-xs italic text-muted-foreground flex items-center gap-1.5">
-              <Clock className="h-3 w-3" />
-              (Wait for them to answer before speaking.)
-            </p>
-          </div>
-        )}
-
         {/* Click feedback ripple effect */}
         {clickFeedback && (
           <div className="absolute inset-0 bg-primary/5 rounded-xl animate-ping pointer-events-none" />
@@ -302,33 +292,27 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 cursor-pointer",
-            centerContent ? "overflow-hidden" : "overflow-y-auto",
-            isCallBasedInteraction ? "pt-10 pb-4" : "pt-8 pb-4"
+            "flex-1 px-8 cursor-pointer flex flex-col items-center text-center",
+            hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
           )}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: centerContent ? "center" : "flex-start",
-            alignItems: centerContent ? "center" : "stretch"
-          }}
         >
+          {/* Static Wait Instruction - Only for Call-Based Interactions */}
+          {isCallBasedInteraction && hideStepIndicator && (
+            <p className="text-xs italic text-muted-foreground flex items-center gap-1.5 mb-4">
+              <Clock className="h-3 w-3" />
+              (Wait for them to answer before speaking.)
+            </p>
+          )}
+
           <div
             key={currentStep}
             className={cn(
-              "prose prose-lg max-w-none",
-              centerContent ? "w-full" : "",
+              "prose prose-lg max-w-none w-full",
               animationDirection === "forward" ? "animate-fade-in" : "animate-fade-in"
             )}
           >
-            <div className={cn(centerContent ? "text-center" : "text-center")}>
-              {centerContent ? (
-                <p className="text-foreground font-medium text-[1.2rem] leading-relaxed">
-                  {renderScriptLine(currentSegment)}
-                </p>
-              ) : (
-                renderSegmentContent(currentSegment)
-              )}
+            <div className="text-center">
+              {renderSegmentContent(currentSegment)}
             </div>
           </div>
         </div>
