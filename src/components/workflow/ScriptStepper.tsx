@@ -277,9 +277,9 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: hideStepIndicator ? "380px" : "65vh", 
-          minHeight: hideStepIndicator ? "380px" : "280px",
-          height: hideStepIndicator ? "380px" : "auto"
+          maxHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "65vh", 
+          minHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "280px",
+          height: centerContent ? "220px" : hideStepIndicator ? "380px" : "auto"
         }}
       >
         {/* Click feedback ripple effect */}
@@ -293,11 +293,13 @@ export const ScriptStepper = ({
           onClick={handleScriptBoxClick}
           className={cn(
             "flex-1 px-8 cursor-pointer flex flex-col items-center text-center",
-            hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
+            // Call scripts: fully centered vertically and horizontally
+            // Decision prompts (Choose Contact Method): top-aligned with padding, horizontally centered
+            centerContent ? "overflow-hidden justify-start pt-12" : hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
           )}
         >
           {/* Static Wait Instruction - Only for Call-Based Interactions */}
-          {isCallBasedInteraction && hideStepIndicator && (
+          {isCallBasedInteraction && hideStepIndicator && !centerContent && (
             <p className="text-xs italic text-muted-foreground flex items-center gap-1.5 mb-4">
               <Clock className="h-3 w-3" />
               (Wait for them to answer before speaking.)
@@ -312,7 +314,13 @@ export const ScriptStepper = ({
             )}
           >
             <div className="text-center">
-              {renderSegmentContent(currentSegment)}
+              {centerContent ? (
+                <p className="text-foreground font-medium text-[1.2rem] leading-relaxed">
+                  {renderScriptLine(currentSegment)}
+                </p>
+              ) : (
+                renderSegmentContent(currentSegment)
+              )}
             </div>
           </div>
         </div>
