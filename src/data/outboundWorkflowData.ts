@@ -4,9 +4,9 @@ export const outboundWorkflowNodes: WorkflowNode[] = [
   // SOURCE/ENTRY
   {
     node_id: "OUTBOUND_START",
-    parent_id: null,
+    parent_id: "START",
     stage: "Source",
-    scenario_title: "A-Tech Outbound Call Entry",
+    scenario_title: "A-Tech Outbound Call",
     scenario_description: "Starting point for outbound phone calls using the A-Tech script",
     script_name: "Outbound Script",
     script_section: "Entry Point",
