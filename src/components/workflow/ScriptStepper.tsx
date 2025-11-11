@@ -30,7 +30,6 @@ export const ScriptStepper = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [showFullScript, setShowFullScript] = useState(false);
   const [animationDirection, setAnimationDirection] = useState<"forward" | "backward">("forward");
-  const [showTip, setShowTip] = useState(true);
   const [clickFeedback, setClickFeedback] = useState(false);
   const scriptBoxRef = useRef<HTMLDivElement>(null);
 
@@ -40,11 +39,20 @@ export const ScriptStepper = ({
      contactMethod.toLowerCase().includes("phone") ||
      contactMethod.toLowerCase().includes("video"));
 
-  // Only show tip for call-based interactions
-  const shouldShowWaitTip = isCallBasedInteraction && showTip && currentStep === 0;
-
   // Parse script into logical segments (blocks separated by blank lines or separators)
-  const scriptSegments = scriptContent.split(/\n\n+|---/).filter((segment) => segment.trim());
+  const allSegments = scriptContent.split(/\n\n+|---/).filter((segment) => segment.trim());
+  
+  // Filter out instruction-only segments from navigation steps
+  const scriptSegments = allSegments.filter((segment) => {
+    const lines = segment.split("\n").filter(line => line.trim());
+    // Check if ALL lines in this segment are instructions (in parentheses or asterisks)
+    const allInstructions = lines.every(line => {
+      const trimmed = line.trim();
+      return (trimmed.startsWith("(") && trimmed.endsWith(")")) ||
+             (trimmed.startsWith("*") && trimmed.endsWith("*"));
+    });
+    return !allInstructions;
+  });
 
   const totalSteps = scriptSegments.length;
   const currentSegment = scriptSegments[currentStep] || "";
@@ -53,7 +61,6 @@ export const ScriptStepper = ({
     if (currentStep < totalSteps - 1) {
       setAnimationDirection("forward");
       setCurrentStep((prev) => prev + 1);
-      setShowTip(false);
     } else {
       // Flash the next steps section when at the end
       setClickFeedback(true);
@@ -65,7 +72,6 @@ export const ScriptStepper = ({
     if (currentStep > 0) {
       setAnimationDirection("backward");
       setCurrentStep((prev) => prev - 1);
-      setShowTip(false);
     }
   };
 
@@ -99,18 +105,7 @@ export const ScriptStepper = ({
   useEffect(() => {
     setCurrentStep(0);
     setShowFullScript(false);
-    setShowTip(true);
   }, [scriptContent]);
-
-  // Auto-fade tip after 3 seconds (only for call-based interactions)
-  useEffect(() => {
-    if (shouldShowWaitTip) {
-      const timer = setTimeout(() => {
-        setShowTip(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [shouldShowWaitTip]);
 
   const renderSegmentContent = (segment: string) => {
     return segment.split("\n").map((line, index) => {
@@ -287,13 +282,13 @@ export const ScriptStepper = ({
           height: centerContent ? "220px" : "auto"
         }}
       >
-        {/* Auto-Fading Tip Overlay - Only for Call-Based Interactions */}
-        {shouldShowWaitTip && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 animate-fade-in">
-            <div className="bg-blue-100 dark:bg-blue-900/60 text-blue-900 dark:text-blue-100 px-4 py-2 rounded-full text-xs font-medium shadow-lg flex items-center gap-2 animate-pulse">
-              <Clock className="h-3.5 w-3.5" />
-              Wait for the lead to answer before starting your greeting...
-            </div>
+        {/* Static Wait Instruction - Only for Call-Based Interactions */}
+        {isCallBasedInteraction && (
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10">
+            <p className="text-xs italic text-muted-foreground flex items-center gap-1.5">
+              <Clock className="h-3 w-3" />
+              (Wait for them to answer before speaking.)
+            </p>
           </div>
         )}
 
@@ -307,8 +302,9 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 pt-8 pb-4 cursor-pointer",
-            centerContent ? "overflow-hidden" : "overflow-y-auto"
+            "flex-1 px-8 cursor-pointer",
+            centerContent ? "overflow-hidden" : "overflow-y-auto",
+            isCallBasedInteraction ? "pt-10 pb-4" : "pt-8 pb-4"
           )}
           style={{
             display: "flex",
