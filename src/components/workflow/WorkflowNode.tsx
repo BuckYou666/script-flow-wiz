@@ -313,29 +313,51 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               </div>
               
               <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
-                <div className="prose prose-sm max-w-none">
-                  <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
-                    {processedScriptContent.split('\n').map((line, index) => {
-                      const isInstruction = line.includes('(') && line.includes(')');
-                      
-                      if (!line.trim()) {
-                        return <div key={index} className="h-2" />;
-                      }
-                      
-                      if (isInstruction) {
+                  <div className="prose prose-sm max-w-none">
+                    <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
+                      {processedScriptContent.split('\n').map((line, index) => {
+                        // Check for instruction text: lines with parentheses or wrapped in asterisks
+                        const isInstruction = (line.includes('(') && line.includes(')')) || 
+                                            (line.trim().startsWith('*') && line.trim().endsWith('*'));
+                        
+                        // Check for spoken dialogue: lines starting with quotes
+                        const isSpokenDialogue = line.trim().startsWith('"');
+                        
+                        // Check for separator line
+                        const isSeparator = line.trim().startsWith('---');
+                        
+                        if (!line.trim()) {
+                          return <div key={index} className="h-2" />;
+                        }
+                        
+                        if (isSeparator) {
+                          return (
+                            <div key={index} className="border-t border-border/30 my-4" />
+                          );
+                        }
+                        
+                        if (isInstruction) {
+                          return (
+                            <p key={index} className="text-muted-foreground italic text-xs leading-snug">
+                              {line.replace(/^\*|\*$/g, '')}
+                            </p>
+                          );
+                        }
+                        
+                        if (isSpokenDialogue) {
+                          return (
+                            <p key={index} className="text-foreground font-medium text-[16px] leading-relaxed">
+                              {renderScriptLine(line)}
+                            </p>
+                          );
+                        }
+                        
                         return (
-                          <p key={index} className="text-muted-foreground italic text-sm pl-4">
-                            {line}
+                          <p key={index} className="text-foreground leading-relaxed">
+                            {renderScriptLine(line)}
                           </p>
                         );
-                      }
-                      
-                      return (
-                        <p key={index} className="text-foreground leading-relaxed">
-                          {renderScriptLine(line)}
-                        </p>
-                      );
-                    })}
+                      })}
                   </div>
                 </div>
 
