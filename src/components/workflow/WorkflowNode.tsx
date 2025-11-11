@@ -158,11 +158,16 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       className={cn(
         "transition-all duration-300 cursor-pointer hover:shadow-lg",
         isExpanded && "ring-2 ring-primary",
-        isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm h-[calc(100vh-8rem)]"
+        isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
+      style={isWebsiteSignupStart && isExpanded ? {
+        maxHeight: 'calc(100vh - 8rem)'
+      } : undefined}
       onClick={onToggle}
     >
-      <CardHeader className={cn(isWebsiteSignupStart && isExpanded && "py-6 flex-shrink-0")}>
+      <CardHeader className={cn(
+        isWebsiteSignupStart && isExpanded && "py-5 flex-shrink-0"
+      )}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -199,8 +204,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         <CardContent 
           className={cn(
             "pt-0",
-            isWebsiteSignupStart ? "flex-1 flex flex-col pb-6 overflow-hidden" : "space-y-4"
+            isWebsiteSignupStart ? "flex flex-col pb-6 overflow-hidden" : "space-y-4"
           )}
+          style={isWebsiteSignupStart ? {
+            height: 'calc(100% - 110px)' // Subtract header height
+          } : undefined}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Lead Overview for Website Signup Start Node */}

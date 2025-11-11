@@ -70,8 +70,14 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
 
   return (
     <div className="flex flex-col h-full">
-      {/* Scrollable Content Area - Only this section scrolls */}
-      <div className="flex-1 overflow-y-auto space-y-5 pr-2 pb-2" style={{ maxHeight: 'calc(100% - 7rem)' }}>
+      {/* Scrollable Lead Details - Only this section scrolls */}
+      <div 
+        className="flex-1 overflow-y-auto space-y-5 pr-2" 
+        style={{ 
+          maxHeight: 'calc(100% - 110px)', // Reserve space for CTA footer
+          overflowY: 'auto'
+        }}
+      >
         {/* Lead Overview Section - Card within Card */}
         <Card className="bg-secondary/30 border-border/50 shadow-sm">
           <CardHeader className="pb-4">
@@ -269,9 +275,9 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
         </div>
       </div>
 
-      {/* Fixed CTA Footer - Always visible at bottom */}
+      {/* Fixed CTA Footer - Always visible, never scrolls */}
       {nextNodeId && onNavigate && (
-        <div className="flex-shrink-0 pt-4 border-t border-border/30 bg-background">
+        <div className="flex-shrink-0 mt-4 pt-4 border-t border-border/30">
           <div className="bg-secondary/50 border border-border/50 rounded-lg shadow-sm p-4">
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground text-center">Ready to begin?</p>
