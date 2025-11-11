@@ -68,35 +68,37 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       </CardHeader>
 
       {isExpanded && (
-        <CardContent className="space-y-3 pt-0" onClick={(e) => e.stopPropagation()}>
-          <div className="grid gap-3 md:grid-cols-2">
-            {node.script_content && (
-              <div className="space-y-1.5">
-                <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
-                  Script to Use
-                </h4>
-                <div className="bg-muted/50 rounded-md p-2.5 border-l-2 border-primary max-h-32 overflow-y-auto">
-                  <p className="text-xs whitespace-pre-line leading-relaxed">{node.script_content}</p>
-                </div>
-                {node.script_section && (
-                  <p className="text-xs text-muted-foreground">
-                    Section: {node.script_section}
+        <CardContent className="space-y-4 pt-0" onClick={(e) => e.stopPropagation()}>
+          {node.script_content && (
+            <div className="space-y-2">
+              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                Script to Use
+              </h4>
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-5 border-2 border-primary/20 shadow-sm">
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-base leading-loose whitespace-pre-line font-normal text-foreground">
+                    {node.script_content}
                   </p>
-                )}
-              </div>
-            )}
-
-            {node.crm_actions && (
-              <div className="space-y-1.5">
-                <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
-                  CRM Actions
-                </h4>
-                <div className="bg-secondary/50 rounded-md p-2.5 border max-h-32 overflow-y-auto">
-                  <p className="text-xs">{node.crm_actions}</p>
                 </div>
               </div>
-            )}
-          </div>
+              {node.script_section && (
+                <p className="text-xs text-muted-foreground italic">
+                  Section: {node.script_section}
+                </p>
+              )}
+            </div>
+          )}
+
+          {node.crm_actions && (
+            <div className="space-y-2 pt-2 border-t border-dashed">
+              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                CRM Actions
+              </h4>
+              <div className="bg-secondary/30 rounded-md p-3 border border-secondary">
+                <p className="text-sm leading-relaxed whitespace-pre-line">{node.crm_actions}</p>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2 pt-2 border-t">
             <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wide">
