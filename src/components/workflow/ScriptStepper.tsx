@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -24,6 +24,9 @@ export const ScriptStepper = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [showFullScript, setShowFullScript] = useState(false);
   const [animationDirection, setAnimationDirection] = useState<"forward" | "backward">("forward");
+  const [showTip, setShowTip] = useState(true);
+  const [clickFeedback, setClickFeedback] = useState(false);
+  const scriptBoxRef = useRef<HTMLDivElement>(null);
 
   // Parse script into logical segments (blocks separated by blank lines or separators)
   const scriptSegments = scriptContent.split(/\n\n+|---/).filter((segment) => segment.trim());
@@ -35,6 +38,11 @@ export const ScriptStepper = ({
     if (currentStep < totalSteps - 1) {
       setAnimationDirection("forward");
       setCurrentStep((prev) => prev + 1);
+      setShowTip(false);
+    } else {
+      // Flash the next steps section when at the end
+      setClickFeedback(true);
+      setTimeout(() => setClickFeedback(false), 300);
     }
   };
 
@@ -42,7 +50,13 @@ export const ScriptStepper = ({
     if (currentStep > 0) {
       setAnimationDirection("backward");
       setCurrentStep((prev) => prev - 1);
+      setShowTip(false);
     }
+  };
+
+  // Click anywhere in script box to advance
+  const handleScriptBoxClick = () => {
+    handleNext();
   };
 
   // Keyboard navigation
@@ -70,11 +84,22 @@ export const ScriptStepper = ({
   useEffect(() => {
     setCurrentStep(0);
     setShowFullScript(false);
+    setShowTip(true);
   }, [scriptContent]);
+
+  // Auto-fade tip after 3 seconds
+  useEffect(() => {
+    if (showTip && currentStep === 0) {
+      const timer = setTimeout(() => {
+        setShowTip(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showTip, currentStep]);
 
   const renderSegmentContent = (segment: string) => {
     return segment.split("\n").map((line, index) => {
-      // Check for instruction text: lines with parentheses or wrapped in asterisks
+      // Skip instruction lines wrapped in asterisks or parentheses - we'll show them in the overlay
       const isInstruction =
         (line.includes("(") && line.includes(")")) ||
         (line.trim().startsWith("*") && line.trim().endsWith("*"));
@@ -82,28 +107,20 @@ export const ScriptStepper = ({
       // Check for spoken dialogue: lines starting with quotes
       const isSpokenDialogue = line.trim().startsWith('"');
 
-      if (!line.trim()) {
-        return <div key={index} className="h-2" />;
-      }
-
-      if (isInstruction) {
-        return (
-          <p key={index} className="text-muted-foreground italic text-xs leading-snug mb-2">
-            {line.replace(/^\*|\*$/g, "")}
-          </p>
-        );
+      if (!line.trim() || isInstruction) {
+        return null;
       }
 
       if (isSpokenDialogue) {
         return (
-          <p key={index} className="text-foreground font-medium text-[16px] leading-relaxed mb-3">
+          <p key={index} className="text-foreground font-semibold text-[18px] leading-[1.7] mb-4">
             {renderScriptLine(line)}
           </p>
         );
       }
 
       return (
-        <p key={index} className="text-foreground leading-relaxed mb-2">
+        <p key={index} className="text-foreground text-[17px] leading-[1.6] mb-3">
           {renderScriptLine(line)}
         </p>
       );
@@ -234,52 +251,97 @@ export const ScriptStepper = ({
         )}
       </div>
 
-      {/* Script Content with Animation */}
-      <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm min-h-[200px] flex flex-col justify-between">
+      {/* Script Content with Animation - Click Anywhere to Advance */}
+      <div 
+        ref={scriptBoxRef}
+        onClick={handleScriptBoxClick}
+        className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl p-8 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
+        style={{ maxHeight: "60vh", minHeight: "240px" }}
+      >
+        {/* Auto-Fading Tip Overlay */}
+        {showTip && currentStep === 0 && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 animate-fade-in">
+            <div className="bg-blue-100 dark:bg-blue-900/60 text-blue-900 dark:text-blue-100 px-4 py-2 rounded-full text-xs font-medium shadow-lg flex items-center gap-2 animate-pulse">
+              <Clock className="h-3.5 w-3.5" />
+              Wait for the lead to answer before starting your greeting...
+            </div>
+          </div>
+        )}
+
+        {/* Click feedback ripple effect */}
+        {clickFeedback && (
+          <div className="absolute inset-0 bg-primary/5 rounded-xl animate-ping pointer-events-none" />
+        )}
+
         <div
           key={currentStep}
           className={cn(
-            "prose prose-sm max-w-none",
+            "prose prose-lg max-w-none flex flex-col justify-center min-h-[180px]",
             animationDirection === "forward" ? "animate-fade-in" : "animate-fade-in"
           )}
         >
-          <div className="text-[15px] leading-loose font-normal text-foreground">
+          <div className="text-center">
             {renderSegmentContent(currentSegment)}
           </div>
         </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={currentStep === 0}
-            className="gap-2"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Back
-          </Button>
-
-          <div className="text-xs text-muted-foreground flex items-center gap-2">
-            <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
-              ←
-            </kbd>
-            <span>or</span>
-            <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
-              →
-            </kbd>
-            <span>to navigate</span>
+        {/* Navigation Buttons - Centered Layout */}
+        <div className="flex flex-col items-center gap-3 mt-6 pt-5 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50">
+          {/* Progress Dots */}
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalSteps }).map((_, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  idx === currentStep
+                    ? "w-8 bg-primary"
+                    : idx < currentStep
+                    ? "w-2 bg-primary/60"
+                    : "w-2 bg-muted"
+                )}
+              />
+            ))}
           </div>
 
-          <Button
-            variant="default"
-            onClick={handleNext}
-            disabled={currentStep === totalSteps - 1}
-            className="gap-2"
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center justify-center gap-4 w-full max-w-md">
+            <Button
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBack();
+              }}
+              disabled={currentStep === 0}
+              className="gap-2 min-w-[120px] hover:scale-105 transition-transform"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back
+            </Button>
+
+            <div className="text-xs text-muted-foreground flex items-center gap-2 px-3">
+              <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
+                ←
+              </kbd>
+              <span>/</span>
+              <kbd className="px-2 py-1 text-[10px] font-semibold bg-muted border border-border rounded">
+                →
+              </kbd>
+              <span className="hidden sm:inline">or click text</span>
+            </div>
+
+            <Button
+              variant="default"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+              disabled={currentStep === totalSteps - 1}
+              className="gap-2 min-w-[120px] hover:scale-105 transition-transform shadow-md"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
