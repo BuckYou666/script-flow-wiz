@@ -293,6 +293,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 scriptContent={processedScriptContent}
                 renderScriptLine={renderScriptLine}
                 replacementValues={replacementValues}
+                contactMethod={node.scenario_title}
               />
 
               {/* Inline Replies Section */}
