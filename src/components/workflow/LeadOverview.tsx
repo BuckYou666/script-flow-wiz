@@ -71,54 +71,54 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
   return (
     <div className="flex flex-col h-full">
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-        {/* Lead Overview Section */}
-        <Card>
-          <CardHeader>
+      <div className="flex-1 overflow-y-auto space-y-5 pr-2">
+        {/* Lead Overview Section - Card within Card */}
+        <Card className="bg-secondary/30 border-border/50 shadow-sm">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
                 👤 Lead Overview
               </CardTitle>
               {!isEditing ? (
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={() => setIsEditing(true)}
-                  className="gap-2"
+                  className="gap-1.5 h-8 text-xs"
                 >
-                  <Pencil className="h-3.5 w-3.5" />
-                  Edit Lead Details
+                  <Pencil className="h-3 w-3" />
+                  Edit Details
                 </Button>
               ) : (
                 <div className="flex gap-2">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={handleCancel}
-                    className="gap-2"
+                    className="gap-1.5 h-8 text-xs"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3 w-3" />
                     Cancel
                   </Button>
                   <Button
                     variant="default"
                     size="sm"
                     onClick={handleSave}
-                    className="gap-2"
+                    className="gap-1.5 h-8 text-xs"
                   >
-                    <Save className="h-3.5 w-3.5" />
+                    <Save className="h-3 w-3" />
                     Save
                   </Button>
                 </div>
               )}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <Table>
               <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium w-1/3">Lead Name</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground w-1/3 py-2.5">Lead Name</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         value={editedLead.first_name}
@@ -126,16 +126,16 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           setEditedLead({ ...editedLead, first_name: e.target.value })
                         }
                         placeholder="First name"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.first_name || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.first_name || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Full Name</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Full Name</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         value={editedLead.full_name}
@@ -143,16 +143,16 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           setEditedLead({ ...editedLead, full_name: e.target.value })
                         }
                         placeholder="Full name"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.full_name || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.full_name || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Business Name</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Business Name</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         value={editedLead.business_name}
@@ -160,22 +160,22 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           setEditedLead({ ...editedLead, business_name: e.target.value })
                         }
                         placeholder="Business name"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.business_name || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.business_name || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Lead Source</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">Website Signup</Badge>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Lead Source</TableCell>
+                  <TableCell className="py-2.5">
+                    <Badge variant="secondary" className="text-xs">Website Signup</Badge>
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Lead Magnet</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Lead Magnet</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         value={editedLead.lead_magnet_name}
@@ -186,16 +186,16 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           })
                         }
                         placeholder="Lead magnet name"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.lead_magnet_name || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.lead_magnet_name || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Email</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Email</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         type="email"
@@ -204,16 +204,16 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           setEditedLead({ ...editedLead, email: e.target.value })
                         }
                         placeholder="email@example.com"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.email || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.email || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Phone</TableCell>
-                  <TableCell>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Phone</TableCell>
+                  <TableCell className="py-2.5">
                     {isEditing ? (
                       <Input
                         type="tel"
@@ -222,74 +222,68 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
                           setEditedLead({ ...editedLead, phone: e.target.value })
                         }
                         placeholder="(555) 123-4567"
-                        className="h-8"
+                        className="h-8 text-sm"
                       />
                     ) : (
-                      <span>{lead?.phone || "—"}</span>
+                      <span className="text-sm font-medium">{lead?.phone || "—"}</span>
                     )}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Stage</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">Entry Point</Badge>
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Stage</TableCell>
+                  <TableCell className="py-2.5">
+                    <Badge variant="outline" className="text-xs">Entry Point</Badge>
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Last Contacted</TableCell>
-                  <TableCell>
-                    {lead?.updated_at
-                      ? new Date(lead.updated_at).toLocaleString()
-                      : "—"}
+                <TableRow className="border-border/40">
+                  <TableCell className="text-xs text-muted-foreground py-2.5">Last Contacted</TableCell>
+                  <TableCell className="py-2.5">
+                    <span className="text-sm font-medium">
+                      {lead?.updated_at
+                        ? new Date(lead.updated_at).toLocaleString()
+                        : "—"}
+                    </span>
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
-
-        {/* Lead Context Summary */}
-        <Card className="bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
-          <CardContent className="pt-6">
-            <p className="text-sm text-foreground leading-relaxed">
-              {getLeadContextSummary()}
-            </p>
+            
+            {/* Context Summary - Inside Lead Overview Card */}
+            <div className="mt-4 pt-4 border-t border-border/40">
+              <p className="text-xs text-muted-foreground italic leading-relaxed">
+                {getLeadContextSummary()}
+              </p>
+            </div>
           </CardContent>
         </Card>
 
         {/* Quick Notes Field */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">📝 Add a quick internal note...</label>
-              <Textarea
-                value={internalNote}
-                onChange={(e) => setInternalNote(e.target.value)}
-                placeholder="Type any quick notes about this lead here..."
-                className="min-h-[80px] resize-none"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="space-y-2">
+          <label className="text-xs text-muted-foreground">📝 Add a quick internal note...</label>
+          <Textarea
+            value={internalNote}
+            onChange={(e) => setInternalNote(e.target.value)}
+            placeholder="Type any quick notes about this lead here..."
+            className="min-h-[60px] resize-none text-sm"
+          />
+        </div>
       </div>
 
       {/* Sticky CTA Footer */}
       {nextNodeId && onNavigate && (
-        <div className="sticky bottom-0 mt-4 pt-4 bg-gradient-to-t from-background via-background to-transparent">
-          <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/40 shadow-lg">
-            <CardContent className="pt-6">
-              <div className="text-center space-y-4">
-                <h3 className="text-xl font-semibold">Ready to begin?</h3>
-                <Button
-                  onClick={() => onNavigate(nextNodeId)}
-                  size="lg"
-                  className="w-full text-base"
-                >
-                  Proceed to Script → "Choose Contact Method"
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="sticky bottom-0 mt-6 pt-3 bg-gradient-to-t from-background via-background to-transparent">
+          <div className="bg-secondary/50 border border-border/50 rounded-lg shadow-sm p-4">
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground text-center">Ready to begin?</p>
+              <Button
+                onClick={() => onNavigate(nextNodeId)}
+                size="default"
+                className="w-full text-sm h-9"
+              >
+                Proceed to Script → "Choose Contact Method"
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

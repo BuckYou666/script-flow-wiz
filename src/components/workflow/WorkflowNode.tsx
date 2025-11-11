@@ -150,16 +150,19 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   
   const showActionButtons = !childrenMatchNextNodes && (node.on_yes_next_node || node.on_no_next_node || node.on_no_response_next_node);
   const showChildCards = childNodes.length > 0;
+  
+  const isWebsiteSignupStart = node.node_id === "WEBSITE_SIGNUP_START";
 
   return (
     <Card 
       className={cn(
         "transition-all duration-300 cursor-pointer hover:shadow-lg",
-        isExpanded && "ring-2 ring-primary"
+        isExpanded && "ring-2 ring-primary",
+        isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       onClick={onToggle}
     >
-      <CardHeader>
+      <CardHeader className={cn(isWebsiteSignupStart && isExpanded && "py-8")}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -179,7 +182,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               )}
             </div>
             <CardTitle className="text-xl mb-1">{node.scenario_title}</CardTitle>
-            {node.node_id !== "WEBSITE_SIGNUP_START" && (
+            {!isWebsiteSignupStart && (
               <CardDescription>{node.scenario_description}</CardDescription>
             )}
           </div>
@@ -196,12 +199,12 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         <CardContent 
           className={cn(
             "pt-0",
-            node.node_id === "WEBSITE_SIGNUP_START" ? "h-[calc(100vh-12rem)] flex flex-col" : "space-y-4"
-          )} 
+            isWebsiteSignupStart ? "h-[calc(100vh-14rem)] flex flex-col pb-8" : "space-y-4"
+          )}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Lead Overview for Website Signup Start Node */}
-          {node.node_id === "WEBSITE_SIGNUP_START" && (
+          {isWebsiteSignupStart && (
             <LeadOverview
               lead={currentLead}
               onNavigate={onSelectChild}
@@ -210,7 +213,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           )}
 
           {/* Script Section - Full Width with optional CRM toggle */}
-          {processedScriptContent && node.node_id !== "WEBSITE_SIGNUP_START" && (
+          {processedScriptContent && !isWebsiteSignupStart && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
@@ -424,7 +427,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           )}
 
           {/* Only show Next Steps if no inline replies are present and not the Website Signup Start node */}
-          {!inlineReplies && node.node_id !== "WEBSITE_SIGNUP_START" && (
+          {!inlineReplies && !isWebsiteSignupStart && (
             <div className="space-y-3 pt-3 border-t">
               <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
                 Next Steps
