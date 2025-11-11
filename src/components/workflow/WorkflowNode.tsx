@@ -186,11 +186,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       onClick={onToggle}
     >
       <CardHeader className={cn(
-        isExpanded && "py-5 flex-shrink-0"
+        isExpanded && "py-4 flex-shrink-0"
       )}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-1.5">
               <Badge 
                 variant="outline" 
                 className={cn(
@@ -208,7 +208,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
             <CardTitle className="text-xl mb-1">{node.scenario_title}</CardTitle>
             {!isWebsiteSignupStart && (
-              <CardDescription>{node.scenario_description}</CardDescription>
+              <CardDescription className="text-xs">{node.scenario_description}</CardDescription>
             )}
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -281,11 +281,29 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           {/* Script Section - Step-by-step Navigation */}
           {processedScriptContent && !isWebsiteSignupStart && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-                  Script to Use
-                </h4>
-                {node.crm_actions && (
+              {/* Compact Info Row - Mode, Step, Context (only for non-short stages) */}
+              {!isShortScriptStage && (
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+                    Script to Use
+                  </h4>
+                  {node.crm_actions && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowCrmActions(!showCrmActions)}
+                      className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+                    >
+                      <Settings className="h-3.5 w-3.5" />
+                      {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* Compact CRM Actions Toggle for Short Stages */}
+              {isShortScriptStage && node.crm_actions && (
+                <div className="flex justify-end -mt-2 mb-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -295,8 +313,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     <Settings className="h-3.5 w-3.5" />
                     {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Script Stepper Component */}
               <ScriptStepper

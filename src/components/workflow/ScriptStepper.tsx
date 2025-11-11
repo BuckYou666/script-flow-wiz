@@ -205,7 +205,7 @@ export const ScriptStepper = ({
     <div className="space-y-3">
       {/* Top Bar: Mode Badge, Progress + Full Script Toggle - Hidden for single-step stages */}
       {!hideStepIndicator && (
-        <div className="flex items-center justify-between mb-3 pb-3 border-b border-border/30">
+        <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/30">
           <div className="flex items-center gap-3">
             {/* Contact Method Badge */}
             {contactMethod && (
@@ -246,28 +246,28 @@ export const ScriptStepper = ({
         </div>
       )}
 
-      {/* Call Context Bar */}
+      {/* Call Context Bar - Hidden for short stages */}
       {!hideStepIndicator && (
-        <div className="flex flex-wrap items-center gap-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+        <div className="flex flex-wrap items-center gap-2 p-2.5 bg-muted/30 rounded-lg border border-border/50 mb-3">
         <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
-        <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+        <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
           <span className="text-xs text-muted-foreground">Lead:</span>
-          <span className="font-medium">{replacementValues.leadFirstName}</span>
+          <span className="font-medium text-xs">{replacementValues.leadFirstName}</span>
         </Badge>
-        <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+        <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
           <span className="text-xs text-muted-foreground">Rep:</span>
-          <span className="font-medium">{replacementValues.repName}</span>
+          <span className="font-medium text-xs">{replacementValues.repName}</span>
         </Badge>
         {replacementValues.leadMagnetName && (
-          <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+          <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
             <span className="text-xs text-muted-foreground">Lead Magnet:</span>
-            <span className="font-medium">{replacementValues.leadMagnetName}</span>
+            <span className="font-medium text-xs">{replacementValues.leadMagnetName}</span>
           </Badge>
         )}
         {replacementValues.businessName && (
-          <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+          <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
             <span className="text-xs text-muted-foreground">Business:</span>
-            <span className="font-medium">{replacementValues.businessName}</span>
+            <span className="font-medium text-xs">{replacementValues.businessName}</span>
           </Badge>
         )}
         </div>
@@ -277,9 +277,9 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "220px" : hideStepIndicator ? "280px" : "65vh", 
-          minHeight: centerContent ? "220px" : hideStepIndicator ? "280px" : "280px",
-          height: centerContent ? "220px" : hideStepIndicator ? "280px" : "auto"
+          maxHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "65vh", 
+          minHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "280px",
+          height: centerContent ? "220px" : hideStepIndicator ? "380px" : "auto"
         }}
       >
         {/* Static Wait Instruction - Only for Call-Based Interactions */}
