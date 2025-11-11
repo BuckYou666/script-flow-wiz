@@ -179,14 +179,14 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isExpanded ? {
-        maxHeight: isShortScriptStage ? 'none' : 'calc(100vh - 12rem)',
+        maxHeight: 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
       onClick={onToggle}
     >
       <CardHeader className={cn(
-        isExpanded && "py-4 flex-shrink-0"
+        isExpanded && "py-3 flex-shrink-0"
       )}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -240,7 +240,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       {isExpanded && (
         <CardContent 
           className={cn(
-            "pt-0 flex flex-col pb-0 overflow-hidden"
+            "pt-0 flex flex-col pb-2 overflow-hidden"
           )}
           style={isExpanded ? {
             flex: '1',
@@ -253,7 +253,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           {/* Scrollable Body Zone - Script, CRM, Context */}
           <div 
             className={cn(
-              "space-y-4 pr-2",
+              "space-y-3 pr-2",
               isShortScriptStage ? "overflow-visible" : "overflow-y-auto"
             )}
             style={!isShortScriptStage ? { 

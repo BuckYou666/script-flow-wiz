@@ -277,9 +277,10 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "65vh", 
-          minHeight: centerContent ? "220px" : hideStepIndicator ? "380px" : "280px",
-          height: centerContent ? "220px" : hideStepIndicator ? "380px" : "auto"
+          flex: hideStepIndicator ? '1 1 auto' : undefined,
+          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : "65vh", 
+          minHeight: centerContent ? "200px" : hideStepIndicator ? "280px" : "280px",
+          height: centerContent ? "200px" : hideStepIndicator ? "auto" : "auto"
         }}
       >
         {/* Click feedback ripple effect */}
@@ -326,7 +327,7 @@ export const ScriptStepper = ({
         </div>
 
         {/* Fixed Navigation Controls at Bottom */}
-        <div className="flex-shrink-0 px-8 pb-6 pt-4 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
+        <div className="flex-shrink-0 px-8 pb-4 pt-3 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
           <div className="flex flex-col items-center gap-3">
             {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
