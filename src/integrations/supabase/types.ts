@@ -17,6 +17,8 @@ export type Database = {
       leads: {
         Row: {
           business_name: string | null
+          conversation_history: Json | null
+          conversation_notes: string | null
           created_at: string
           email: string | null
           first_name: string | null
@@ -29,6 +31,8 @@ export type Database = {
         }
         Insert: {
           business_name?: string | null
+          conversation_history?: Json | null
+          conversation_notes?: string | null
           created_at?: string
           email?: string | null
           first_name?: string | null
@@ -41,6 +45,8 @@ export type Database = {
         }
         Update: {
           business_name?: string | null
+          conversation_history?: Json | null
+          conversation_notes?: string | null
           created_at?: string
           email?: string | null
           first_name?: string | null
