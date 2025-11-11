@@ -179,7 +179,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isExpanded ? {
-        maxHeight: 'calc(100vh - 14rem)',
+        maxHeight: 'calc(100vh - 10rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
