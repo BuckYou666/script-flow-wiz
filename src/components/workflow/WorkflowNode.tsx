@@ -52,10 +52,37 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
     [replacementData]
   );
 
-  // Replace placeholders in script content and track positions
-  const processedScriptContent = useMemo(() => {
-    if (!node.script_content) return null;
-    return replaceScriptPlaceholders(node.script_content, replacementData);
+  // Replace placeholders in script content and separate inline replies
+  const { scriptContent: processedScriptContent, inlineReplies } = useMemo(() => {
+    if (!node.script_content) return { scriptContent: null, inlineReplies: null };
+    
+    const content = replaceScriptPlaceholders(node.script_content, replacementData);
+    
+    // Check for inline replies pattern
+    const inlineReplyMatch = content.match(/\[INLINE_REPLIES\]([\s\S]*?)\[\/INLINE_REPLIES\]/);
+    
+    if (inlineReplyMatch) {
+      const scriptWithoutReplies = content.replace(/\[INLINE_REPLIES\][\s\S]*?\[\/INLINE_REPLIES\]/, '').trim();
+      const repliesSection = inlineReplyMatch[1].trim();
+      
+      // Parse individual replies
+      const replies = repliesSection.split('\n')
+        .filter(line => line.trim())
+        .map(line => {
+          // Match pattern: 🟢 YES: "Response text"
+          const match = line.match(/^(🟢|🔴|🟡)\s+(\w+):\s+"(.+)"$/);
+          if (match) {
+            const [, emoji, type, text] = match;
+            return { emoji, type: type.toLowerCase(), text };
+          }
+          return null;
+        })
+        .filter(Boolean);
+      
+      return { scriptContent: scriptWithoutReplies, inlineReplies: replies };
+    }
+    
+    return { scriptContent: content, inlineReplies: null };
   }, [node.script_content, replacementData]);
 
   // Function to render script line with highlighted dynamic fields
@@ -235,6 +262,73 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     })}
                   </div>
                 </div>
+
+                {/* Inline Replies Section */}
+                {inlineReplies && inlineReplies.length > 0 && (
+                  <div className="mt-6 pt-4 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50">
+                    <div className="flex flex-col gap-2.5">
+                      {inlineReplies.map((reply: any, idx: number) => {
+                        const isYes = reply.type === 'yes';
+                        const isNo = reply.type === 'no';
+                        const isUnsure = reply.type === 'unsure';
+                        
+                        const bgColor = isYes 
+                          ? 'bg-green-100/80 dark:bg-green-950/30 hover:bg-green-200/90 dark:hover:bg-green-900/40' 
+                          : isNo 
+                            ? 'bg-red-100/80 dark:bg-red-950/30 hover:bg-red-200/90 dark:hover:bg-red-900/40'
+                            : 'bg-yellow-100/80 dark:bg-yellow-950/30 hover:bg-yellow-200/90 dark:hover:bg-yellow-900/40';
+                        
+                        const borderColor = isYes
+                          ? 'border-green-400/60 dark:border-green-700/60'
+                          : isNo
+                            ? 'border-red-400/60 dark:border-red-700/60'
+                            : 'border-yellow-400/60 dark:border-yellow-700/60';
+                        
+                        const textColor = isYes
+                          ? 'text-green-900 dark:text-green-100'
+                          : isNo
+                            ? 'text-red-900 dark:text-red-100'
+                            : 'text-yellow-900 dark:text-yellow-100';
+                        
+                        const nextNodeId = isYes 
+                          ? node.on_yes_next_node 
+                          : isNo 
+                            ? node.on_no_next_node 
+                            : node.on_no_response_next_node;
+                        
+                        return (
+                          <button
+                            key={idx}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (nextNodeId) {
+                                onNavigate(nextNodeId, reply.type);
+                              }
+                            }}
+                            className={cn(
+                              "w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 shadow-sm hover:shadow-md",
+                              bgColor,
+                              borderColor,
+                              textColor
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-2xl flex-shrink-0">{reply.emoji}</span>
+                              <div className="flex-1">
+                                <div className="font-semibold text-sm uppercase tracking-wide mb-1">
+                                  {reply.type}
+                                </div>
+                                <div className="text-sm font-medium">
+                                  {reply.text}
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
               
               {node.script_section && (
@@ -311,12 +405,14 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
           )}
 
-          <div className="space-y-3 pt-3 border-t">
-            <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
-              Next Steps
-            </h4>
-            
-            {showActionButtons && (
+          {/* Only show Next Steps if no inline replies are present */}
+          {!inlineReplies && (
+            <div className="space-y-3 pt-3 border-t">
+              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                Next Steps
+              </h4>
+              
+              {showActionButtons && (
               <div className="grid gap-1.5">
                 {node.on_yes_next_node && (
                   <Button
@@ -405,7 +501,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 ))}
               </div>
             )}
-          </div>
+            </div>
+          )}
         </CardContent>
       )}
     </Card>
