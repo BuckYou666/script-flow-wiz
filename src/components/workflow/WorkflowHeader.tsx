@@ -1,6 +1,7 @@
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -23,15 +24,27 @@ export const WorkflowHeader = ({
   stageFilter,
   onStageFilterChange,
 }: WorkflowHeaderProps) => {
+  const navigate = useNavigate();
+  
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          A-Tech Sales Workflow
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Interactive training tool - Navigate through real sales scenarios and master every step
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            A-Tech Sales Workflow
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Interactive training tool - Navigate through real sales scenarios and master every step
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/profile")}
+          className="gap-2"
+        >
+          <User className="h-4 w-4" />
+          Profile
+        </Button>
       </div>
 
       <div className="flex gap-4 flex-col sm:flex-row">

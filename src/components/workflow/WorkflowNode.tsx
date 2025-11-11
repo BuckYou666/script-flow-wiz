@@ -5,7 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, ChevronRight, XCircle, Clock, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useCurrentProfile } from "@/hooks/useCurrentProfile";
+import { useLeads } from "@/hooks/useLeads";
+import { replaceScriptPlaceholders } from "@/lib/scriptPlaceholders";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -20,6 +23,32 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   const stageColor = getStageColor(node.stage);
   const stageLightColor = getStageLightColor(node.stage);
   const [showCrmActions, setShowCrmActions] = useState(false);
+  
+  // Fetch current user profile and leads for placeholder replacement
+  const { data: profile } = useCurrentProfile();
+  const { data: leads } = useLeads();
+  
+  // Use the most recent lead for demo purposes, or create a mock lead
+  const currentLead = leads?.[0] || { 
+    first_name: "Sarah", 
+    full_name: "Sarah Johnson",
+    business_name: "Acme Corp",
+    lead_magnet_name: "Local AI System Demo"
+  };
+  
+  // Replace placeholders in script content
+  const processedScriptContent = useMemo(() => {
+    if (!node.script_content) return null;
+    
+    return replaceScriptPlaceholders(node.script_content, {
+      leadFirstName: currentLead.first_name,
+      leadFullName: currentLead.full_name,
+      repFirstName: profile?.first_name,
+      repFullName: profile?.full_name,
+      businessName: currentLead.business_name,
+      leadMagnetName: currentLead.lead_magnet_name,
+    });
+  }, [node.script_content, currentLead, profile]);
   
   // Determine if we should show action buttons or child cards
   // If child nodes exist that match the next node IDs, show cards instead of buttons
@@ -72,7 +101,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       {isExpanded && (
         <CardContent className="space-y-4 pt-0" onClick={(e) => e.stopPropagation()}>
           {/* Script Section - Full Width with optional CRM toggle */}
-          {node.script_content && (
+          {processedScriptContent && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
@@ -94,7 +123,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-6 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
                 <div className="prose prose-sm max-w-none">
                   <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
-                    {node.script_content.split('\n').map((line, index) => {
+                    {processedScriptContent.split('\n').map((line, index) => {
                       const isInstruction = line.includes('(') && line.includes(')');
                       
                       if (!line.trim()) {
