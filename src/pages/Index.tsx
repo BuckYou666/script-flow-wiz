@@ -117,22 +117,19 @@ const Index = () => {
               </div>
             )}
 
-            {currentNode && (
+            {currentNodeId === "START" ? (
               <div className="space-y-4">
-                <WorkflowNode
-                  node={currentNode}
-                  onNavigate={handleNavigate}
-                  isExpanded={expandedNodeId === currentNode.node_id}
-                  onToggle={() => setExpandedNodeId(
-                    expandedNodeId === currentNode.node_id ? null : currentNode.node_id
-                  )}
-                />
+                <div className="text-center mb-8">
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-3">
+                    Choose Your Lead Source
+                  </h1>
+                  <p className="text-lg text-muted-foreground">
+                    Select where this lead originated from to begin the appropriate sales workflow
+                  </p>
+                </div>
                 
                 {filteredNodes.length > 0 && (
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-bold mt-8">
-                      {currentNodeId === "START" ? "Choose Your Lead Source" : "Available Options"}
-                    </h2>
+                  <div className="grid gap-4 md:grid-cols-2">
                     {filteredNodes.map(node => (
                       <WorkflowNode
                         key={node.node_id}
@@ -155,6 +152,44 @@ const Index = () => {
                   </div>
                 )}
               </div>
+            ) : (
+              currentNode && (
+                <div className="space-y-4">
+                  <WorkflowNode
+                    node={currentNode}
+                    onNavigate={handleNavigate}
+                    isExpanded={expandedNodeId === currentNode.node_id}
+                    onToggle={() => setExpandedNodeId(
+                      expandedNodeId === currentNode.node_id ? null : currentNode.node_id
+                    )}
+                  />
+                  
+                  {filteredNodes.length > 0 && (
+                    <div className="space-y-4">
+                      <h2 className="text-2xl font-bold mt-8">Available Options</h2>
+                      {filteredNodes.map(node => (
+                        <WorkflowNode
+                          key={node.node_id}
+                          node={node}
+                          onNavigate={handleNavigate}
+                          isExpanded={expandedNodeId === node.node_id}
+                          onToggle={() => setExpandedNodeId(
+                            expandedNodeId === node.node_id ? null : node.node_id
+                          )}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {filteredNodes.length === 0 && childNodes.length > 0 && (
+                    <div className="text-center py-12 bg-muted/30 rounded-lg border-2 border-dashed">
+                      <p className="text-muted-foreground">
+                        No results found. Try adjusting your search or filters.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )
             )}
           </div>
 
