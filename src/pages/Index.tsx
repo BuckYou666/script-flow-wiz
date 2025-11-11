@@ -179,10 +179,10 @@ const Index = () => {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="container mx-auto px-4 py-6 max-w-7xl">
-            <div className="grid lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-3">
+        <div className="flex-1 overflow-y-auto scroll-smooth">
+          <div className="container mx-auto px-4 py-6 max-w-7xl min-h-full">
+            <div className="grid lg:grid-cols-[1fr_300px] gap-6 items-start">
+              <div className="w-full max-w-4xl mx-auto lg:mx-0">
                 {currentNodeId === "START" ? (
                   <div className="space-y-4">
                     <div className="text-center mb-8 animate-in fade-in duration-500">
@@ -319,8 +319,8 @@ const Index = () => {
                 )}
               </div>
 
-              <div className="lg:col-span-1">
-                <div className="sticky top-8">
+              <div className="hidden lg:block">
+                <div className="sticky top-6">
                   <StageLegend />
                 </div>
               </div>
