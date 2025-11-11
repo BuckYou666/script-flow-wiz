@@ -277,9 +277,9 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
-          maxHeight: centerContent ? "220px" : "65vh", 
-          minHeight: centerContent ? "220px" : "280px",
-          height: centerContent ? "220px" : "auto"
+          maxHeight: centerContent ? "220px" : hideStepIndicator ? "280px" : "65vh", 
+          minHeight: centerContent ? "220px" : hideStepIndicator ? "280px" : "280px",
+          height: centerContent ? "220px" : hideStepIndicator ? "280px" : "auto"
         }}
       >
         {/* Static Wait Instruction - Only for Call-Based Interactions */}

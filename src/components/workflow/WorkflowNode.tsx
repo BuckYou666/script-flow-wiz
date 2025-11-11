@@ -164,7 +164,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   const showChildCards = childNodes.length > 0;
   
   const isWebsiteSignupStart = node.node_id === "WEBSITE_SIGNUP_START";
-  const isChooseContactMethod = node.scenario_title === "Choose Contact Method";
+  
+  // Check if this is a short-script stage that should fit without scrolling
+  const isShortScriptStage = 
+    node.scenario_title === "Choose Contact Method" ||
+    node.scenario_title === "Introduction Call" ||
+    node.scenario_title === "Introduction Text" ||
+    (node.stage === "First Contact" && !isWebsiteSignupStart);
 
   return (
     <Card 
@@ -173,7 +179,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isExpanded ? {
-        maxHeight: isChooseContactMethod ? 'none' : 'calc(100vh - 12rem)',
+        maxHeight: isShortScriptStage ? 'none' : 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
@@ -248,9 +254,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           <div 
             className={cn(
               "space-y-4 pr-2",
-              isChooseContactMethod ? "overflow-visible" : "overflow-y-auto"
+              isShortScriptStage ? "overflow-visible" : "overflow-y-auto"
             )}
-            style={!isChooseContactMethod ? { 
+            style={!isShortScriptStage ? { 
               flex: '1',
               minHeight: '0'
             } : undefined}
@@ -298,7 +304,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 renderScriptLine={renderScriptLine}
                 replacementValues={replacementValues}
                 contactMethod={node.scenario_title}
-                hideStepIndicator={node.scenario_title === "Choose Contact Method"}
+                hideStepIndicator={isShortScriptStage}
                 centerContent={node.scenario_title === "Choose Contact Method"}
               />
 
