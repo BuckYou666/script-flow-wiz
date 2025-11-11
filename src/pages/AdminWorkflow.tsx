@@ -15,7 +15,7 @@ import {
   useBulkImportNodes 
 } from "@/hooks/useWorkflowNodes";
 import { WorkflowNode } from "@/types/workflow";
-import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen } from "lucide-react";
+import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen, Check, X } from "lucide-react";
 import { workflowNodes as staticData } from "@/data/workflowData";
 import { outboundWorkflowNodes } from "@/data/outboundWorkflowData";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -28,6 +28,8 @@ const AdminWorkflow = () => {
   const [nodeToDelete, setNodeToDelete] = useState<string | null>(null);
   const [expandedWorkflows, setExpandedWorkflows] = useState<Set<string>>(new Set());
   const [user, setUser] = useState<any>(null);
+  const [editingWorkflow, setEditingWorkflow] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
 
   const { data: nodes, isLoading } = useWorkflowNodes();
   const createNode = useCreateWorkflowNode();
@@ -132,6 +134,34 @@ const AdminWorkflow = () => {
     });
   };
 
+  const handleStartEditWorkflow = (workflowName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingWorkflow(workflowName);
+    setEditingName(workflowName);
+  };
+
+  const handleSaveWorkflowName = async (oldName: string) => {
+    if (!editingName.trim() || editingName === oldName) {
+      setEditingWorkflow(null);
+      return;
+    }
+    
+    // Update all nodes in this workflow with the new name
+    const nodesToUpdate = groupedWorkflows[oldName];
+    for (const node of nodesToUpdate) {
+      if (node.id) {
+        await updateNode.mutateAsync({ ...node, id: node.id, workflow_name: editingName });
+      }
+    }
+    
+    setEditingWorkflow(null);
+  };
+
+  const handleCancelEditWorkflow = () => {
+    setEditingWorkflow(null);
+    setEditingName("");
+  };
+
   // Auto-expand all workflows on first load
   useEffect(() => {
     if (nodes && nodes.length > 0 && expandedWorkflows.size === 0) {
@@ -206,9 +236,42 @@ const AdminWorkflow = () => {
                         <div className="flex items-center gap-3 p-4 border rounded-lg hover:bg-accent/30 transition-colors group">
                           <FolderOpen className="h-5 w-5 text-primary" />
                           <div className="flex-1 text-left">
-                            <h3 className="font-semibold text-lg">{workflowName}</h3>
-                            <p className="text-sm text-muted-foreground">{workflowNodes.length} node{workflowNodes.length !== 1 ? 's' : ''}</p>
+                            {editingWorkflow === workflowName ? (
+                              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                <Input
+                                  value={editingName}
+                                  onChange={(e) => setEditingName(e.target.value)}
+                                  className="h-8"
+                                  autoFocus
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveWorkflowName(workflowName);
+                                    if (e.key === 'Escape') handleCancelEditWorkflow();
+                                  }}
+                                />
+                                <Button size="sm" variant="ghost" onClick={() => handleSaveWorkflowName(workflowName)}>
+                                  <Check className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="ghost" onClick={handleCancelEditWorkflow}>
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <>
+                                <h3 className="font-semibold text-lg">{workflowName}</h3>
+                                <p className="text-sm text-muted-foreground">{workflowNodes.length} node{workflowNodes.length !== 1 ? 's' : ''}</p>
+                              </>
+                            )}
                           </div>
+                          {editingWorkflow !== workflowName && (
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              onClick={(e) => handleStartEditWorkflow(workflowName, e)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          )}
                           <ChevronDown className={`h-5 w-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                         </div>
                       </CollapsibleTrigger>
