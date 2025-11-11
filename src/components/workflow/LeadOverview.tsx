@@ -72,10 +72,10 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
     <div className="flex flex-col h-full">
       {/* Scrollable Lead Details - Only this section scrolls */}
       <div 
-        className="flex-1 overflow-y-auto space-y-5 pr-2" 
+        className="overflow-y-auto space-y-5 pr-2" 
         style={{ 
-          maxHeight: 'calc(100% - 110px)', // Reserve space for CTA footer
-          overflowY: 'auto'
+          flex: '1',
+          minHeight: '0'
         }}
       >
         {/* Lead Overview Section - Card within Card */}

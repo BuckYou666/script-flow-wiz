@@ -161,7 +161,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isWebsiteSignupStart && isExpanded && "max-w-[85%] mx-auto border-border/50 shadow-sm"
       )}
       style={isWebsiteSignupStart && isExpanded ? {
-        maxHeight: 'calc(100vh - 8rem)'
+        height: 'calc(100vh - 8rem)',
+        display: 'flex',
+        flexDirection: 'column'
       } : undefined}
       onClick={onToggle}
     >
@@ -207,7 +209,10 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             isWebsiteSignupStart ? "flex flex-col pb-6 overflow-hidden" : "space-y-4"
           )}
           style={isWebsiteSignupStart ? {
-            height: 'calc(100% - 110px)' // Subtract header height
+            flex: '1',
+            minHeight: '0',
+            display: 'flex',
+            flexDirection: 'column'
           } : undefined}
           onClick={(e) => e.stopPropagation()}
         >
