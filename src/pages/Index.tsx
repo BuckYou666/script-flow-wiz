@@ -131,49 +131,33 @@ const Index = () => {
     <div className="fixed inset-0 bg-gradient-to-br from-background via-background to-secondary/20 overflow-hidden">
       <div className="h-full flex flex-col">
         {/* Fixed Header */}
-        <div className="flex-none px-4 py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex-none px-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto max-w-7xl">
-            <div className="flex items-center justify-between gap-4">
-              {currentNodeId !== "START" && (
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleReset}
-                    className="gap-2"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Start Over
-                  </Button>
-                  {navigationPath.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleBack}
-                      className="gap-2"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                  )}
-                </div>
-              )}
-              <div className="flex items-center gap-3 flex-1 justify-end">
-                {currentNodeId !== "START" && (
-                  <div className="flex-1 max-w-md">
-                    <WorkflowHeader
-                      searchQuery={searchQuery}
-                      onSearchChange={setSearchQuery}
-                      stageFilter={stageFilter}
-                      onStageFilterChange={setStageFilter}
-                    />
-                  </div>
-                )}
+            {currentNodeId === "START" ? (
+              <div className="py-6">
+                <WorkflowHeader
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  stageFilter={stageFilter}
+                  onStageFilterChange={setStageFilter}
+                />
+              </div>
+            ) : (
+              <div className="py-3 flex items-center justify-between gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleReset}
+                  className="gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Start Over
+                </Button>
                 <Sheet open={showGuide} onOpenChange={setShowGuide}>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
                       <Info className="h-4 w-4" />
-                      Stage Guide
+                      <span className="hidden sm:inline">Stage Guide</span>
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="right" className="w-[400px] sm:w-[540px] overflow-y-auto">
@@ -185,14 +169,6 @@ const Index = () => {
                     </div>
                   </SheetContent>
                 </Sheet>
-              </div>
-            </div>
-            {navigationPath.length > 0 && (
-              <div className="mt-2">
-                <WorkflowBreadcrumb 
-                  path={navigationPath} 
-                  onNavigateToNode={handleNavigateToNode}
-                />
               </div>
             )}
           </div>
