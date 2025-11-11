@@ -208,7 +208,7 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-6 py-4 pb-20 max-w-[1400px] min-h-full">
+          <div className="container mx-auto px-6 py-2 pb-20 max-w-[1400px] min-h-full">
             <div className="w-full space-y-4">
                 {currentNodeId === "START" ? (
                   <div className="space-y-4">
@@ -297,11 +297,11 @@ const Index = () => {
                   </div>
                 ) : (
                   currentNode && (
-                    <div className="space-y-4 animate-in fade-in duration-500">
+                    <div className="space-y-2 animate-in fade-in duration-500">
                       {/* Current Node - Main Focus */}
-                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Currently Learning:</p>
-                        <h2 className="text-xl font-bold text-primary">{currentNode.scenario_title}</h2>
+                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-2">
+                        <p className="text-xs text-muted-foreground mb-0.5">Currently Learning:</p>
+                        <h2 className="text-lg font-bold text-primary">{currentNode.scenario_title}</h2>
                       </div>
                       
                       <WorkflowNode
