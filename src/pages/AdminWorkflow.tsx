@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { NodeEditor } from "@/components/admin/NodeEditor";
+import { WorkflowFlowView } from "@/components/admin/WorkflowFlowView";
 import { 
   useWorkflowNodes, 
   useCreateWorkflowNode, 
@@ -15,7 +16,7 @@ import {
   useBulkImportNodes 
 } from "@/hooks/useWorkflowNodes";
 import { WorkflowNode } from "@/types/workflow";
-import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen, Check, X } from "lucide-react";
+import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen, Check, X, Network, List } from "lucide-react";
 import { workflowNodes as staticData } from "@/data/workflowData";
 import { outboundWorkflowNodes } from "@/data/outboundWorkflowData";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -30,6 +31,8 @@ const AdminWorkflow = () => {
   const [user, setUser] = useState<any>(null);
   const [editingWorkflow, setEditingWorkflow] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
+  const [viewMode, setViewMode] = useState<'list' | 'flow'>('list');
+  const [selectedWorkflowForFlow, setSelectedWorkflowForFlow] = useState<string | null>(null);
 
   const { data: nodes, isLoading } = useWorkflowNodes();
   const createNode = useCreateWorkflowNode();
@@ -162,13 +165,18 @@ const AdminWorkflow = () => {
     setEditingName("");
   };
 
-  // Auto-expand all workflows on first load
+  // Auto-expand all workflows on first load and set default flow workflow
   useEffect(() => {
-    if (nodes && nodes.length > 0 && expandedWorkflows.size === 0) {
-      const workflowNames = new Set(nodes.map(n => n.workflow_name || "Uncategorized"));
-      setExpandedWorkflows(workflowNames);
+    if (nodes && nodes.length > 0) {
+      if (expandedWorkflows.size === 0) {
+        const workflowNames = new Set(nodes.map(n => n.workflow_name || "Uncategorized"));
+        setExpandedWorkflows(workflowNames);
+      }
+      if (!selectedWorkflowForFlow && Object.keys(groupedWorkflows).length > 0) {
+        setSelectedWorkflowForFlow(Object.keys(groupedWorkflows)[0]);
+      }
     }
-  }, [nodes]);
+  }, [nodes, expandedWorkflows.size, selectedWorkflowForFlow, groupedWorkflows]);
 
   if (!user) return null;
 
@@ -191,6 +199,26 @@ const AdminWorkflow = () => {
             <div className="flex justify-between items-center">
               <CardTitle>Workflow Nodes ({nodes?.length || 0})</CardTitle>
               <div className="flex gap-2">
+                <div className="flex border rounded-md">
+                  <Button 
+                    variant={viewMode === 'list' ? 'default' : 'ghost'} 
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="gap-2 rounded-r-none"
+                  >
+                    <List className="h-4 w-4" />
+                    List
+                  </Button>
+                  <Button 
+                    variant={viewMode === 'flow' ? 'default' : 'ghost'} 
+                    size="sm"
+                    onClick={() => setViewMode('flow')}
+                    className="gap-2 rounded-l-none"
+                  >
+                    <Network className="h-4 w-4" />
+                    Flow
+                  </Button>
+                </div>
                 <Button onClick={handleImportOutbound} variant="secondary" className="gap-2">
                   <Upload className="h-4 w-4" />
                   Import Outbound Script
@@ -209,15 +237,35 @@ const AdminWorkflow = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by title, node ID, or stage..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+            {viewMode === 'list' && (
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by title, node ID, or stage..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            )}
+
+            {viewMode === 'flow' && Object.keys(groupedWorkflows).length > 1 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Select Workflow to Visualize:</label>
+                <div className="flex gap-2 flex-wrap">
+                  {Object.keys(groupedWorkflows).map((workflowName) => (
+                    <Button
+                      key={workflowName}
+                      variant={selectedWorkflowForFlow === workflowName ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedWorkflowForFlow(workflowName)}
+                    >
+                      {workflowName}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {isLoading ? (
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
@@ -225,6 +273,11 @@ const AdminWorkflow = () => {
               <div className="text-center py-8 text-muted-foreground">
                 {nodes?.length === 0 ? "No nodes yet. Import initial data to get started." : "No nodes match your search."}
               </div>
+            ) : viewMode === 'flow' ? (
+              <WorkflowFlowView 
+                nodes={selectedWorkflowForFlow ? groupedWorkflows[selectedWorkflowForFlow] : Object.values(groupedWorkflows).flat()}
+                onNodeClick={(node) => { setSelectedNode(node); setIsEditorOpen(true); }}
+              />
             ) : (
               <div className="space-y-4">
                 {Object.entries(groupedWorkflows).map(([workflowName, workflowNodes]) => {
