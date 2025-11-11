@@ -10,6 +10,7 @@ import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import { useLeads } from "@/hooks/useLeads";
 import { replaceScriptPlaceholders, getReplacementValues } from "@/lib/scriptPlaceholders";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { LeadOverview } from "./LeadOverview";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -178,7 +179,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               )}
             </div>
             <CardTitle className="text-xl mb-1">{node.scenario_title}</CardTitle>
-            <CardDescription>{node.scenario_description}</CardDescription>
+            {node.node_id !== "WEBSITE_SIGNUP_START" && (
+              <CardDescription>{node.scenario_description}</CardDescription>
+            )}
           </div>
           <ChevronRight 
             className={cn(
@@ -191,8 +194,17 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
 
       {isExpanded && (
         <CardContent className="space-y-4 pt-0" onClick={(e) => e.stopPropagation()}>
+          {/* Lead Overview for Website Signup Start Node */}
+          {node.node_id === "WEBSITE_SIGNUP_START" && (
+            <LeadOverview
+              lead={currentLead}
+              onNavigate={onSelectChild}
+              nextNodeId={childNodes[0]?.node_id}
+            />
+          )}
+
           {/* Script Section - Full Width with optional CRM toggle */}
-          {processedScriptContent && (
+          {processedScriptContent && node.node_id !== "WEBSITE_SIGNUP_START" && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">

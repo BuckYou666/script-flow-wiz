@@ -35,3 +35,24 @@ export const useCreateLead = () => {
     },
   });
 };
+
+export const useUpdateLead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: any) => {
+      const { data, error } = await supabase
+        .from("leads")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
+};
