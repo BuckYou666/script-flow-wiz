@@ -7,6 +7,7 @@ import { WorkflowHeader } from "@/components/workflow/WorkflowHeader";
 import { StageLegend } from "@/components/workflow/StageLegend";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,12 +32,24 @@ const Index = () => {
   const [stageFilter, setStageFilter] = useState<StageType | "all">("all");
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string>("all");
 
   const currentNode = workflowNodes.find(node => node.node_id === currentNodeId);
   
+  const availableWorkflows = useMemo(() => {
+    const workflows = new Set(workflowNodes.map(node => node.workflow_name).filter(Boolean));
+    return Array.from(workflows).sort();
+  }, [workflowNodes]);
+
   const childNodes = useMemo(() => {
-    return workflowNodes.filter(node => node.parent_id === currentNodeId);
-  }, [workflowNodes, currentNodeId]);
+    let nodes = workflowNodes.filter(node => node.parent_id === currentNodeId);
+    
+    if (selectedWorkflow !== "all" && currentNodeId === "START") {
+      nodes = nodes.filter(node => node.workflow_name === selectedWorkflow);
+    }
+    
+    return nodes;
+  }, [workflowNodes, currentNodeId, selectedWorkflow]);
 
   const filteredNodes = useMemo(() => {
     let nodes = childNodes;
@@ -123,6 +136,7 @@ const Index = () => {
     setSelectedSource(null);
     setSearchQuery("");
     setStageFilter("all");
+    setSelectedWorkflow("all");
     toast.success("Workflow Reset", {
       description: "Back to lead source selection"
     });
@@ -203,6 +217,27 @@ const Index = () => {
                         Click on any pipeline option to start the interactive training workflow
                       </p>
                     </div>
+
+                    {availableWorkflows.length > 1 && (
+                      <div className="flex justify-center mb-6 animate-in fade-in duration-500">
+                        <div className="inline-flex flex-col gap-2">
+                          <label className="text-sm text-muted-foreground text-center">Filter by Workflow</label>
+                          <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
+                            <SelectTrigger className="w-[280px]">
+                              <SelectValue placeholder="All Workflows" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Workflows</SelectItem>
+                              {availableWorkflows.map((workflow) => (
+                                <SelectItem key={workflow} value={workflow || ""}>
+                                  {workflow || "Untitled Workflow"}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
                     
                     {filteredNodes.length > 0 && (
                       <div className="grid gap-6 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
