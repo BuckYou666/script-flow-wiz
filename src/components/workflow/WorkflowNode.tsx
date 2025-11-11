@@ -3,7 +3,7 @@ import { getStageColor, getStageLightColor } from "@/types/workflow";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, ChevronRight, XCircle, Clock, Settings } from "lucide-react";
+import { CheckCircle2, ChevronRight, XCircle, Clock, Settings, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useMemo } from "react";
 import { useCurrentProfile } from "@/hooks/useCurrentProfile";
@@ -11,6 +11,7 @@ import { useLeads } from "@/hooks/useLeads";
 import { replaceScriptPlaceholders, getReplacementValues } from "@/lib/scriptPlaceholders";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { LeadOverview } from "./LeadOverview";
+import { LeadInfoSheet } from "./LeadInfoSheet";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -25,6 +26,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   const stageColor = getStageColor(node.stage);
   const stageLightColor = getStageLightColor(node.stage);
   const [showCrmActions, setShowCrmActions] = useState(false);
+  const [isLeadInfoOpen, setIsLeadInfoOpen] = useState(false);
   
   // Fetch current user profile and leads for placeholder replacement
   const { data: profile } = useCurrentProfile();
@@ -170,7 +172,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "py-5 flex-shrink-0"
       )}>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
               <Badge 
                 variant="outline" 
@@ -192,12 +194,29 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               <CardDescription>{node.scenario_description}</CardDescription>
             )}
           </div>
-          <ChevronRight 
-            className={cn(
-              "h-5 w-5 text-muted-foreground transition-transform",
-              isExpanded && "rotate-90"
-            )} 
-          />
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* View Lead Info Button */}
+            {isExpanded && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLeadInfoOpen(true);
+                }}
+                className="gap-1.5 h-8 text-xs"
+              >
+                <User className="h-3.5 w-3.5" />
+                View Lead Info
+              </Button>
+            )}
+            <ChevronRight 
+              className={cn(
+                "h-5 w-5 text-muted-foreground transition-transform",
+                isExpanded && "rotate-90"
+              )} 
+            />
+          </div>
         </div>
       </CardHeader>
 
@@ -546,6 +565,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           )}
         </CardContent>
       )}
+      
+      {/* Lead Info Sheet */}
+      <LeadInfoSheet
+        open={isLeadInfoOpen}
+        onOpenChange={setIsLeadInfoOpen}
+        lead={currentLead}
+      />
     </Card>
   );
 };
