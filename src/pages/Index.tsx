@@ -205,7 +205,7 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-4 py-4 pb-20 max-w-5xl min-h-full">
+          <div className="container mx-auto px-6 py-4 pb-20 max-w-[1400px] min-h-full">
             <div className="w-full space-y-4">
                 {currentNodeId === "START" ? (
                   <div className="space-y-4">
