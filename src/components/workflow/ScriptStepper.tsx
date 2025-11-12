@@ -350,12 +350,13 @@ export const ScriptStepper = ({
             <div className="flex items-center justify-center gap-4 w-full max-w-md">
               <Button
                 variant="outline"
+                size="default"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleBack();
                 }}
                 disabled={currentStep === 0}
-                className="gap-2 min-w-[120px] hover:scale-105 transition-transform"
+                className="gap-2 min-w-[130px] hover:scale-105 transition-transform font-semibold"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Back
@@ -374,12 +375,13 @@ export const ScriptStepper = ({
 
               <Button
                 variant="default"
+                size="default"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNext();
                 }}
                 disabled={currentStep === totalSteps - 1}
-                className="gap-2 min-w-[120px] hover:scale-105 transition-transform shadow-md"
+                className="gap-2 min-w-[130px] hover:scale-105 transition-transform shadow-md font-semibold"
               >
                 Next
                 <ChevronRight className="h-4 w-4" />
