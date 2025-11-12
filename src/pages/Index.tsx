@@ -261,21 +261,21 @@ const Index = () => {
           <div className="container mx-auto px-6 py-8 pb-20 max-w-[1400px] min-h-full">
             <div className="w-full space-y-8">
                 {currentNodeId === "START" ? (
-                  <div className="space-y-6">
-                    <div className="text-center mb-4 animate-in fade-in duration-500">
-                      <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-3">
+                  <div className="space-y-12">
+                    <div className="text-center mb-12 animate-in fade-in duration-500">
+                      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                         Sales Workflow Training
                       </h1>
-                      <p className="text-xl text-muted-foreground mb-2">
+                      <p className="text-lg text-muted-foreground mb-3 max-w-2xl mx-auto">
                         Choose Your Lead Source to Begin
                       </p>
-                      <p className="text-sm text-muted-foreground/80">
+                      <p className="text-sm text-muted-foreground/70 max-w-xl mx-auto">
                         Click on any pipeline option to start the interactive training workflow
                       </p>
                     </div>
 
                     {availableWorkflows.length > 1 && (
-                      <div className="flex justify-center mb-8 animate-in fade-in duration-500">
+                      <div className="flex justify-center mb-10 animate-in fade-in duration-500">
                         <div className="inline-flex flex-col gap-2">
                           <label className="text-sm text-muted-foreground text-center">Filter by Workflow</label>
                           <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
@@ -296,7 +296,7 @@ const Index = () => {
                     )}
                     
                     {filteredNodes.length > 0 && (
-                      <div className="grid gap-6 md:grid-cols-2 auto-rows-fr animate-in fade-in slide-in-from-bottom-4 duration-700">
+                      <div className="grid gap-8 md:grid-cols-2 auto-rows-fr animate-in fade-in slide-in-from-bottom-4 duration-700">
                         {filteredNodes.map((node, index) => {
                           const SourceIcon = getSourceIcon(node.node_id);
                           return (
@@ -309,22 +309,22 @@ const Index = () => {
                                 onClick={() => handleSelectSource(node.node_id)}
                                 className="w-full h-full text-left group"
                               >
-                                <div className="relative overflow-hidden rounded-xl border-2 border-border bg-card h-full p-6 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:scale-[1.03] hover:border-primary/60 hover:-translate-y-1 cursor-pointer">
+                                <div className="relative overflow-hidden rounded-xl border-2 border-border bg-card h-full p-8 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:scale-[1.02] hover:border-primary/60 hover:-translate-y-1 cursor-pointer">
                                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                  <div className="absolute top-4 right-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                                    <SourceIcon className="h-12 w-12 text-primary/20 group-hover:text-primary/50 transition-colors duration-500" />
+                                  <div className="absolute top-6 right-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+                                    <SourceIcon className="h-14 w-14 text-primary/15 group-hover:text-primary/40 transition-colors duration-500" />
                                   </div>
                                   <div className="relative flex flex-col h-full">
-                                    <div className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold mb-3 w-fit bg-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')}/10 text-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')} transition-all duration-300 group-hover:scale-105`}>
+                                    <div className={`inline-flex px-3 py-1.5 rounded-full text-xs font-semibold mb-4 w-fit bg-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')}/10 text-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')} transition-all duration-300 group-hover:scale-105`}>
                                       {node.stage}
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300 pr-16">
+                                    <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors duration-300 pr-20 leading-tight">
                                       {node.scenario_title}
                                     </h3>
-                                    <p className="text-muted-foreground mb-4 flex-grow leading-relaxed">
+                                    <p className="text-muted-foreground/90 mb-6 flex-grow leading-relaxed text-[15px]">
                                       {node.scenario_description}
                                     </p>
-                                    <div className="flex items-center text-sm text-primary font-medium mt-auto pt-2">
+                                    <div className="flex items-center text-sm text-primary font-semibold mt-auto pt-4 border-t border-border/50">
                                       <span className="transition-all duration-300 group-hover:mr-1">Start This Path</span>
                                       <ArrowLeft className="ml-2 h-4 w-4 rotate-180 transition-all duration-300 group-hover:translate-x-2" />
                                     </div>
