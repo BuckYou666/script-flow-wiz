@@ -91,6 +91,21 @@ const Index = () => {
     }
   };
 
+  const handleSelectChild = (nodeId: string) => {
+    const node = workflowNodes.find(n => n.node_id === nodeId);
+    if (node) {
+      // Preserve navigation history when clicking child cards
+      if (currentNode) {
+        setNavigationPath(prev => [...prev, currentNode]);
+      }
+      setCurrentNodeId(nodeId);
+      setExpandedNodeId(nodeId);
+      toast.success("Navigating to", {
+        description: node.scenario_title
+      });
+    }
+  };
+
   const handleNavigate = (nextNodeId: string, action: "yes" | "no" | "no_response") => {
     const nextNode = workflowNodes.find(node => node.node_id === nextNodeId);
     if (nextNode) {
@@ -321,7 +336,7 @@ const Index = () => {
                         isExpanded={true}
                         onToggle={() => {}}
                         childNodes={filteredNodes}
-                        onSelectChild={handleSelectSource}
+                        onSelectChild={handleSelectChild}
                       />
 
                       {filteredNodes.length === 0 && childNodes.length === 0 && (
