@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,18 +9,20 @@ import { cn } from "@/lib/utils";
  * follows the same visual and functional patterns.
  * 
  * Height Calculation Logic:
- * - Main card container: calc(100vh - 12rem) to fit within viewport on standard laptop screens (1366×768, 1920×1080)
- *   - 12rem accounts for: top navigation bar (~4rem) + page margins/padding (~8rem)
- * - Script panel: Uses flex-grow with min-height to fill available space
- * - NO max-height on script panel = no inner scrollbar
- * - If content exceeds viewport, the PAGE scrolls (not an inner container)
+ * - Main container: calc(100vh - 64px - 72px - 40px)
+ *   - 64px = top global nav (Start Over / Edit Mode / Stage Guide)
+ *   - 72px = "Currently Learning" strip
+ *   - 40px = extra breathing room for margins
+ * - Body flexes to fill remaining space with script centered vertically
+ * - Footer (Back/Next) always hugs bottom of card, never in scrollable region
+ * - Scrolling happens at PAGE level, not inside the card
  * 
  * Layout Structure:
- * 1. Header (fixed at top): stage badges, title, description, action buttons
- * 2. Instruction Bar (optional): non-script guidance like "Wait for them to answer..."
- * 3. Script Panel (flexible): main content area that grows to fit content
- * 4. Footer Controls (optional): navigation buttons like Back/Next
- * 5. Next Steps Section (fixed at bottom, inside border): action cards for next stages
+ * 1. Header (top): chips, title, subtitle, header actions
+ * 2. Mode Bar (optional): Mode / Step indicator
+ * 3. Body (flexible, fills space): contains script content, vertically centered
+ * 4. Footer (bottom, fixed): Back/Next controls
+ * 5. Next Steps Section (below footer, inside border): action cards for next stages
  * 
  * Future Notes:
  * - All new workflow nodes MUST use this layout component
@@ -30,17 +31,20 @@ import { cn } from "@/lib/utils";
  */
 
 interface TrainingStageLayoutProps {
-  // Header section
-  header: ReactNode;
+  // Header content
+  title: string;
+  subtitle?: string;
+  chips?: ReactNode;
+  headerRight?: ReactNode;
   
-  // Optional instruction bar (e.g., "Wait for them to answer before speaking")
-  instructionBar?: ReactNode;
+  // Mode bar (e.g., "Mode: Introduction Call | Step 1 of 5")
+  modeBar?: ReactNode;
   
-  // Main script/content panel
-  scriptPanel: ReactNode;
+  // Main script content (should include InstructionBar + ScriptCard)
+  children: ReactNode;
   
-  // Optional footer controls (e.g., Back/Next buttons)
-  footerControls?: ReactNode;
+  // Footer controls (Back/Next buttons)
+  footer?: ReactNode;
   
   // Next steps section (action cards)
   nextSteps?: ReactNode;
@@ -49,80 +53,95 @@ interface TrainingStageLayoutProps {
   className?: string;
   
   // Click handlers
-  onCardClick?: () => void;
-  onContentClick?: (e: React.MouseEvent) => void;
+  onClick?: () => void;
   
   // Expanded state
   isExpanded: boolean;
 }
 
 export const TrainingStageLayout = ({
-  header,
-  instructionBar,
-  scriptPanel,
-  footerControls,
+  title,
+  subtitle,
+  chips,
+  headerRight,
+  modeBar,
+  children,
+  footer,
   nextSteps,
   className,
-  onCardClick,
-  onContentClick,
+  onClick,
   isExpanded,
 }: TrainingStageLayoutProps) => {
+  if (!isExpanded) {
+    return (
+      <div
+        className={cn(
+          "transition-all duration-300 cursor-pointer hover:shadow-lg rounded-lg border bg-card p-6",
+          className
+        )}
+        onClick={onClick}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            {chips && <div className="flex flex-wrap gap-2 mb-2">{chips}</div>}
+            <h2 className="text-xl font-semibold">{title}</h2>
+            {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
+          </div>
+          {headerRight}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Card
+    <section 
       className={cn(
-        "transition-all duration-300 cursor-pointer hover:shadow-lg",
-        isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm",
+        "stage mx-auto px-6 py-4 rounded-2xl bg-background shadow-sm border border-border",
+        "flex flex-col max-w-[980px]",
         className
       )}
-      style={isExpanded ? {
-        // Main container height calculated to fit viewport on standard laptops
-        // Accounts for: top nav (4rem) + page margins/padding (8rem) = 12rem total
-        minHeight: 'calc(100vh - 12rem)',
-        display: 'flex',
-        flexDirection: 'column',
-      } : undefined}
-      onClick={onCardClick}
+      style={{
+        minHeight: 'calc(100vh - 64px - 72px - 40px)',
+      }}
     >
-      {/* Header Section - Fixed at Top */}
-      <CardHeader className={cn(isExpanded && "py-3 flex-shrink-0")}>
-        {header}
-      </CardHeader>
-
-      {isExpanded && (
-        <CardContent
-          className="pt-0 pb-4 flex flex-col gap-3"
-          onClick={onContentClick}
-        >
-          {/* Instruction Bar - Optional non-script guidance */}
-          {instructionBar && (
-            <div className="flex-shrink-0">
-              {instructionBar}
-            </div>
-          )}
-
-          {/* Main Script Panel - Grows to fit content, NO max-height, NO inner scroll */}
-          <div className="flex-shrink-0 flex-grow-0">
-            {scriptPanel}
+      {/* Header */}
+      <header className="stage__header flex items-start justify-between gap-4 mb-2">
+        <div className="stage__header-left flex flex-col gap-1">
+          {chips && <div className="stage__chips flex flex-wrap gap-2">{chips}</div>}
+          <div>
+            <h2 className="stage__title text-[20px] font-semibold m-0">{title}</h2>
+            {subtitle && <p className="stage__subtitle text-[13px] text-muted-foreground m-0 mt-1">{subtitle}</p>}
           </div>
+        </div>
+        {headerRight && <div className="stage__header-right">{headerRight}</div>}
+      </header>
 
-          {/* Footer Controls - Optional navigation buttons */}
-          {footerControls && (
-            <div className="flex-shrink-0">
-              {footerControls}
-            </div>
-          )}
+      {/* Mode Bar */}
+      {modeBar && <div className="stage__mode my-2">{modeBar}</div>}
 
-          {/* Next Steps Section - Always at bottom, inside border */}
-          {nextSteps && (
-            <div className="flex-shrink-0 pt-4 mt-2 border-t border-[#E4E7EB]">
-              <h4 className="font-semibold text-xs text-[#8A8F98] uppercase tracking-wider mb-3">
-                Next Steps
-              </h4>
-              {nextSteps}
-            </div>
-          )}
-        </CardContent>
+      {/* Body - script area that grows and centers content */}
+      <div className="stage__body flex-1 flex flex-col">
+        <div className="stage__script flex-1 flex items-center justify-center">
+          {children}
+        </div>
+
+        {/* Footer - always at bottom of card */}
+        {footer && (
+          <div className="stage__footer mt-4 flex justify-center">
+            {footer}
+          </div>
+        )}
+      </div>
+
+      {/* Next Steps Section - inside border */}
+      {nextSteps && (
+        <div className="flex-shrink-0 pt-4 mt-4 border-t border-[#E4E7EB]">
+          <h4 className="font-semibold text-xs text-[#8A8F98] uppercase tracking-wider mb-3">
+            Next Steps
+          </h4>
+          {nextSteps}
+        </div>
       )}
-    </Card>
+    </section>
   );
 };

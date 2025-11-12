@@ -16,6 +16,7 @@ import { ConversationHistory } from "./ConversationHistory";
 import { ScriptStepper } from "./ScriptStepper";
 import { TrainingStageLayout } from "./TrainingStageLayout";
 import { InstructionBar } from "./InstructionBar";
+import { ScriptCard } from "./ScriptCard";
 
 interface WorkflowNodeProps {
   node: WorkflowNodeType;
@@ -173,61 +174,52 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
      node.scenario_title.toLowerCase().includes("phone") ||
      node.scenario_title.toLowerCase().includes("video"));
 
-  // Render the header content
-  const headerContent = (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1.5">
-          <Badge 
-            variant="outline" 
-            className={cn(
-              "font-medium border-2",
-              `bg-${stageLightColor} text-${stageColor} border-${stageColor}`
-            )}
-          >
-            {node.stage}
-          </Badge>
-          {node.script_name && (
-            <Badge variant="secondary" className="text-xs">
-              {node.script_name}
-            </Badge>
-          )}
-        </div>
-        <CardTitle className="text-xl mb-1">{node.scenario_title}</CardTitle>
-        {!isWebsiteSignupStart && (
-          <CardDescription className="text-xs">{node.scenario_description}</CardDescription>
+  // Render the chips (badges)
+  const chipsContent = (
+    <>
+      <Badge 
+        variant="outline" 
+        className={cn(
+          "font-medium border-2",
+          `bg-${stageLightColor} text-${stageColor} border-${stageColor}`
         )}
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {/* View Lead Info Button */}
-        {isExpanded && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsLeadInfoOpen(true);
-            }}
-            className="gap-1.5 h-8 text-xs"
-          >
-            <User className="h-3.5 w-3.5" />
-            View Lead Info
-          </Button>
-        )}
-        <ChevronRight 
-          className={cn(
-            "h-5 w-5 text-muted-foreground transition-transform",
-            isExpanded && "rotate-90"
-          )} 
-        />
-      </div>
-    </div>
+      >
+        {node.stage}
+      </Badge>
+      {node.script_name && (
+        <Badge variant="secondary" className="text-xs">
+          {node.script_name}
+        </Badge>
+      )}
+    </>
   );
 
-  // Render instruction bar for call-based interactions
-  const instructionBarContent = isCallBasedInteraction && !isWebsiteSignupStart ? (
-    <InstructionBar text="Wait for them to answer before speaking." />
-  ) : null;
+  // Render the header right content
+  const headerRightContent = isExpanded ? (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsLeadInfoOpen(true);
+        }}
+        className="gap-1.5 h-8 text-xs"
+      >
+        <User className="h-3.5 w-3.5" />
+        View Lead Info
+      </Button>
+      {!isExpanded && (
+        <ChevronRight 
+          className="h-5 w-5 text-muted-foreground"
+        />
+      )}
+    </>
+  ) : (
+    <ChevronRight 
+      className="h-5 w-5 text-muted-foreground"
+    />
+  );
 
   // Render the main script/content panel
   const scriptPanelContent = (
@@ -429,11 +421,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               }}
               variant="outline"
               size="sm"
-              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-choice-yes-bg border-choice-yes-border hover:border-choice-yes-text hover:bg-choice-yes-bg/80 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
             >
-              <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-choice-yes-text flex-shrink-0" />
               <span className="text-left">
-                <div className="font-semibold text-xs text-[#333333]">Prospect says YES</div>
+                <div className="font-semibold text-xs text-foreground">Prospect says YES</div>
                 <div className="text-xs text-muted-foreground">Continue to next step</div>
               </span>
             </Button>
@@ -446,11 +438,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               }}
               variant="outline"
               size="sm"
-              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-choice-no-bg border-choice-no-border hover:border-choice-no-text hover:bg-choice-no-bg/80 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
             >
-              <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
+              <XCircle className="h-4 w-4 text-choice-no-text flex-shrink-0" />
               <span className="text-left">
-                <div className="font-semibold text-xs text-[#333333]">Prospect says NO</div>
+                <div className="font-semibold text-xs text-foreground">Prospect says NO</div>
                 <div className="text-xs text-muted-foreground">Handle objection</div>
               </span>
             </Button>
@@ -463,11 +455,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               }}
               variant="outline"
               size="sm"
-              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+              className="justify-start gap-2 h-auto py-1.5 px-3 border-2 bg-choice-unsure-bg border-choice-unsure-border hover:border-choice-unsure-text hover:bg-choice-unsure-bg/80 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
             >
-              <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
+              <Clock className="h-4 w-4 text-choice-unsure-text flex-shrink-0" />
               <span className="text-left">
-                <div className="font-semibold text-xs text-[#333333]">No Response</div>
+                <div className="font-semibold text-xs text-foreground">No Response</div>
                 <div className="text-xs text-muted-foreground">Follow-up action</div>
               </span>
             </Button>
@@ -523,14 +515,202 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   return (
     <>
       <TrainingStageLayout
-        header={headerContent}
-        instructionBar={instructionBarContent}
-        scriptPanel={scriptPanelContent}
-        nextSteps={nextStepsContent}
+        title={node.scenario_title}
+        subtitle={!isWebsiteSignupStart ? node.scenario_description : undefined}
+        chips={chipsContent}
+        headerRight={headerRightContent}
         isExpanded={isExpanded}
-        onCardClick={onToggle}
-        onContentClick={(e) => e.stopPropagation()}
-      />
+        onClick={onToggle}
+        nextSteps={nextStepsContent}
+      >
+        <div className="w-full space-y-3">
+          {/* Lead Overview for Website Signup Start Node */}
+          {isWebsiteSignupStart && (
+            <>
+              <LeadOverview lead={currentLead} />
+              <ConversationHistory
+                leadId={currentLead.id}
+                conversationHistory={currentLead.conversation_history as any[] || []}
+              />
+            </>
+          )}
+
+          {/* Script Section with Instruction Bar + ScriptCard */}
+          {processedScriptContent && !isWebsiteSignupStart && (
+            <div className="space-y-3">
+              {/* Instruction Bar for call-based interactions */}
+              {isCallBasedInteraction && (
+                <InstructionBar>
+                  Wait for them to answer before speaking.
+                </InstructionBar>
+              )}
+              
+              {/* CRM Actions Toggle */}
+              {node.crm_actions && (
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCrmActions(!showCrmActions)}
+                    className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                    {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
+                  </Button>
+                </div>
+              )}
+
+              {/* Main Script Card */}
+              <ScriptCard>
+                <ScriptStepper
+                  scriptContent={processedScriptContent}
+                  renderScriptLine={renderScriptLine}
+                  replacementValues={replacementValues}
+                  contactMethod={node.scenario_title}
+                  centerContent={node.scenario_title === "Choose Contact Method"}
+                />
+              </ScriptCard>
+
+              {/* Inline Replies Section */}
+              {inlineReplies && inlineReplies.length > 0 && (
+                <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-4 border-2 border-blue-200/40 dark:border-blue-800/40 shadow-sm">
+                  <div className="flex flex-col gap-2.5">
+                    {inlineReplies.map((reply: any, idx: number) => {
+                        const isYes = reply.type === 'yes';
+                        const isNo = reply.type === 'no';
+                        
+                        const bgColor = isYes 
+                          ? 'bg-choice-yes-bg hover:bg-choice-yes-bg/80' 
+                          : isNo 
+                            ? 'bg-choice-no-bg hover:bg-choice-no-bg/80'
+                            : 'bg-choice-unsure-bg hover:bg-choice-unsure-bg/80';
+                        
+                        const borderColor = isYes
+                          ? 'border-choice-yes-border hover:border-choice-yes-text'
+                          : isNo
+                            ? 'border-choice-no-border hover:border-choice-no-text'
+                            : 'border-choice-unsure-border hover:border-choice-unsure-text';
+                        
+                        const iconColor = isYes
+                          ? 'text-choice-yes-text'
+                          : isNo
+                            ? 'text-choice-no-text'
+                            : 'text-choice-unsure-text';
+                        
+                        const nextNodeId = isYes 
+                          ? node.on_yes_next_node 
+                          : isNo 
+                            ? node.on_no_next_node 
+                            : node.on_no_response_next_node;
+                        
+                        return (
+                          <button
+                            key={idx}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (nextNodeId) {
+                                onNavigate(nextNodeId, reply.type);
+                              }
+                            }}
+                            className={cn(
+                              "w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 shadow-sm hover:shadow-md",
+                              bgColor,
+                              borderColor
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={cn("text-2xl flex-shrink-0", iconColor)}>{reply.emoji}</span>
+                              <div className="flex-1">
+                                <div className={cn("font-semibold text-sm uppercase tracking-wide mb-1", iconColor)}>
+                                  {reply.type}
+                                </div>
+                                <div className="text-sm font-medium text-foreground">
+                                  {reply.text}
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              {node.script_section && (
+                <p className="text-xs text-muted-foreground italic pl-1">
+                  📋 Section: {node.script_section}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* CRM Actions - Collapsible */}
+          {node.crm_actions && showCrmActions && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+                CRM Actions
+              </h4>
+              <div className="bg-amber-50/50 dark:bg-amber-950/10 rounded-lg p-4 border-2 border-amber-200/40 dark:border-amber-800/30 shadow-sm">
+                <div className="text-sm leading-relaxed whitespace-pre-line space-y-2">
+                  {node.crm_actions.split('\n').map((line, index) => {
+                    if (!line.trim()) return <br key={index} />;
+                    const isField = line.includes('Field:') || line.includes('Input:');
+                    const isUpdate = line.includes('Update') || line.includes('Create') || line.includes('Tag');
+                    
+                    if (isField) {
+                      return (
+                        <p key={index} className="text-xs bg-amber-100/50 dark:bg-amber-900/20 rounded px-2 py-1 font-mono">
+                          {line}
+                        </p>
+                      );
+                    } else if (isUpdate) {
+                      return (
+                        <p key={index} className="font-medium text-amber-900 dark:text-amber-100">
+                          ✓ {line}
+                        </p>
+                      );
+                    }
+                    return <p key={index}>{line}</p>;
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* If no script but has CRM actions */}
+          {!node.script_content && node.crm_actions && (
+            <div className="space-y-2">
+              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+                CRM Actions
+              </h4>
+              <div className="bg-amber-50/50 dark:bg-amber-950/10 rounded-lg p-4 border-2 border-amber-200/40 dark:border-amber-800/30 shadow-sm">
+                <div className="text-sm leading-relaxed whitespace-pre-line space-y-2">
+                  {node.crm_actions.split('\n').map((line, index) => {
+                    if (!line.trim()) return <br key={index} />;
+                    const isField = line.includes('Field:') || line.includes('Input:');
+                    const isUpdate = line.includes('Update') || line.includes('Create') || line.includes('Tag');
+                    
+                    if (isField) {
+                      return (
+                        <p key={index} className="text-xs bg-amber-100/50 dark:bg-amber-900/20 rounded px-2 py-1 font-mono">
+                          {line}
+                        </p>
+                      );
+                    } else if (isUpdate) {
+                      return (
+                        <p key={index} className="font-medium text-amber-900 dark:text-amber-100">
+                          ✓ {line}
+                        </p>
+                      );
+                    }
+                    return <p key={index}>{line}</p>;
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </TrainingStageLayout>
       
       {/* Lead Info Sheet */}
       <LeadInfoSheet

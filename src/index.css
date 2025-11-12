@@ -60,6 +60,19 @@ All colors MUST be HSL.
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Choice card colors - professional, muted palette */
+    --choice-yes-bg: 152 48% 97%;
+    --choice-yes-border: 152 40% 80%;
+    --choice-yes-text: 152 65% 25%;
+    
+    --choice-no-bg: 0 30% 97%;
+    --choice-no-border: 0 40% 80%;
+    --choice-no-text: 0 70% 45%;
+    
+    --choice-unsure-bg: 38 40% 97%;
+    --choice-unsure-border: 38 50% 80%;
+    --choice-unsure-text: 38 70% 35%;
 
     --radius: 0.75rem;
 
@@ -122,6 +135,19 @@ All colors MUST be HSL.
     
     --shadow-card: 0 2px 8px hsl(0 0% 0% / 0.3);
     --shadow-hover: 0 4px 16px hsl(0 0% 0% / 0.4);
+    
+    /* Dark mode choice colors */
+    --choice-yes-bg: 152 40% 15%;
+    --choice-yes-border: 152 30% 30%;
+    --choice-yes-text: 152 50% 70%;
+    
+    --choice-no-bg: 0 30% 15%;
+    --choice-no-border: 0 30% 30%;
+    --choice-no-text: 0 50% 70%;
+    
+    --choice-unsure-bg: 38 35% 15%;
+    --choice-unsure-border: 38 35% 30%;
+    --choice-unsure-text: 38 50% 70%;
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

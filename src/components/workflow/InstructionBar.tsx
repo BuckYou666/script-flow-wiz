@@ -2,49 +2,43 @@ import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * InstructionBar - Dedicated component for non-script guidance
+ * InstructionBar - Non-spoken guidance component
  * 
- * This component displays instructional text that should NOT be spoken by reps
- * (e.g., "Wait for them to answer before speaking", workflow directives, internal notes).
+ * Displays instructional text that should NOT be spoken by reps.
+ * Examples: "Wait for them to answer before speaking", workflow directives, internal notes.
  * 
  * Visual Design:
- * - Light blue/grey background to distinguish from script content
- * - Smaller italic font in muted grey color
+ * - Grey pill/badge style with dashed border
+ * - Smaller italic font in muted color
  * - Optional icon for visual clarity
- * - Subtle rounded corners and border
- * 
- * Usage:
- * - Only shown when there is actual instruction text to display
  * - Always appears ABOVE the script content
- * - Conditionally rendered based on contact method (e.g., only for calls, not texts)
+ * - Clearly distinct from spoken dialogue
  */
 
 interface InstructionBarProps {
-  text: string;
   icon?: React.ReactNode;
+  children: React.ReactNode;
   className?: string;
 }
 
 export const InstructionBar = ({ 
-  text, 
-  icon = <Clock className="h-4 w-4 text-blue-600/70 dark:text-blue-400/70 flex-shrink-0 mt-0.5" />,
+  icon = <Clock className="h-3.5 w-3.5 flex-shrink-0" />,
+  children,
   className 
 }: InstructionBarProps) => {
-  if (!text || !text.trim()) {
+  if (!children) {
     return null;
   }
 
   return (
     <div className={cn(
-      "flex items-start gap-2.5 py-2.5 px-4",
-      "bg-blue-50/50 dark:bg-blue-950/20",
-      "rounded-lg border border-blue-200/40 dark:border-blue-800/40",
+      "instruction-bar inline-flex items-center gap-2 px-3 py-1.5 mb-3",
+      "rounded-full bg-muted/50 border border-dashed border-border",
+      "text-xs italic text-muted-foreground",
       className
     )}>
-      {icon}
-      <p className="text-sm italic text-[#8A8F98] leading-relaxed">
-        {text}
-      </p>
+      {icon && <span className="instruction-bar__icon">{icon}</span>}
+      <span className="instruction-bar__text">{children}</span>
     </div>
   );
 };

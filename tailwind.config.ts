@@ -69,6 +69,23 @@ export default {
           outcome: "hsl(var(--stage-outcome))",
           "outcome-light": "hsl(var(--stage-outcome-light))",
         },
+        choice: {
+          yes: {
+            bg: "hsl(var(--choice-yes-bg))",
+            border: "hsl(var(--choice-yes-border))",
+            text: "hsl(var(--choice-yes-text))",
+          },
+          no: {
+            bg: "hsl(var(--choice-no-bg))",
+            border: "hsl(var(--choice-no-border))",
+            text: "hsl(var(--choice-no-text))",
+          },
+          unsure: {
+            bg: "hsl(var(--choice-unsure-bg))",
+            border: "hsl(var(--choice-unsure-border))",
+            text: "hsl(var(--choice-unsure-text))",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
