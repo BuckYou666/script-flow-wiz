@@ -237,7 +237,7 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
         style={{ 
-          minHeight: centerContent ? "180px" : "240px",
+          minHeight: centerContent ? "160px" : "200px",
         }}
       >
         {/* Click feedback ripple effect */}
@@ -250,10 +250,10 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 py-6 cursor-pointer flex flex-col items-center text-center",
+            "flex-1 px-8 py-4 cursor-pointer flex flex-col items-center text-center",
             // Decision prompts (Choose Contact Method): top-aligned with padding
             // Call scripts: fully centered
-            centerContent ? "justify-start pt-10" : "justify-center"
+            centerContent ? "justify-start pt-8" : "justify-center"
           )}
         >
           <div
@@ -276,7 +276,7 @@ export const ScriptStepper = ({
         </div>
 
         {/* Fixed Navigation Controls at Bottom */}
-        <div className="flex-shrink-0 px-8 pb-4 pt-2 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
+        <div className="flex-shrink-0 px-8 pb-3 pt-1 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
           <div className="flex flex-col items-center gap-3">
             {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
