@@ -179,7 +179,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm overflow-hidden"
       )}
       style={isExpanded ? {
-        height: 'calc(100vh - 20rem)',
+        height: 'calc(100vh - 8rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
@@ -259,7 +259,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             style={!isShortScriptStage ? { 
               flex: '1',
               minHeight: 0,
-              maxHeight: 'calc(100vh - 32rem)'
+              maxHeight: 'calc(100vh - 20rem)'
             } : undefined}
           >
           {/* Lead Overview for Website Signup Start Node */}
