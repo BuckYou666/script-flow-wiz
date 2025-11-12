@@ -176,15 +176,26 @@ const Index = () => {
               </div>
             ) : (
               <div className="py-3 flex items-center justify-between gap-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleReset}
-                  className="gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Start Over
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleBack}
+                    disabled={navigationPath.length === 0}
+                    className="gap-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleReset}
+                    className="gap-2"
+                  >
+                    Start Over
+                  </Button>
+                </div>
                 <Sheet open={showGuide} onOpenChange={setShowGuide}>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
