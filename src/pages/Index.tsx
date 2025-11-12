@@ -296,37 +296,37 @@ const Index = () => {
                     )}
                     
                     {filteredNodes.length > 0 && (
-                      <div className="grid gap-6 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                      <div className="grid gap-6 md:grid-cols-2 auto-rows-fr animate-in fade-in slide-in-from-bottom-4 duration-700">
                         {filteredNodes.map((node, index) => {
                           const SourceIcon = getSourceIcon(node.node_id);
                           return (
                             <div
                               key={node.node_id}
-                              className="animate-in fade-in slide-in-from-bottom-2 duration-500"
+                              className="animate-in fade-in slide-in-from-bottom-2 duration-500 h-full"
                               style={{ animationDelay: `${index * 100}ms` }}
                             >
                               <button
                                 onClick={() => handleSelectSource(node.node_id)}
-                                className="w-full text-left group"
+                                className="w-full h-full text-left group"
                               >
-                                <div className="relative overflow-hidden rounded-xl border-2 border-border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary/50 cursor-pointer">
-                                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                  <div className="absolute top-4 right-4">
-                                    <SourceIcon className="h-12 w-12 text-primary/20 group-hover:text-primary/40 transition-colors" />
+                                <div className="relative overflow-hidden rounded-xl border-2 border-border bg-card h-full p-6 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:scale-[1.03] hover:border-primary/60 hover:-translate-y-1 cursor-pointer">
+                                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                  <div className="absolute top-4 right-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+                                    <SourceIcon className="h-12 w-12 text-primary/20 group-hover:text-primary/50 transition-colors duration-500" />
                                   </div>
-                                  <div className="relative">
-                                    <div className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold mb-3 bg-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')}/10 text-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')}`}>
+                                  <div className="relative flex flex-col h-full">
+                                    <div className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold mb-3 w-fit bg-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')}/10 text-stage-${node.stage.toLowerCase().replace(/[^a-z]/g, '')} transition-all duration-300 group-hover:scale-105`}>
                                       {node.stage}
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors pr-16">
+                                    <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300 pr-16">
                                       {node.scenario_title}
                                     </h3>
-                                    <p className="text-muted-foreground mb-4">
+                                    <p className="text-muted-foreground mb-4 flex-grow leading-relaxed">
                                       {node.scenario_description}
                                     </p>
-                                    <div className="flex items-center text-sm text-primary font-medium">
-                                      <span>Start This Path</span>
-                                      <ArrowLeft className="ml-2 h-4 w-4 rotate-180 group-hover:translate-x-1 transition-transform" />
+                                    <div className="flex items-center text-sm text-primary font-medium mt-auto pt-2">
+                                      <span className="transition-all duration-300 group-hover:mr-1">Start This Path</span>
+                                      <ArrowLeft className="ml-2 h-4 w-4 rotate-180 transition-all duration-300 group-hover:translate-x-2" />
                                     </div>
                                   </div>
                                 </div>
