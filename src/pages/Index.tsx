@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useWorkflowNodes } from "@/hooks/useWorkflowNodes";
 import { WorkflowNode as WorkflowNodeType, StageType, getStageColor, getStageLightColor } from "@/types/workflow";
 import { WorkflowNode } from "@/components/workflow/WorkflowNode";
@@ -10,7 +11,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info, ChevronRight } from "lucide-react";
+import { ArrowLeft, Users, Globe, PhoneIncoming, Target, UserCheck, RefreshCw, Info, ChevronRight, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ const getSourceIcon = (nodeId: string) => {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const { data: workflowNodes = [], isLoading } = useWorkflowNodes();
   const [currentNodeId, setCurrentNodeId] = useState<string>("START");
   const [expandedNodeId, setExpandedNodeId] = useState<string | null>("START");
@@ -182,12 +184,23 @@ const Index = () => {
           <div className="container mx-auto max-w-7xl">
             {currentNodeId === "START" ? (
               <div className="py-6">
-                <WorkflowHeader
-                  searchQuery={searchQuery}
-                  onSearchChange={setSearchQuery}
-                  stageFilter={stageFilter}
-                  onStageFilterChange={setStageFilter}
-                />
+                <div className="flex items-center justify-between mb-4">
+                  <WorkflowHeader
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    stageFilter={stageFilter}
+                    onStageFilterChange={setStageFilter}
+                  />
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => navigate("/admin/workflow")}
+                    className="gap-2 bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit Workflow
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="py-3 flex items-center justify-between gap-4">
@@ -211,22 +224,33 @@ const Index = () => {
                     Start Over
                   </Button>
                 </div>
-                <Sheet open={showGuide} onOpenChange={setShowGuide}>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Info className="h-4 w-4" />
-                      <span className="hidden sm:inline">Stage Guide</span>
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-[400px] sm:w-[540px] overflow-y-auto">
-                    <SheetHeader>
-                      <SheetTitle>Stage Guide</SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-6">
-                      <StageLegend />
-                    </div>
-                  </SheetContent>
-                </Sheet>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => navigate("/admin/workflow")}
+                    className="gap-2 bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit Mode
+                  </Button>
+                  <Sheet open={showGuide} onOpenChange={setShowGuide}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Info className="h-4 w-4" />
+                        <span className="hidden sm:inline">Stage Guide</span>
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[400px] sm:w-[540px] overflow-y-auto">
+                      <SheetHeader>
+                        <SheetTitle>Stage Guide</SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-6">
+                        <StageLegend />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
               </div>
             )}
           </div>

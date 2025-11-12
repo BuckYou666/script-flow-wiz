@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { NodeEditor } from "@/components/admin/NodeEditor";
 import { WorkflowFlowView } from "@/components/admin/WorkflowFlowView";
+import { WorkflowGuide } from "@/components/admin/WorkflowGuide";
 import { 
   useWorkflowNodes, 
   useCreateWorkflowNode, 
@@ -16,7 +17,7 @@ import {
   useBulkImportNodes 
 } from "@/hooks/useWorkflowNodes";
 import { WorkflowNode } from "@/types/workflow";
-import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen, Check, X, Network, List } from "lucide-react";
+import { LogOut, Plus, Upload, Pencil, Trash2, Search, ChevronDown, FolderOpen, Check, X, Network, List, HelpCircle, ArrowLeft } from "lucide-react";
 import { workflowNodes as staticData } from "@/data/workflowData";
 import { outboundWorkflowNodes } from "@/data/outboundWorkflowData";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -33,6 +34,7 @@ const AdminWorkflow = () => {
   const [editingName, setEditingName] = useState("");
   const [viewMode, setViewMode] = useState<'list' | 'flow'>('list');
   const [selectedWorkflowForFlow, setSelectedWorkflowForFlow] = useState<string | null>(null);
+  const [showGuide, setShowGuide] = useState(false);
 
   const { data: nodes, isLoading } = useWorkflowNodes();
   const createNode = useCreateWorkflowNode();
@@ -184,14 +186,36 @@ const AdminWorkflow = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Workflow Admin</h1>
-            <p className="text-muted-foreground">Manage sales workflow scripts and nodes</p>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Training
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Workflow Editor</h1>
+              <p className="text-muted-foreground">Edit scripts, nodes, and connections for your sales workflow</p>
+            </div>
           </div>
-          <Button variant="outline" onClick={handleSignOut} className="gap-2">
-            <LogOut className="h-4 w-4" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowGuide(true)}
+              className="gap-2"
+            >
+              <HelpCircle className="h-4 w-4" />
+              How to Edit
+            </Button>
+            <Button variant="outline" onClick={handleSignOut} className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         <Card>
@@ -374,6 +398,11 @@ const AdminWorkflow = () => {
         open={isEditorOpen}
         onClose={() => { setIsEditorOpen(false); setSelectedNode(null); }}
         onSave={handleSaveNode}
+      />
+
+      <WorkflowGuide
+        open={showGuide}
+        onClose={() => setShowGuide(false)}
       />
 
       <AlertDialog open={!!nodeToDelete} onOpenChange={() => setNodeToDelete(null)}>
