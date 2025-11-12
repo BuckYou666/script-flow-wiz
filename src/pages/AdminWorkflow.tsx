@@ -35,6 +35,7 @@ const AdminWorkflow = () => {
   const [viewMode, setViewMode] = useState<'list' | 'flow'>('list');
   const [selectedWorkflowForFlow, setSelectedWorkflowForFlow] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
+  const [workflowToDelete, setWorkflowToDelete] = useState<string | null>(null);
 
   const { data: nodes, isLoading } = useWorkflowNodes();
   const createNode = useCreateWorkflowNode();
@@ -165,6 +166,16 @@ const AdminWorkflow = () => {
   const handleCancelEditWorkflow = () => {
     setEditingWorkflow(null);
     setEditingName("");
+  };
+
+  const handleDeleteWorkflow = async (workflowName: string) => {
+    const nodesToDelete = groupedWorkflows[workflowName];
+    for (const node of nodesToDelete) {
+      if (node.id) {
+        await deleteNode.mutateAsync(node.id);
+      }
+    }
+    setWorkflowToDelete(null);
   };
 
   // Auto-expand all workflows on first load and set default flow workflow
@@ -340,14 +351,27 @@ const AdminWorkflow = () => {
                             )}
                           </div>
                           {editingWorkflow !== workflowName && (
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
-                              onClick={(e) => handleStartEditWorkflow(workflowName, e)}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
+                            <>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                onClick={(e) => handleStartEditWorkflow(workflowName, e)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setWorkflowToDelete(workflowName);
+                                }}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </>
                           )}
                           <ChevronDown className={`h-5 w-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                         </div>
@@ -416,6 +440,7 @@ const AdminWorkflow = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => {
                 if (nodeToDelete) {
                   deleteNode.mutate(nodeToDelete);
@@ -424,6 +449,30 @@ const AdminWorkflow = () => {
               }}
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!workflowToDelete} onOpenChange={() => setWorkflowToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Entire Workflow</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete the "{workflowToDelete}" workflow and all {workflowToDelete ? groupedWorkflows[workflowToDelete]?.length : 0} nodes within it? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                if (workflowToDelete) {
+                  handleDeleteWorkflow(workflowToDelete);
+                }
+              }}
+            >
+              Delete Workflow
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
