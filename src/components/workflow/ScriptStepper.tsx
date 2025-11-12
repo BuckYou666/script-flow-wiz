@@ -169,6 +169,16 @@ export const ScriptStepper = ({
 
   return (
     <div className="space-y-3">
+      {/* Instruction Bar - Always visible for call-based interactions */}
+      {isCallBasedInteraction && !centerContent && (
+        <div className="flex items-start gap-2.5 py-3 px-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/40 dark:border-blue-800/40">
+          <Clock className="h-4 w-4 text-blue-600/70 dark:text-blue-400/70 flex-shrink-0 mt-0.5" />
+          <p className="text-sm italic text-muted-foreground leading-relaxed">
+            Wait for them to answer before speaking.
+          </p>
+        </div>
+      )}
+
       {/* Top Bar: Mode Badge, Progress + Full Script Toggle - Hidden for single-step stages */}
       {!hideStepIndicator && (
         <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/30">
@@ -265,13 +275,6 @@ export const ScriptStepper = ({
             centerContent ? "overflow-hidden justify-start pt-12" : hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
           )}
         >
-          {/* Static Wait Instruction - Only for Call-Based Interactions */}
-          {isCallBasedInteraction && hideStepIndicator && !centerContent && (
-            <div className="mb-4 w-full max-w-2xl">
-              {renderInstructionLine("(Wait for them to answer before speaking.)")}
-            </div>
-          )}
-
           <div
             key={currentStep}
             className={cn(
