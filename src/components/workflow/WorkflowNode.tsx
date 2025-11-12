@@ -418,9 +418,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_yes_next_node!, "yes");
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                }, 100);
               }}
               variant="outline"
               size="sm"
@@ -438,9 +438,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_no_next_node!, "no");
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                }, 100);
               }}
               variant="outline"
               size="sm"
@@ -458,9 +458,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_no_response_next_node!, "no_response");
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                }, 100);
               }}
               variant="outline"
               size="sm"
@@ -485,9 +485,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onSelectChild?.(child.node_id);
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                }, 100);
               }}
             >
               <CardContent className="p-3">
@@ -622,9 +622,9 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                               e.stopPropagation();
                               if (nextNodeId) {
                                 onNavigate(nextNodeId, reply.type);
-                                requestAnimationFrame(() => {
+                                setTimeout(() => {
                                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                                });
+                                }, 100);
                               }
                             }}
                             className={cn(
