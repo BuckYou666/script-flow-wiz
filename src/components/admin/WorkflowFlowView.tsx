@@ -47,6 +47,7 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
     const flowNodes: Node[] = [];
     const flowEdges: Edge[] = [];
 
+    // First pass: create all nodes
     stageOrder.forEach((stage, stageIndex) => {
       const stageNodes = stageGroups[stage] || [];
       stageNodes.forEach((node, nodeIndex) => {
@@ -64,73 +65,79 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
             onNodeClick 
           },
         });
+      });
+    });
 
-        // Create edge from parent to this node (parent_id relationship)
-        if (node.parent_id && node.parent_id !== 'START') {
+    // Create a Set of all node IDs for fast lookup
+    const nodeIdSet = new Set(flowNodes.map(n => n.id));
+
+    // Second pass: create edges only if both source and target exist
+    nodes.forEach(node => {
+      // Create edge from parent to this node (parent_id relationship)
+      if (node.parent_id && node.parent_id !== 'START' && nodeIdSet.has(node.parent_id) && nodeIdSet.has(node.node_id)) {
+        flowEdges.push({
+          id: `parent-${node.parent_id}-to-${node.node_id}`,
+          source: node.parent_id,
+          target: node.node_id,
+          type: 'smoothstep',
+          animated: false,
+          style: { 
+            stroke: 'hsl(220, 15%, 65%)', 
+            strokeWidth: 2,
+            transition: 'all 0.2s ease'
+          },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: 'hsl(220, 15%, 65%)',
+          },
+          data: { 
+            sourceNode: node.parent_id, 
+            targetNode: node.node_id 
+          }
+        });
+      }
+
+      // Create edges based on decision branches (yes/no/no_response)
+      const edgeConfigs = [
+        { next: node.on_yes_next_node, type: 'yes', color: 'hsl(142, 71%, 45%)', label: 'Yes' },
+        { next: node.on_no_next_node, type: 'no', color: 'hsl(25, 95%, 53%)', label: 'No' },
+        { next: node.on_no_response_next_node, type: 'no_response', color: 'hsl(0, 72%, 51%)', label: 'No Response' }
+      ];
+
+      edgeConfigs.forEach(({ next, type, color, label }) => {
+        if (next && nodeIdSet.has(node.node_id) && nodeIdSet.has(next)) {
           flowEdges.push({
-            id: `parent-${node.parent_id}-to-${node.node_id}`,
-            source: node.parent_id,
-            target: node.node_id,
+            id: `${node.node_id}-${type}-${next}`,
+            source: node.node_id,
+            target: next,
             type: 'smoothstep',
-            animated: false,
+            animated: type === 'yes',
             style: { 
-              stroke: 'hsl(220, 15%, 65%)', 
+              stroke: color, 
               strokeWidth: 2,
               transition: 'all 0.2s ease'
             },
             markerEnd: {
               type: MarkerType.ArrowClosed,
-              color: 'hsl(220, 15%, 65%)',
+              color: color,
+            },
+            label: label,
+            labelStyle: { 
+              fill: 'hsl(220, 15%, 30%)', 
+              fontWeight: 500, 
+              fontSize: 11,
+              fontFamily: 'system-ui, sans-serif'
+            },
+            labelBgStyle: { 
+              fill: 'hsl(0, 0%, 100%)', 
+              fillOpacity: 0.95
             },
             data: { 
-              sourceNode: node.parent_id, 
-              targetNode: node.node_id 
+              sourceNode: node.node_id, 
+              targetNode: next 
             }
           });
         }
-
-        // Create edges based on decision branches (yes/no/no_response)
-        const edgeConfigs = [
-          { next: node.on_yes_next_node, type: 'yes', color: 'hsl(142, 71%, 45%)', label: 'Yes' },
-          { next: node.on_no_next_node, type: 'no', color: 'hsl(25, 95%, 53%)', label: 'No' },
-          { next: node.on_no_response_next_node, type: 'no_response', color: 'hsl(0, 72%, 51%)', label: 'No Response' }
-        ];
-
-        edgeConfigs.forEach(({ next, type, color, label }) => {
-          if (next) {
-            flowEdges.push({
-              id: `${node.node_id}-${type}-${next}`,
-              source: node.node_id,
-              target: next,
-              type: 'smoothstep',
-              animated: type === 'yes',
-              style: { 
-                stroke: color, 
-                strokeWidth: 2,
-                transition: 'all 0.2s ease'
-              },
-              markerEnd: {
-                type: MarkerType.ArrowClosed,
-                color: color,
-              },
-              label: label,
-              labelStyle: { 
-                fill: 'hsl(220, 15%, 30%)', 
-                fontWeight: 500, 
-                fontSize: 11,
-                fontFamily: 'system-ui, sans-serif'
-              },
-              labelBgStyle: { 
-                fill: 'hsl(0, 0%, 100%)', 
-                fillOpacity: 0.95
-              },
-              data: { 
-                sourceNode: node.node_id, 
-                targetNode: next 
-              }
-            });
-          }
-        });
       });
     });
 
