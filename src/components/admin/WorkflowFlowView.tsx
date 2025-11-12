@@ -65,11 +65,35 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
           },
         });
 
-        // Create edges based on next node relationships with subtle professional styling
+        // Create edge from parent to this node (parent_id relationship)
+        if (node.parent_id && node.parent_id !== 'START') {
+          flowEdges.push({
+            id: `parent-${node.parent_id}-to-${node.node_id}`,
+            source: node.parent_id,
+            target: node.node_id,
+            type: 'smoothstep',
+            animated: false,
+            style: { 
+              stroke: 'hsl(220, 15%, 65%)', 
+              strokeWidth: 2,
+              transition: 'all 0.2s ease'
+            },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: 'hsl(220, 15%, 65%)',
+            },
+            data: { 
+              sourceNode: node.parent_id, 
+              targetNode: node.node_id 
+            }
+          });
+        }
+
+        // Create edges based on decision branches (yes/no/no_response)
         const edgeConfigs = [
-          { next: node.on_yes_next_node, type: 'yes', color: 'hsl(217, 91%, 60%)', label: 'Yes' },
-          { next: node.on_no_next_node, type: 'no', color: 'hsl(220, 15%, 70%)', label: 'No' },
-          { next: node.on_no_response_next_node, type: 'no_response', color: 'hsl(220, 10%, 60%)', label: 'No Response' }
+          { next: node.on_yes_next_node, type: 'yes', color: 'hsl(142, 71%, 45%)', label: 'Yes' },
+          { next: node.on_no_next_node, type: 'no', color: 'hsl(25, 95%, 53%)', label: 'No' },
+          { next: node.on_no_response_next_node, type: 'no_response', color: 'hsl(0, 72%, 51%)', label: 'No Response' }
         ];
 
         edgeConfigs.forEach(({ next, type, color, label }) => {
@@ -79,7 +103,7 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
               source: node.node_id,
               target: next,
               type: 'smoothstep',
-              animated: false,
+              animated: type === 'yes',
               style: { 
                 stroke: color, 
                 strokeWidth: 2,
