@@ -102,7 +102,7 @@ export const TrainingStageLayout = ({
       className={cn("stage", className)}
       style={{ height: 'calc(100vh - 160px)' }}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full relative">
         {/* Header - fixed at top */}
         <header className="stage__header flex-shrink-0">
           <div className="stage__header-left">
@@ -118,27 +118,29 @@ export const TrainingStageLayout = ({
         {/* Mode Bar - fixed */}
         {modeBar && <div className="stage__mode flex-shrink-0">{modeBar}</div>}
 
-        {/* Content area - either scrollable lead overview or centered script */}
+        {/* Scrollable content area - ONLY this scrolls */}
         {isScrollableContent ? (
           <div className="flex-1 overflow-y-auto py-4 min-h-0">
             {children}
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center max-h-[320px] overflow-y-auto py-4">
-            {children}
+          <div className="flex-1 overflow-y-auto py-4 min-h-0">
+            <div className="flex items-center justify-center min-h-[240px]">
+              {children}
+            </div>
           </div>
         )}
 
-        {/* Footer - fixed at bottom */}
+        {/* Sticky Footer - always visible at bottom */}
         {footer && (
-          <div className="stage__footer flex-shrink-0">
+          <div className="flex-shrink-0 sticky bottom-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 border-t border-border pt-4 pb-2 -mx-6 px-6">
             {footer}
           </div>
         )}
 
-        {/* Next Steps Section - fixed at bottom */}
+        {/* Next Steps Section - below sticky footer */}
         {nextSteps && (
-          <div className="flex-shrink-0 pt-3 mt-3 border-t border-border">
+          <div className="flex-shrink-0 pt-3 pb-2 border-t border-border">
             <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
               Next Steps
             </h4>
