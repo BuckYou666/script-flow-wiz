@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { 
   ReactFlow, 
   Node, 
@@ -9,7 +9,8 @@ import {
   useNodesState,
   useEdgesState,
   ConnectionLineType,
-  MarkerType
+  MarkerType,
+  EdgeMouseHandler
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { WorkflowNode } from '@/types/workflow';
@@ -27,6 +28,9 @@ const horizontalSpacing = 350;
 const verticalSpacing = 200;
 
 export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) => {
+  const [hoveredEdge, setHoveredEdge] = useState<string | null>(null);
+  const [hoveredNodes, setHoveredNodes] = useState<Set<string>>(new Set());
+
   // Transform workflow nodes to React Flow format
   const { flowNodes, flowEdges } = useMemo(() => {
     // Group nodes by stage for layout
@@ -61,29 +65,45 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
           },
         });
 
-        // Create edges based on next node relationships
+        // Create edges based on next node relationships with subtle professional styling
         const edgeConfigs = [
-          { next: node.on_yes_next_node, type: 'yes', color: '#22c55e' },
-          { next: node.on_no_next_node, type: 'no', color: '#f97316' },
-          { next: node.on_no_response_next_node, type: 'no_response', color: '#ef4444' }
+          { next: node.on_yes_next_node, type: 'yes', color: 'hsl(217, 91%, 60%)', label: 'Yes' },
+          { next: node.on_no_next_node, type: 'no', color: 'hsl(220, 15%, 70%)', label: 'No' },
+          { next: node.on_no_response_next_node, type: 'no_response', color: 'hsl(220, 10%, 60%)', label: 'No Response' }
         ];
 
-        edgeConfigs.forEach(({ next, type, color }) => {
+        edgeConfigs.forEach(({ next, type, color, label }) => {
           if (next) {
             flowEdges.push({
               id: `${node.node_id}-${type}-${next}`,
               source: node.node_id,
               target: next,
               type: 'smoothstep',
-              animated: type === 'yes',
-              style: { stroke: color, strokeWidth: 2 },
+              animated: false,
+              style: { 
+                stroke: color, 
+                strokeWidth: 2,
+                transition: 'all 0.2s ease'
+              },
               markerEnd: {
                 type: MarkerType.ArrowClosed,
                 color: color,
               },
-              label: type === 'yes' ? 'Yes' : type === 'no' ? 'No' : 'No Response',
-              labelStyle: { fill: color, fontWeight: 600, fontSize: 12 },
-              labelBgStyle: { fill: 'white', fillOpacity: 0.9 },
+              label: label,
+              labelStyle: { 
+                fill: 'hsl(220, 15%, 30%)', 
+                fontWeight: 500, 
+                fontSize: 11,
+                fontFamily: 'system-ui, sans-serif'
+              },
+              labelBgStyle: { 
+                fill: 'hsl(0, 0%, 100%)', 
+                fillOpacity: 0.95
+              },
+              data: { 
+                sourceNode: node.node_id, 
+                targetNode: next 
+              }
             });
           }
         });
@@ -96,16 +116,68 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
   const [rfNodes, setNodes, onNodesChange] = useNodesState(flowNodes);
   const [rfEdges, setEdges, onEdgesChange] = useEdgesState(flowEdges);
 
+  // Handle edge hover for highlighting
+  const handleEdgeMouseEnter: EdgeMouseHandler = useCallback((event, edge) => {
+    setHoveredEdge(edge.id);
+    const sourceNode = edge.source;
+    const targetNode = edge.target;
+    setHoveredNodes(new Set([sourceNode, targetNode]));
+  }, []);
+
+  const handleEdgeMouseLeave: EdgeMouseHandler = useCallback(() => {
+    setHoveredEdge(null);
+    setHoveredNodes(new Set());
+  }, []);
+
+  // Update edges with hover state
+  const edgesWithHover = useMemo(() => {
+    return rfEdges.map(edge => {
+      const isHovered = hoveredEdge === edge.id;
+      const originalColor = (edge.markerEnd as any)?.color || 'hsl(220, 15%, 70%)';
+      
+      return {
+        ...edge,
+        style: {
+          ...edge.style,
+          strokeWidth: isHovered ? 3 : 2,
+          stroke: isHovered ? 'hsl(217, 91%, 50%)' : edge.style?.stroke,
+          opacity: hoveredEdge && !isHovered ? 0.3 : 1,
+        },
+        markerEnd: edge.markerEnd ? {
+          type: (edge.markerEnd as any).type || MarkerType.ArrowClosed,
+          color: isHovered ? 'hsl(217, 91%, 50%)' : originalColor,
+        } : undefined,
+      };
+    });
+  }, [rfEdges, hoveredEdge]);
+
   // Custom node component
-  const CustomNode = useCallback(({ data }: { data: { node: WorkflowNode; onNodeClick: (node: WorkflowNode) => void } }) => {
+  const CustomNode = useCallback(({ data, id }: { data: { node: WorkflowNode; onNodeClick: (node: WorkflowNode) => void }, id: string }) => {
     const { node, onNodeClick } = data;
     const stageColor = getStageColor(node.stage);
     const stageLightColor = getStageLightColor(node.stage);
+    const isHighlighted = hoveredNodes.has(id);
+    const isOrphan = !flowNodes.some(n => {
+      const wn = n.data.node as WorkflowNode;
+      return wn.on_yes_next_node === node.node_id || 
+             wn.on_no_next_node === node.node_id || 
+             wn.on_no_response_next_node === node.node_id;
+    }) && node.parent_id !== null;
 
     return (
       <div 
         className="px-4 py-3 border-2 rounded-lg bg-card shadow-lg cursor-pointer hover:shadow-xl transition-all group"
-        style={{ width: nodeWidth, borderColor: `hsl(var(--${stageColor}))` }}
+        style={{ 
+          width: nodeWidth, 
+          borderColor: `hsl(var(--${stageColor}))`,
+          borderStyle: isOrphan ? 'dashed' : 'solid',
+          opacity: isHighlighted ? 1 : hoveredEdge ? 0.4 : 1,
+          transform: isHighlighted ? 'scale(1.05)' : 'scale(1)',
+          transition: 'all 0.2s ease',
+          boxShadow: isHighlighted 
+            ? '0 8px 24px hsla(217, 91%, 60%, 0.3)' 
+            : undefined
+        }}
         onClick={() => onNodeClick(node)}
       >
         <div className="flex flex-col gap-2">
@@ -134,7 +206,7 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
         </div>
       </div>
     );
-  }, []);
+  }, [hoveredNodes, hoveredEdge, flowNodes]);
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), [CustomNode]);
 
@@ -142,9 +214,11 @@ export const WorkflowFlowView = ({ nodes, onNodeClick }: WorkflowFlowViewProps) 
     <div className="h-[calc(100vh-300px)] w-full border rounded-lg bg-accent/5">
       <ReactFlow
         nodes={rfNodes}
-        edges={rfEdges}
+        edges={edgesWithHover}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onEdgeMouseEnter={handleEdgeMouseEnter}
+        onEdgeMouseLeave={handleEdgeMouseLeave}
         nodeTypes={nodeTypes}
         connectionLineType={ConnectionLineType.SmoothStep}
         fitView
