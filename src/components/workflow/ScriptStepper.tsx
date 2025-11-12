@@ -166,9 +166,9 @@ export const ScriptStepper = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Top Bar: Mode Badge, Progress + Full Script Toggle */}
-      <div className="flex items-center justify-between pb-2 border-b border-border/30">
+      <div className="flex items-center justify-between pb-1.5 border-b border-border/30">
         <div className="flex items-center gap-3">
           {/* Contact Method Badge */}
           {contactMethod && (
@@ -209,7 +209,7 @@ export const ScriptStepper = ({
       </div>
 
       {/* Call Context Bar */}
-      <div className="flex flex-wrap items-center gap-2 p-2 bg-muted/30 rounded-lg border border-border/50">
+      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-muted/30 rounded-lg border border-border/50">
         <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
         <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
           <span className="text-xs text-muted-foreground">Lead:</span>
@@ -237,7 +237,7 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
         style={{ 
-          minHeight: centerContent ? "160px" : "200px",
+          minHeight: centerContent ? "140px" : "180px",
         }}
       >
         {/* Click feedback ripple effect */}
@@ -250,7 +250,7 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 py-4 cursor-pointer flex flex-col items-center text-center",
+            "flex-1 px-8 py-3 cursor-pointer flex flex-col items-center text-center",
             // Decision prompts (Choose Contact Method): top-aligned with padding
             // Call scripts: fully centered
             centerContent ? "justify-start pt-8" : "justify-center"
@@ -277,7 +277,7 @@ export const ScriptStepper = ({
 
         {/* Fixed Navigation Controls at Bottom */}
         <div className="flex-shrink-0 px-8 pb-3 pt-1 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-2">
             {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
               {Array.from({ length: totalSteps }).map((_, idx) => (
