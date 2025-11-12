@@ -198,72 +198,64 @@ All colors MUST be HSL.
 /* Main card: Grid layout with fixed viewport height */
 .training-stage {
   display: grid;
-  grid-template-rows: auto 1fr auto; /* header | body (flex) | footer */
-  height: calc(100vh - 280px); /* leave room for Next Steps */
+  grid-template-rows: auto 1fr auto; /* header | body (scrollable) | footer (nav + next steps) */
+  height: calc(100vh - 160px); /* tight fit to viewport */
   overflow: hidden; /* contain all overflow within card */
   border-radius: 12px;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--card));
-  padding: 0; /* no outer padding - each zone controls its own */
-}
-
-/* Header: auto-sized, never scrolls */
-.stage-header {
-  padding: 0.5rem 1rem;
-  flex-shrink: 0;
+  padding: 0;
 }
 
 /* Header zone: contains header + mode bar, never scrolls */
 .stage-header-zone {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.25rem;
   flex-shrink: 0;
 }
 
-/* Body: takes all remaining space (1fr), ONLY scrollable area */
+/* Body: takes remaining space (1fr), ONLY scrollable area */
 .stage-body {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
   padding: 0 1rem;
-  /* No max-height needed - Grid 1fr handles it */
+  min-height: 0; /* critical for grid scrolling */
 }
 
-/* Footer: sticky to bottom, always visible */
-.stage-footer {
-  position: sticky;
-  bottom: 0;
-  z-index: 20;
-  background: linear-gradient(to top, hsl(var(--card) / 1), hsl(var(--card) / 0.95));
-  backdrop-filter: blur(4px);
-  border-top: 1px solid hsl(var(--border) / 0.5);
-  padding: 0.75rem 1rem;
+/* Combined footer: contains nav controls + Next Steps, always visible at bottom */
+.stage-footer-combined {
   flex-shrink: 0;
+  background: hsl(var(--card));
+  border-top: 1px solid hsl(var(--border) / 0.3);
 }
 
-/* Next Steps section - outside card */
-.next-steps {
-  margin-top: 1rem;
+/* Navigation controls section within footer */
+.stage-footer-nav {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.2);
 }
 
-/* Next Steps container with fixed minimum height */
-.next-steps-container {
-  min-height: 140px;
-  margin-top: 1rem;
+/* Next Steps section within footer */
+.stage-footer-nextsteps {
+  padding: 0.75rem 1rem 1rem;
 }
 
 /* Responsive adjustments for smaller screens */
 @media (max-height: 740px) {
   .training-stage {
-    height: calc(100vh - 260px); /* leave room for Next Steps on small screens */
+    height: calc(100vh - 140px);
   }
   .stage-header-zone {
-    padding: 0.375rem 0.75rem;
+    padding: 0.375rem 0.75rem 0.25rem;
   }
   .stage-body {
     padding: 0 0.75rem;
   }
-  .stage-footer {
+  .stage-footer-nav {
     padding: 0.625rem 0.75rem;
+  }
+  .stage-footer-nextsteps {
+    padding: 0.625rem 0.75rem 0.75rem;
   }
 }
 

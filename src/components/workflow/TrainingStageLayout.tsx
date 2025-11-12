@@ -120,57 +120,56 @@ export const TrainingStageLayout = ({
   }
 
   return (
-    <>
-      <section 
-        ref={rootRef}
-        className={cn("training-stage", className)}
-        style={{ height: 'calc(100vh - 280px)' }}
-      >
-        {/* Header Zone: auto height */}
-        <div ref={headerRef} className="stage-header-zone">
-          <header className="stage__header">
-            <div className="stage__header-left">
-              {chips && <div className="stage__chips">{chips}</div>}
-              <div>
-                <h2 className="stage__title">{title}</h2>
-                {subtitle && <p className="stage__subtitle">{subtitle}</p>}
-              </div>
+    <section 
+      ref={rootRef}
+      className={cn("training-stage", className)}
+      style={{ height: 'calc(100vh - 160px)' }}
+    >
+      {/* Header Zone: auto height */}
+      <div ref={headerRef} className="stage-header-zone">
+        <header className="stage__header">
+          <div className="stage__header-left">
+            {chips && <div className="stage__chips">{chips}</div>}
+            <div>
+              <h2 className="stage__title">{title}</h2>
+              {subtitle && <p className="stage__subtitle">{subtitle}</p>}
             </div>
-            {headerRight && <div className="stage__header-right">{headerRight}</div>}
-          </header>
+          </div>
+          {headerRight && <div className="stage__header-right">{headerRight}</div>}
+        </header>
 
-          {/* Mode Bar */}
-          {modeBar && <div className="stage__mode">{modeBar}</div>}
-        </div>
+        {/* Mode Bar */}
+        {modeBar && <div className="stage__mode">{modeBar}</div>}
+      </div>
 
-        {/* Body: 1fr (flex-grow), ONLY scrollable area */}
-        <div className="stage-body">
-          {isScrollableContent ? (
-            children
-          ) : (
-            <div className="flex items-center justify-start pt-12 min-h-[280px]">
-              {children}
-            </div>
-          )}
-        </div>
+      {/* Body: 1fr (flex-grow), ONLY scrollable area */}
+      <div className="stage-body">
+        {isScrollableContent ? (
+          children
+        ) : (
+          <div className="flex flex-col items-center justify-start pt-8">
+            {children}
+          </div>
+        )}
+      </div>
 
-        {/* Footer: auto height, always visible */}
+      {/* Footer: auto height, contains nav controls AND Next Steps, always visible at bottom */}
+      <div ref={footerRef} className="stage-footer-combined">
         {footer && (
-          <div ref={footerRef} className="stage-footer">
+          <div className="stage-footer-nav">
             {footer}
           </div>
         )}
-      </section>
-
-      {/* Next Steps Section - outside card, below it */}
-      {nextSteps && (
-        <div className="next-steps-container">
-          <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
-            Next Steps
-          </h4>
-          {nextSteps}
-        </div>
-      )}
-    </>
+        
+        {nextSteps && (
+          <div className="stage-footer-nextsteps">
+            <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
+              Next Steps
+            </h4>
+            {nextSteps}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
