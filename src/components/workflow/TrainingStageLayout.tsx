@@ -100,10 +100,10 @@ export const TrainingStageLayout = ({
   return (
     <section 
       className={cn("stage", className)}
-      style={{ height: 'calc(100vh - 160px)' }}
+      style={{ height: 'calc(100vh - 100px)' }}
     >
-      <div className="flex flex-col h-full relative">
-        {/* Header - fixed at top */}
+      <div className="flex flex-col h-full">
+        {/* Zone 1: Fixed Header */}
         <header className="stage__header flex-shrink-0">
           <div className="stage__header-left">
             {chips && <div className="stage__chips">{chips}</div>}
@@ -118,33 +118,31 @@ export const TrainingStageLayout = ({
         {/* Mode Bar - fixed */}
         {modeBar && <div className="stage__mode flex-shrink-0">{modeBar}</div>}
 
-        {/* Scrollable content area - ONLY this scrolls */}
-        {isScrollableContent ? (
-          <div className="flex-1 overflow-y-auto py-4 min-h-0">
-            {children}
-          </div>
-        ) : (
-          <div className="flex-1 overflow-y-auto py-4 min-h-0">
-            <div className="flex items-center justify-center min-h-[240px]">
+        {/* Zone 2: Scrollable Middle - children AND nextSteps scroll together */}
+        <div className="flex-1 overflow-y-auto min-h-0 py-4">
+          {isScrollableContent ? (
+            children
+          ) : (
+            <div className="flex items-center justify-center min-h-[280px]">
               {children}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Sticky Footer - always visible at bottom */}
+          {/* Next Steps inside scrollable area */}
+          {nextSteps && (
+            <div className="mt-6 pt-4 border-t border-border">
+              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                Next Steps
+              </h4>
+              {nextSteps}
+            </div>
+          )}
+        </div>
+
+        {/* Zone 3: Fixed Footer - always at bottom via flex */}
         {footer && (
-          <div className="flex-shrink-0 sticky bottom-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 border-t border-border pt-4 pb-2 -mx-6 px-6">
+          <div className="flex-shrink-0 border-t border-border pt-4 pb-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
             {footer}
-          </div>
-        )}
-
-        {/* Next Steps Section - below sticky footer */}
-        {nextSteps && (
-          <div className="flex-shrink-0 pt-3 pb-2 border-t border-border">
-            <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
-              Next Steps
-            </h4>
-            {nextSteps}
           </div>
         )}
       </div>
