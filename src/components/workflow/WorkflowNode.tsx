@@ -534,13 +534,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           {/* Script Section with Instruction Bar + ScriptCard */}
           {processedScriptContent && !isWebsiteSignupStart && (
             <div className="space-y-3">
-              {/* Instruction Bar for call-based interactions */}
-              {isCallBasedInteraction && (
-                <InstructionBar>
-                  Wait for them to answer before speaking.
-                </InstructionBar>
-              )}
-
               {/* Main Script Card */}
               <ScriptCard>
                 <ScriptStepper
