@@ -336,22 +336,22 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                         const isUnsure = reply.type === 'unsure';
                         
                         const bgColor = isYes 
-                          ? 'bg-green-100/80 dark:bg-green-950/30 hover:bg-green-200/90 dark:hover:bg-green-900/40' 
+                          ? 'bg-[#F3FBF6] hover:bg-[#E8F5ED]' 
                           : isNo 
-                            ? 'bg-red-100/80 dark:bg-red-950/30 hover:bg-red-200/90 dark:hover:bg-red-900/40'
-                            : 'bg-yellow-100/80 dark:bg-yellow-950/30 hover:bg-yellow-200/90 dark:hover:bg-yellow-900/40';
+                            ? 'bg-[#FDF3F3] hover:bg-[#FBE9E9]'
+                            : 'bg-[#FFF9EC] hover:bg-[#FFF4DC]';
                         
                         const borderColor = isYes
-                          ? 'border-green-400/60 dark:border-green-700/60'
+                          ? 'border-[#9AC9A5] hover:border-[#4A9B5D]'
                           : isNo
-                            ? 'border-red-400/60 dark:border-red-700/60'
-                            : 'border-yellow-400/60 dark:border-yellow-700/60';
+                            ? 'border-[#D9A1A1] hover:border-[#C15B5B]'
+                            : 'border-[#DDBF81] hover:border-[#C7922E]';
                         
-                        const textColor = isYes
-                          ? 'text-green-900 dark:text-green-100'
+                        const iconColor = isYes
+                          ? 'text-[#4A9B5D]'
                           : isNo
-                            ? 'text-red-900 dark:text-red-100'
-                            : 'text-yellow-900 dark:text-yellow-100';
+                            ? 'text-[#C15B5B]'
+                            : 'text-[#C7922E]';
                         
                         const nextNodeId = isYes 
                           ? node.on_yes_next_node 
@@ -371,17 +371,16 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                             className={cn(
                               "w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 shadow-sm hover:shadow-md",
                               bgColor,
-                              borderColor,
-                              textColor
+                              borderColor
                             )}
                           >
                             <div className="flex items-center gap-3">
-                              <span className="text-2xl flex-shrink-0">{reply.emoji}</span>
+                              <span className={cn("text-2xl flex-shrink-0", iconColor)}>{reply.emoji}</span>
                               <div className="flex-1">
-                                <div className="font-semibold text-sm uppercase tracking-wide mb-1">
+                                <div className={cn("font-semibold text-sm uppercase tracking-wide mb-1", iconColor)}>
                                   {reply.type}
                                 </div>
-                                <div className="text-sm font-medium">
+                                <div className="text-sm font-medium text-[#333333]">
                                   {reply.text}
                                 </div>
                               </div>
@@ -482,11 +481,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     onClick={() => onNavigate(node.on_yes_next_node!, "yes")}
                     variant="outline"
                     size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-close hover:bg-stage-close-light transition-colors"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-stage-close flex-shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
                     <span className="text-left">
-                      <div className="font-semibold text-xs">Prospect says YES</div>
+                      <div className="font-semibold text-xs text-[#333333]">Prospect says YES</div>
                       <div className="text-xs text-muted-foreground">Continue to next step</div>
                     </span>
                   </Button>
@@ -496,11 +495,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     onClick={() => onNavigate(node.on_no_next_node!, "no")}
                     variant="outline"
                     size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-destructive hover:bg-destructive/10 transition-colors"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
                   >
-                    <XCircle className="h-4 w-4 text-destructive flex-shrink-0" />
+                    <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
                     <span className="text-left">
-                      <div className="font-semibold text-xs">Prospect says NO</div>
+                      <div className="font-semibold text-xs text-[#333333]">Prospect says NO</div>
                       <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
                     </span>
                   </Button>
@@ -510,11 +509,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                     onClick={() => onNavigate(node.on_no_response_next_node!, "no_response")}
                     variant="outline"
                     size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 hover:border-stage-contact hover:bg-stage-contact-light transition-colors"
+                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
                   >
-                    <Clock className="h-4 w-4 text-stage-contact flex-shrink-0" />
+                    <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
                     <span className="text-left">
-                      <div className="font-semibold text-xs">No Response</div>
+                      <div className="font-semibold text-xs text-[#333333]">No Response</div>
                       <div className="text-xs text-muted-foreground">Follow-up sequence</div>
                     </span>
                   </Button>
