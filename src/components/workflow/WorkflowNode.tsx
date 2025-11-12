@@ -522,6 +522,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded={isExpanded}
         onClick={onToggle}
         nextSteps={nextStepsContent}
+        isScrollableContent={isWebsiteSignupStart}
       >
         <div className="w-full space-y-3">
           {/* Lead Overview for Website Signup Start Node */}

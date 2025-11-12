@@ -57,6 +57,9 @@ interface TrainingStageLayoutProps {
   
   // Expanded state
   isExpanded: boolean;
+  
+  // Content mode: true for scrollable content like LeadOverview, false for centered scripts
+  isScrollableContent?: boolean;
 }
 
 export const TrainingStageLayout = ({
@@ -71,6 +74,7 @@ export const TrainingStageLayout = ({
   className,
   onClick,
   isExpanded,
+  isScrollableContent = false,
 }: TrainingStageLayoutProps) => {
   if (!isExpanded) {
     return (
@@ -114,10 +118,16 @@ export const TrainingStageLayout = ({
         {/* Mode Bar - fixed */}
         {modeBar && <div className="stage__mode flex-shrink-0">{modeBar}</div>}
 
-        {/* Script area - grows to fill space but with max height */}
-        <div className="flex-1 flex items-center justify-center max-h-[320px] overflow-y-auto py-4">
-          {children}
-        </div>
+        {/* Content area - either scrollable lead overview or centered script */}
+        {isScrollableContent ? (
+          <div className="flex-1 overflow-y-auto py-4 min-h-0">
+            {children}
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center max-h-[320px] overflow-y-auto py-4">
+            {children}
+          </div>
+        )}
 
         {/* Footer - fixed at bottom */}
         {footer && (
