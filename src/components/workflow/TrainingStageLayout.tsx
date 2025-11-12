@@ -164,8 +164,8 @@ export const TrainingStageLayout = ({
 
       {/* Next Steps Section - outside card, below it */}
       {nextSteps && (
-        <div className="mt-4">
-          <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3">
+        <div className="mt-3">
+          <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
             Next Steps
           </h4>
           {nextSteps}
