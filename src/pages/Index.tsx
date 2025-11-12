@@ -258,12 +258,12 @@ const Index = () => {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto scroll-smooth">
-          <div className="container mx-auto px-6 py-2 pb-20 max-w-[1400px] min-h-full">
-            <div className="w-full space-y-4">
+          <div className="container mx-auto px-6 py-8 pb-20 max-w-[1400px] min-h-full">
+            <div className="w-full space-y-8">
                 {currentNodeId === "START" ? (
-                  <div className="space-y-4">
-                    <div className="text-center mb-8 animate-in fade-in duration-500">
-                      <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                  <div className="space-y-6">
+                    <div className="text-center mb-4 animate-in fade-in duration-500">
+                      <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-3">
                         Sales Workflow Training
                       </h1>
                       <p className="text-xl text-muted-foreground mb-2">
@@ -275,7 +275,7 @@ const Index = () => {
                     </div>
 
                     {availableWorkflows.length > 1 && (
-                      <div className="flex justify-center mb-6 animate-in fade-in duration-500">
+                      <div className="flex justify-center mb-8 animate-in fade-in duration-500">
                         <div className="inline-flex flex-col gap-2">
                           <label className="text-sm text-muted-foreground text-center">Filter by Workflow</label>
                           <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
