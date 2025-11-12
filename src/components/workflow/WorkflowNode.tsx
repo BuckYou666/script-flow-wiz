@@ -418,9 +418,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_yes_next_node!, "yes");
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -438,9 +435,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_no_next_node!, "no");
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -458,9 +452,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigate(node.on_no_response_next_node!, "no_response");
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -485,9 +476,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               onClick={(e) => {
                 e.stopPropagation();
                 onSelectChild?.(child.node_id);
-                setTimeout(() => {
-                  window.scrollTo(0, 0);
-                }, 50);
               }}
             >
               <CardContent className="p-3">
@@ -622,9 +610,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                               e.stopPropagation();
                               if (nextNodeId) {
                                 onNavigate(nextNodeId, reply.type);
-                                setTimeout(() => {
-                                  window.scrollTo(0, 0);
-                                }, 50);
                               }
                             }}
                             className={cn(

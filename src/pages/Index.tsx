@@ -105,6 +105,11 @@ const Index = () => {
       toast.success("Navigating to", {
         description: node.scenario_title
       });
+      
+      // Scroll to top after state update
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
     }
   };
 
@@ -126,6 +131,11 @@ const Index = () => {
       }
       setCurrentNodeId(nextNodeId);
       setExpandedNodeId(nextNodeId);
+      
+      // Scroll to top after state update
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
     }
   };
 
@@ -149,6 +159,11 @@ const Index = () => {
       setNavigationPath(prev => prev.slice(0, -1));
       setCurrentNodeId(previousNode.node_id);
       setExpandedNodeId(previousNode.node_id);
+      
+      // Scroll to top after state update
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
     }
   };
 
