@@ -198,7 +198,7 @@ All colors MUST be HSL.
 /* Main card: Grid layout with fixed viewport height */
 .training-stage {
   display: grid;
-  grid-template-rows: auto 1fr auto; /* header | body (scrollable) | footer (nav + next steps) */
+  grid-template-rows: 80px 1fr 260px; /* header (fixed) | body (scrollable) | footer (fixed) */
   height: calc(100vh - 160px); /* tight fit to viewport */
   overflow: hidden; /* contain all overflow within card */
   border-radius: 12px;
@@ -238,6 +238,8 @@ All colors MUST be HSL.
 /* Next Steps section within footer */
 .stage-footer-nextsteps {
   padding: 0.75rem 1rem 1rem;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 /* Responsive adjustments for smaller screens */
