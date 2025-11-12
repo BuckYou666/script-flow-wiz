@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Maximize2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { isInstructionLine, renderInstructionLine, renderDialogueLine } from "@/lib/scriptFormatter";
 
 interface ScriptStepperProps {
   scriptContent: string;
@@ -45,12 +46,8 @@ export const ScriptStepper = ({
   // Filter out instruction-only segments from navigation steps
   const scriptSegments = allSegments.filter((segment) => {
     const lines = segment.split("\n").filter(line => line.trim());
-    // Check if ALL lines in this segment are instructions (in parentheses or asterisks)
-    const allInstructions = lines.every(line => {
-      const trimmed = line.trim();
-      return (trimmed.startsWith("(") && trimmed.endsWith(")")) ||
-             (trimmed.startsWith("*") && trimmed.endsWith("*"));
-    });
+    // Check if ALL lines in this segment are instructions
+    const allInstructions = lines.every(line => isInstructionLine(line));
     return !allInstructions;
   });
 
@@ -109,31 +106,18 @@ export const ScriptStepper = ({
 
   const renderSegmentContent = (segment: string) => {
     return segment.split("\n").map((line, index) => {
-      // Skip instruction lines wrapped in asterisks or parentheses - we'll show them in the overlay
-      const isInstruction =
-        (line.includes("(") && line.includes(")")) ||
-        (line.trim().startsWith("*") && line.trim().endsWith("*"));
-
-      // Check for spoken dialogue: lines starting with quotes
-      const isSpokenDialogue = line.trim().startsWith('"');
-
-      if (!line.trim() || isInstruction) {
+      // Skip empty lines
+      if (!line.trim()) {
         return null;
       }
 
-      if (isSpokenDialogue) {
-        return (
-          <p key={index} className="text-foreground font-semibold text-[18px] leading-[1.7] mb-4">
-            {renderScriptLine(line)}
-          </p>
-        );
+      // Render instruction lines with special styling
+      if (isInstructionLine(line)) {
+        return renderInstructionLine(line, index);
       }
 
-      return (
-        <p key={index} className="text-foreground text-[17px] leading-[1.6] mb-3">
-          {renderScriptLine(line)}
-        </p>
-      );
+      // Render spoken dialogue lines
+      return renderDialogueLine(line, renderScriptLine, index);
     });
   };
 
@@ -158,10 +142,6 @@ export const ScriptStepper = ({
           <div className="prose prose-sm max-w-none">
             <div className="text-[15px] leading-loose whitespace-pre-line font-normal text-foreground space-y-4">
               {scriptContent.split("\n").map((line, index) => {
-                const isInstruction =
-                  (line.includes("(") && line.includes(")")) ||
-                  (line.trim().startsWith("*") && line.trim().endsWith("*"));
-                const isSpokenDialogue = line.trim().startsWith('"');
                 const isSeparator = line.trim().startsWith("---");
 
                 if (!line.trim()) {
@@ -172,27 +152,13 @@ export const ScriptStepper = ({
                   return <div key={index} className="border-t border-border/30 my-4" />;
                 }
 
-                if (isInstruction) {
-                  return (
-                    <p key={index} className="text-muted-foreground italic text-xs leading-snug">
-                      {line.replace(/^\*|\*$/g, "")}
-                    </p>
-                  );
+                // Render instruction lines with special styling
+                if (isInstructionLine(line)) {
+                  return renderInstructionLine(line, index);
                 }
 
-                if (isSpokenDialogue) {
-                  return (
-                    <p key={index} className="text-foreground font-medium text-[16px] leading-relaxed">
-                      {renderScriptLine(line)}
-                    </p>
-                  );
-                }
-
-                return (
-                  <p key={index} className="text-foreground leading-relaxed">
-                    {renderScriptLine(line)}
-                  </p>
-                );
+                // Render spoken dialogue lines
+                return renderDialogueLine(line, renderScriptLine, index);
               })}
             </div>
           </div>
@@ -301,10 +267,9 @@ export const ScriptStepper = ({
         >
           {/* Static Wait Instruction - Only for Call-Based Interactions */}
           {isCallBasedInteraction && hideStepIndicator && !centerContent && (
-            <p className="text-xs italic text-muted-foreground flex items-center gap-1.5 mb-4">
-              <Clock className="h-3 w-3" />
-              (Wait for them to answer before speaking.)
-            </p>
+            <div className="mb-4 w-full max-w-2xl">
+              {renderInstructionLine("(Wait for them to answer before speaking.)")}
+            </div>
           )}
 
           <div
