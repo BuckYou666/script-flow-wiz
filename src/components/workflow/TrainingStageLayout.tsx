@@ -147,7 +147,7 @@ export const TrainingStageLayout = ({
         {isScrollableContent ? (
           children
         ) : (
-          <div className="flex flex-col items-center justify-start pt-8">
+          <div className="flex flex-col items-center justify-start pt-4">
             {children}
           </div>
         )}

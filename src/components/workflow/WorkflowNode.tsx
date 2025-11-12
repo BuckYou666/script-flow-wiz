@@ -197,18 +197,34 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
   // Render the header right content
   const headerRightContent = isExpanded ? (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsLeadInfoOpen(true);
-        }}
-        className="gap-1.5 h-8 text-xs"
-      >
-        <User className="h-3.5 w-3.5" />
-        View Lead Info
-      </Button>
+      <div className="flex items-center gap-2">
+        {node.crm_actions && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowCrmActions(!showCrmActions);
+            }}
+            className="gap-1.5 h-8 text-xs"
+          >
+            <Settings className="h-3.5 w-3.5" />
+            {showCrmActions ? "Hide CRM" : "Show CRM"}
+          </Button>
+        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsLeadInfoOpen(true);
+          }}
+          className="gap-1.5 h-8 text-xs"
+        >
+          <User className="h-3.5 w-3.5" />
+          View Lead Info
+        </Button>
+      </div>
       {!isExpanded && (
         <ChevronRight 
           className="h-5 w-5 text-muted-foreground"
@@ -242,21 +258,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       {/* Script Section - Step-by-step Navigation */}
       {processedScriptContent && !isWebsiteSignupStart && (
         <div className="space-y-3">
-          {/* CRM Actions Toggle */}
-          {node.crm_actions && (
-            <div className="flex justify-end">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowCrmActions(!showCrmActions)}
-                className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
-              >
-                <Settings className="h-3.5 w-3.5" />
-                {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
-              </Button>
-            </div>
-          )}
-
           {/* Script Stepper Component */}
           <ScriptStepper
             scriptContent={processedScriptContent}
