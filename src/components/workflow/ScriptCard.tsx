@@ -28,10 +28,10 @@ interface ScriptCardProps {
 export const ScriptCard = ({ children, className }: ScriptCardProps) => {
   return (
     <div className={cn(
-      "script-card w-full max-w-[840px] mx-auto px-10 py-8",
+      "script-card w-full max-w-[1100px] mx-auto px-8 py-5",
       "rounded-[14px] bg-gradient-to-br from-[#f9fbff] to-[#f5f7fd]",
       "border border-[#e3e9f7] shadow-sm",
-      "text-center flex flex-col gap-3",
+      "text-center flex flex-col gap-2",
       className
     )}>
       {children}

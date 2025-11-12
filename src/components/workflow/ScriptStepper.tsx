@@ -237,7 +237,7 @@ export const ScriptStepper = ({
       <div 
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
         style={{ 
-          minHeight: centerContent ? "200px" : "280px",
+          minHeight: centerContent ? "180px" : "240px",
         }}
       >
         {/* Click feedback ripple effect */}
@@ -250,10 +250,10 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 py-8 cursor-pointer flex flex-col items-center text-center",
+            "flex-1 px-8 py-6 cursor-pointer flex flex-col items-center text-center",
             // Decision prompts (Choose Contact Method): top-aligned with padding
             // Call scripts: fully centered
-            centerContent ? "justify-start pt-12" : "justify-center"
+            centerContent ? "justify-start pt-10" : "justify-center"
           )}
         >
           <div
