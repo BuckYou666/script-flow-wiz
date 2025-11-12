@@ -179,7 +179,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm overflow-hidden"
       )}
       style={isExpanded ? {
-        height: 'calc(100vh - 18rem)',
+        height: 'calc(100vh - 20rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
@@ -258,7 +258,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             )}
             style={!isShortScriptStage ? { 
               flex: '1',
-              minHeight: '0'
+              minHeight: 0,
+              maxHeight: 'calc(100vh - 32rem)'
             } : undefined}
           >
           {/* Lead Overview for Website Signup Start Node */}
@@ -467,13 +468,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
 
           {/* Next Steps Section - Separate, Non-Scrolling */}
           {(showActionButtons || showChildCards) && (
-            <div className="flex-shrink-0 pt-2 border-t-2 border-border/30">
-              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-2">
+            <div className="flex-shrink-0 pt-1.5 border-t-2 border-border/30">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-1.5">
                 Next Steps
               </h4>
               
               {showActionButtons && (
-                <div className="grid gap-1.5">
+                <div className="grid gap-1">
                   {node.on_yes_next_node && (
                     <Button
                       onClick={(e) => {
@@ -482,7 +483,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-2 px-2.5 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
+                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
                     >
                       <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
                       <span className="text-left">
@@ -499,7 +500,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-2 px-2.5 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
+                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
                     >
                       <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
                       <span className="text-left">
@@ -516,7 +517,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-2 px-2.5 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
+                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
                     >
                       <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
                       <span className="text-left">
@@ -529,7 +530,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               )}
 
               {showChildCards && (
-                <div className="grid gap-1.5">
+                <div className="grid gap-1">
                   {childNodes.map((child) => (
                     <Card
                       key={child.node_id}
