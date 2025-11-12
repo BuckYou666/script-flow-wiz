@@ -419,8 +419,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 e.stopPropagation();
                 onNavigate(node.on_yes_next_node!, "yes");
                 setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
+                  window.scrollTo(0, 0);
+                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -439,8 +439,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 e.stopPropagation();
                 onNavigate(node.on_no_next_node!, "no");
                 setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
+                  window.scrollTo(0, 0);
+                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -459,8 +459,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 e.stopPropagation();
                 onNavigate(node.on_no_response_next_node!, "no_response");
                 setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
+                  window.scrollTo(0, 0);
+                }, 50);
               }}
               variant="outline"
               size="sm"
@@ -486,8 +486,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 e.stopPropagation();
                 onSelectChild?.(child.node_id);
                 setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
+                  window.scrollTo(0, 0);
+                }, 50);
               }}
             >
               <CardContent className="p-3">
@@ -623,8 +623,8 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                               if (nextNodeId) {
                                 onNavigate(nextNodeId, reply.type);
                                 setTimeout(() => {
-                                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }, 100);
+                                  window.scrollTo(0, 0);
+                                }, 50);
                               }
                             }}
                             className={cn(
