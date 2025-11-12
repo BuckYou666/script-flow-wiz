@@ -94,40 +94,31 @@ export const TrainingStageLayout = ({
   }
 
   return (
-    <section 
-      className={cn(
-        "stage mx-auto px-6 py-4 rounded-2xl bg-background shadow-sm border border-border",
-        "flex flex-col max-w-[980px]",
-        className
-      )}
-      style={{
-        minHeight: 'calc(100vh - 64px - 72px - 40px)',
-      }}
-    >
+    <section className={cn("stage", className)}>
       {/* Header */}
-      <header className="stage__header flex items-start justify-between gap-4 mb-2">
-        <div className="stage__header-left flex flex-col gap-1">
-          {chips && <div className="stage__chips flex flex-wrap gap-2">{chips}</div>}
+      <header className="stage__header">
+        <div className="stage__header-left">
+          {chips && <div className="stage__chips">{chips}</div>}
           <div>
-            <h2 className="stage__title text-[20px] font-semibold m-0">{title}</h2>
-            {subtitle && <p className="stage__subtitle text-[13px] text-muted-foreground m-0 mt-1">{subtitle}</p>}
+            <h2 className="stage__title">{title}</h2>
+            {subtitle && <p className="stage__subtitle">{subtitle}</p>}
           </div>
         </div>
         {headerRight && <div className="stage__header-right">{headerRight}</div>}
       </header>
 
       {/* Mode Bar */}
-      {modeBar && <div className="stage__mode my-2">{modeBar}</div>}
+      {modeBar && <div className="stage__mode">{modeBar}</div>}
 
       {/* Body - script area that grows and centers content */}
-      <div className="stage__body flex-1 flex flex-col">
-        <div className="stage__script flex-1 flex items-center justify-center">
+      <div className="stage__body">
+        <div className="stage__script">
           {children}
         </div>
 
         {/* Footer - always at bottom of card */}
         {footer && (
-          <div className="stage__footer mt-4 flex justify-center">
+          <div className="stage__footer">
             {footer}
           </div>
         )}
@@ -135,8 +126,8 @@ export const TrainingStageLayout = ({
 
       {/* Next Steps Section - inside border */}
       {nextSteps && (
-        <div className="flex-shrink-0 pt-4 mt-4 border-t border-[#E4E7EB]">
-          <h4 className="font-semibold text-xs text-[#8A8F98] uppercase tracking-wider mb-3">
+        <div className="flex-shrink-0 pt-4 mt-4 border-t border-border">
+          <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3">
             Next Steps
           </h4>
           {nextSteps}

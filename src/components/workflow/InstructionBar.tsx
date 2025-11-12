@@ -31,12 +31,7 @@ export const InstructionBar = ({
   }
 
   return (
-    <div className={cn(
-      "instruction-bar inline-flex items-center gap-2 px-3 py-1.5 mb-3",
-      "rounded-full bg-muted/50 border border-dashed border-border",
-      "text-xs italic text-muted-foreground",
-      className
-    )}>
+    <div className={cn("instruction-bar", className)}>
       {icon && <span className="instruction-bar__icon">{icon}</span>}
       <span className="instruction-bar__text">{children}</span>
     </div>
