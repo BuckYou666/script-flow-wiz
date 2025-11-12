@@ -511,7 +511,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
     <>
       <TrainingStageLayout
         title={node.scenario_title}
-        subtitle={!isWebsiteSignupStart ? node.scenario_description : undefined}
+        subtitle={undefined}
         chips={chipsContent}
         headerRight={headerRightContent}
         isExpanded={isExpanded}
@@ -539,21 +539,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 <InstructionBar>
                   Wait for them to answer before speaking.
                 </InstructionBar>
-              )}
-              
-              {/* CRM Actions Toggle */}
-              {node.crm_actions && (
-                <div className="flex justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowCrmActions(!showCrmActions)}
-                    className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <Settings className="h-3.5 w-3.5" />
-                    {showCrmActions ? "Hide CRM Actions" : "Show CRM Actions"}
-                  </Button>
-                </div>
               )}
 
               {/* Main Script Card */}
