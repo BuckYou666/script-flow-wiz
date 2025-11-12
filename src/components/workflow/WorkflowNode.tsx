@@ -179,14 +179,14 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
         isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm overflow-hidden"
       )}
       style={isExpanded ? {
-        height: 'calc(100vh - 8rem)',
+        height: 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}
       onClick={onToggle}
     >
       <CardHeader className={cn(
-        isExpanded && "py-2 flex-shrink-0"
+        isExpanded && "py-3 flex-shrink-0"
       )}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -240,7 +240,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
       {isExpanded && (
         <CardContent 
           className={cn(
-            "pt-0 flex flex-col pb-1 overflow-hidden"
+            "pt-0 flex flex-col pb-3 overflow-hidden"
           )}
           style={isExpanded ? {
             flex: '1',
@@ -253,13 +253,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
           {/* Scrollable Body Zone - Script, CRM, Context */}
           <div 
             className={cn(
-              "space-y-2 pr-2",
+              "space-y-3 pr-2",
               isShortScriptStage ? "overflow-visible" : "overflow-y-auto"
             )}
             style={!isShortScriptStage ? { 
               flex: '1',
               minHeight: 0,
-              maxHeight: 'calc(100vh - 20rem)'
+              maxHeight: 'calc(100vh - 28rem)'
             } : undefined}
           >
           {/* Lead Overview for Website Signup Start Node */}
@@ -468,13 +468,13 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
 
           {/* Next Steps Section - Separate, Non-Scrolling */}
           {(showActionButtons || showChildCards) && (
-            <div className="flex-shrink-0 pt-1.5 border-t-2 border-border/30">
-              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-1.5">
+            <div className="flex-shrink-0 pt-4 mt-4 border-t border-[#E4E7EB]">
+              <h4 className="font-semibold text-xs text-[#8A8F98] uppercase tracking-wider mb-3">
                 Next Steps
               </h4>
               
               {showActionButtons && (
-                <div className="grid gap-1">
+                <div className="grid gap-2">
                   {node.on_yes_next_node && (
                     <Button
                       onClick={(e) => {
@@ -483,7 +483,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
+                      className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                     >
                       <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
                       <span className="text-left">
@@ -500,7 +500,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
+                      className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                     >
                       <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
                       <span className="text-left">
@@ -517,7 +517,7 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                       }}
                       variant="outline"
                       size="sm"
-                      className="justify-start gap-2 h-auto py-1.5 px-2.5 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
+                      className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                     >
                       <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
                       <span className="text-left">
@@ -530,11 +530,11 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               )}
 
               {showChildCards && (
-                <div className="grid gap-1">
+                <div className="grid gap-2">
                   {childNodes.map((child) => (
                     <Card
                       key={child.node_id}
-                      className="border-2 hover:border-primary hover:bg-accent/50 transition-all cursor-pointer overflow-hidden"
+                      className="border-2 hover:border-primary hover:bg-accent/50 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md cursor-pointer overflow-hidden"
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectChild?.(child.node_id);
