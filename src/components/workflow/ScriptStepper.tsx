@@ -16,7 +16,6 @@ interface ScriptStepperProps {
     leadMagnetName?: string;
   };
   contactMethod?: string; // "Call", "Text", "Email", etc.
-  hideStepIndicator?: boolean; // Hide progress bar for single-step stages
   centerContent?: boolean; // Center content vertically and horizontally
 }
 
@@ -25,7 +24,6 @@ export const ScriptStepper = ({
   renderScriptLine,
   replacementValues,
   contactMethod,
-  hideStepIndicator = false,
   centerContent = false,
 }: ScriptStepperProps) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -169,38 +167,27 @@ export const ScriptStepper = ({
 
   return (
     <div className="space-y-3">
-      {/* Instruction Bar - Always visible for call-based interactions */}
-      {isCallBasedInteraction && !centerContent && (
-        <div className="flex items-start gap-2.5 py-2 px-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/40 dark:border-blue-800/40">
-          <Clock className="h-4 w-4 text-blue-600/70 dark:text-blue-400/70 flex-shrink-0 mt-0.5" />
-          <p className="text-sm italic text-muted-foreground leading-relaxed">
-            Wait for them to answer before speaking.
-          </p>
-        </div>
-      )}
-
-      {/* Top Bar: Mode Badge, Progress + Full Script Toggle - Hidden for single-step stages */}
-      {!hideStepIndicator && (
-        <div className="flex items-center justify-between pb-2 border-b border-border/30">
-          <div className="flex items-center gap-3">
-            {/* Contact Method Badge */}
-            {contactMethod && (
-              <Badge variant="secondary" className="text-xs gap-1.5">
-                Mode: {contactMethod.toLowerCase().includes("call") || contactMethod.toLowerCase().includes("phone") ? "📞" : 
-                       contactMethod.toLowerCase().includes("text") || contactMethod.toLowerCase().includes("sms") ? "💬" : 
-                       contactMethod.toLowerCase().includes("email") ? "📧" : "📋"} {contactMethod}
-              </Badge>
-            )}
-            <Badge variant="secondary" className="text-xs font-mono">
-              Step {currentStep + 1} of {totalSteps}
+      {/* Top Bar: Mode Badge, Progress + Full Script Toggle */}
+      <div className="flex items-center justify-between pb-2 border-b border-border/30">
+        <div className="flex items-center gap-3">
+          {/* Contact Method Badge */}
+          {contactMethod && (
+            <Badge variant="secondary" className="text-xs gap-1.5">
+              Mode: {contactMethod.toLowerCase().includes("call") || contactMethod.toLowerCase().includes("phone") ? "📞" : 
+                     contactMethod.toLowerCase().includes("text") || contactMethod.toLowerCase().includes("sms") ? "💬" : 
+                     contactMethod.toLowerCase().includes("email") ? "📧" : "📋"} {contactMethod}
             </Badge>
-            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden w-32">
-              <div
-                className="h-full bg-primary transition-all duration-300"
-                style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
-              />
-            </div>
+          )}
+          <Badge variant="secondary" className="text-xs font-mono">
+            Step {currentStep + 1} of {totalSteps}
+          </Badge>
+          <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden w-32">
+            <div
+              className="h-full bg-primary transition-all duration-300"
+              style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
+            />
           </div>
+        </div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -219,12 +206,10 @@ export const ScriptStepper = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        </div>
-      )}
+      </div>
 
-      {/* Call Context Bar - Hidden for short stages */}
-      {!hideStepIndicator && (
-        <div className="flex flex-wrap items-center gap-2 p-2 bg-muted/30 rounded-lg border border-border/50">
+      {/* Call Context Bar */}
+      <div className="flex flex-wrap items-center gap-2 p-2 bg-muted/30 rounded-lg border border-border/50">
         <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
         <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
           <span className="text-xs text-muted-foreground">Lead:</span>
@@ -246,17 +231,13 @@ export const ScriptStepper = ({
             <span className="font-medium text-xs">{replacementValues.businessName}</span>
           </Badge>
         )}
-        </div>
-      )}
+      </div>
 
       {/* Script Content with Animation - Click Anywhere to Advance */}
       <div 
-        className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
+        className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
         style={{ 
-          flex: hideStepIndicator ? '1 1 auto' : undefined,
-          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : "calc(100vh - 26rem)", 
-          minHeight: centerContent ? "200px" : hideStepIndicator ? "280px" : "280px",
-          height: centerContent ? "200px" : hideStepIndicator ? "auto" : "auto"
+          minHeight: centerContent ? "200px" : "280px",
         }}
       >
         {/* Click feedback ripple effect */}
@@ -269,10 +250,10 @@ export const ScriptStepper = ({
           ref={scriptBoxRef}
           onClick={handleScriptBoxClick}
           className={cn(
-            "flex-1 px-8 cursor-pointer flex flex-col items-center text-center",
-            // Call scripts: fully centered vertically and horizontally
-            // Decision prompts (Choose Contact Method): top-aligned with padding, horizontally centered
-            centerContent ? "overflow-hidden justify-start pt-12" : hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
+            "flex-1 px-8 py-8 cursor-pointer flex flex-col items-center text-center",
+            // Decision prompts (Choose Contact Method): top-aligned with padding
+            // Call scripts: fully centered
+            centerContent ? "justify-start pt-12" : "justify-center"
           )}
         >
           <div
