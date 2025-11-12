@@ -16,11 +16,9 @@ import {
 
 interface LeadOverviewProps {
   lead: any;
-  onNavigate?: (nextNodeId: string) => void;
-  nextNodeId?: string;
 }
 
-export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps) => {
+export const LeadOverview = ({ lead }: LeadOverviewProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedLead, setEditedLead] = useState({
     first_name: lead?.first_name || "",
@@ -274,24 +272,6 @@ export const LeadOverview = ({ lead, onNavigate, nextNodeId }: LeadOverviewProps
           />
         </div>
       </div>
-
-      {/* Fixed CTA Footer - Always visible, never scrolls */}
-      {nextNodeId && onNavigate && (
-        <div className="flex-shrink-0 mt-4 pt-4 border-t border-border/30">
-          <div className="bg-secondary/50 border border-border/50 rounded-lg shadow-sm p-4">
-            <div className="space-y-3">
-              <p className="text-xs text-muted-foreground text-center">Ready to begin?</p>
-              <Button
-                onClick={() => onNavigate(nextNodeId)}
-                size="default"
-                className="w-full text-sm h-9"
-              >
-                Proceed to Script → "Choose Contact Method"
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

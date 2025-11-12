@@ -266,8 +266,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             <>
               <LeadOverview
                 lead={currentLead}
-                onNavigate={onSelectChild}
-                nextNodeId={childNodes[0]?.node_id}
               />
               
               {/* Conversation History */}
