@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -76,6 +76,28 @@ export const TrainingStageLayout = ({
   isExpanded,
   isScrollableContent = false,
 }: TrainingStageLayoutProps) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    
+    const ro = new ResizeObserver(() => {
+      const h = headerRef.current?.offsetHeight ?? 0;
+      const f = footerRef.current?.offsetHeight ?? 0;
+      el.style.setProperty("--hdr", `${h}px`);
+      el.style.setProperty("--ftr", `${f}px`);
+    });
+    
+    ro.observe(el);
+    if (headerRef.current) ro.observe(headerRef.current);
+    if (footerRef.current) ro.observe(footerRef.current);
+    
+    return () => ro.disconnect();
+  }, []);
+
   if (!isExpanded) {
     return (
       <div
@@ -100,12 +122,13 @@ export const TrainingStageLayout = ({
   return (
     <>
       <section 
-        className={cn("stage", className)}
+        ref={rootRef}
+        className={cn("stage-root", className)}
         style={{ height: 'calc(100vh - 140px)' }}
       >
-        <div className="flex flex-col h-full overflow-hidden">
-          {/* Fixed Header */}
-          <header className="stage__header flex-shrink-0">
+        {/* Header Zone: auto height */}
+        <div ref={headerRef} className="stage-header-zone">
+          <header className="stage__header">
             <div className="stage__header-left">
               {chips && <div className="stage__chips">{chips}</div>}
               <div>
@@ -116,27 +139,27 @@ export const TrainingStageLayout = ({
             {headerRight && <div className="stage__header-right">{headerRight}</div>}
           </header>
 
-          {/* Mode Bar - fixed */}
-          {modeBar && <div className="stage__mode flex-shrink-0">{modeBar}</div>}
+          {/* Mode Bar */}
+          {modeBar && <div className="stage__mode">{modeBar}</div>}
+        </div>
 
-          {/* Scrollable Content Area - ONLY this scrolls */}
-          <div className="flex-1 overflow-y-auto min-h-0 px-1 py-4">
-            {isScrollableContent ? (
-              children
-            ) : (
-              <div className="flex items-center justify-center min-h-[280px]">
-                {children}
-              </div>
-            )}
-          </div>
-
-          {/* Fixed Footer - always visible at bottom */}
-          {footer && (
-            <div className="flex-shrink-0 border-t border-border pt-4 pb-2 bg-background/98 backdrop-blur-sm supports-[backdrop-filter]:bg-background/95">
-              {footer}
+        {/* Body: 1fr (flex-grow), ONLY scrollable area */}
+        <div className="stage-body">
+          {isScrollableContent ? (
+            children
+          ) : (
+            <div className="flex items-center justify-center min-h-[280px]">
+              {children}
             </div>
           )}
         </div>
+
+        {/* Footer: auto height, always visible */}
+        {footer && (
+          <div ref={footerRef} className="stage-footer">
+            {footer}
+          </div>
+        )}
       </section>
 
       {/* Next Steps Section - outside card, below it */}
