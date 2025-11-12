@@ -331,12 +331,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
               </div>
             </div>
           )}
-          
-          {node.script_section && (
-            <p className="text-xs text-muted-foreground italic pl-1">
-              📋 Section: {node.script_section}
-            </p>
-          )}
         </div>
       )}
 

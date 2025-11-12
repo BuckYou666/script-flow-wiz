@@ -124,7 +124,7 @@ export const TrainingStageLayout = ({
       <section 
         ref={rootRef}
         className={cn("training-stage", className)}
-        style={{ height: 'calc(100vh - 220px)' }}
+        style={{ height: 'calc(100vh - 280px)' }}
       >
         {/* Header Zone: auto height */}
         <div ref={headerRef} className="stage-header-zone">
@@ -148,7 +148,7 @@ export const TrainingStageLayout = ({
           {isScrollableContent ? (
             children
           ) : (
-            <div className="flex items-center justify-center min-h-[280px]">
+            <div className="flex items-center justify-start pt-12 min-h-[280px]">
               {children}
             </div>
           )}
@@ -164,7 +164,7 @@ export const TrainingStageLayout = ({
 
       {/* Next Steps Section - outside card, below it */}
       {nextSteps && (
-        <div className="mt-3">
+        <div className="next-steps-container">
           <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
             Next Steps
           </h4>
