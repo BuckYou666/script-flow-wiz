@@ -16,6 +16,7 @@ interface WorkflowHeaderProps {
   onSearchChange: (query: string) => void;
   stageFilter: StageType | "all";
   onStageFilterChange: (stage: StageType | "all") => void;
+  actions?: React.ReactNode;
 }
 
 export const WorkflowHeader = ({
@@ -23,6 +24,7 @@ export const WorkflowHeader = ({
   onSearchChange,
   stageFilter,
   onStageFilterChange,
+  actions,
 }: WorkflowHeaderProps) => {
   const navigate = useNavigate();
   
@@ -37,14 +39,17 @@ export const WorkflowHeader = ({
             Interactive training tool - Navigate through real sales scenarios and master every step
           </p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={() => navigate("/profile")}
-          className="gap-2"
-        >
-          <User className="h-4 w-4" />
-          Profile
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate("/profile")}
+            className="gap-2"
+          >
+            <User className="h-4 w-4" />
+            Profile
+          </Button>
+          {actions}
+        </div>
       </div>
 
       <div className="flex gap-4 flex-col sm:flex-row">

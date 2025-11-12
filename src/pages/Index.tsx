@@ -184,23 +184,22 @@ const Index = () => {
           <div className="container mx-auto max-w-7xl">
             {currentNodeId === "START" ? (
               <div className="py-6">
-                <div className="flex items-center justify-between mb-4">
-                  <WorkflowHeader
-                    searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
-                    stageFilter={stageFilter}
-                    onStageFilterChange={setStageFilter}
-                  />
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => navigate("/admin/workflow")}
-                    className="gap-2 bg-blue-600 hover:bg-blue-700"
-                  >
-                    <Pencil className="h-4 w-4" />
-                    Edit Workflow
-                  </Button>
-                </div>
+                <WorkflowHeader
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  stageFilter={stageFilter}
+                  onStageFilterChange={setStageFilter}
+                  actions={
+                    <Button
+                      variant="default"
+                      onClick={() => navigate("/admin/workflow")}
+                      className="gap-2 bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Pencil className="h-4 w-4" />
+                      Edit Workflow
+                    </Button>
+                  }
+                />
               </div>
             ) : (
               <div className="py-3 flex items-center justify-between gap-4">
