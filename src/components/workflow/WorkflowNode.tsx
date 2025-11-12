@@ -324,15 +324,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 contactMethod={node.scenario_title}
                 hideStepIndicator={isShortScriptStage}
                 centerContent={node.scenario_title === "Choose Contact Method"}
-                showNextSteps={true}
-                nextStepsData={{
-                  onYesNextNode: node.on_yes_next_node,
-                  onNoNextNode: node.on_no_next_node,
-                  onNoResponseNextNode: node.on_no_response_next_node,
-                }}
-                onNavigate={onNavigate}
-                childNodes={childNodes}
-                onSelectChild={onSelectChild}
               />
 
               {/* Inline Replies Section */}
@@ -475,6 +466,114 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
           )}
           </div>
+
+          {/* Next Steps Section - Separate, Non-Scrolling */}
+          {(showActionButtons || showChildCards) && (
+            <div className="flex-shrink-0 pt-3 border-t-2 border-border/30">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">
+                Next Steps
+              </h4>
+              
+              {showActionButtons && (
+                <div className="grid gap-2">
+                  {node.on_yes_next_node && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigate(node.on_yes_next_node!, "yes");
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
+                    >
+                      <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
+                      <span className="text-left">
+                        <div className="font-semibold text-xs text-[#333333]">Prospect says YES</div>
+                        <div className="text-xs text-muted-foreground">Continue to next step</div>
+                      </span>
+                    </Button>
+                  )}
+                  {node.on_no_next_node && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigate(node.on_no_next_node!, "no");
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
+                    >
+                      <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
+                      <span className="text-left">
+                        <div className="font-semibold text-xs text-[#333333]">Prospect says NO</div>
+                        <div className="text-xs text-muted-foreground">Handle objection</div>
+                      </span>
+                    </Button>
+                  )}
+                  {node.on_no_response_next_node && (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigate(node.on_no_response_next_node!, "no_response");
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
+                    >
+                      <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
+                      <span className="text-left">
+                        <div className="font-semibold text-xs text-[#333333]">No Response</div>
+                        <div className="text-xs text-muted-foreground">Follow-up action</div>
+                      </span>
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {showChildCards && (
+                <div className="grid gap-2">
+                  {childNodes.map((child) => (
+                    <Card
+                      key={child.node_id}
+                      className="border-2 hover:border-primary hover:bg-accent/50 transition-all cursor-pointer overflow-hidden"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectChild?.(child.node_id);
+                      }}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-center gap-3">
+                          <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Badge 
+                                variant="outline" 
+                                className={cn(
+                                  "text-[10px] font-medium border",
+                                  `bg-${getStageLightColor(child.stage)} text-${getStageColor(child.stage)} border-${getStageColor(child.stage)}`
+                                )}
+                              >
+                                {child.stage}
+                              </Badge>
+                              {child.script_name && (
+                                <Badge variant="secondary" className="text-[10px]">
+                                  {child.script_name}
+                                </Badge>
+                              )}
+                            </div>
+                            <h4 className="font-semibold text-sm mb-0.5">{child.scenario_title}</h4>
+                            <p className="text-xs text-muted-foreground line-clamp-2">
+                              {child.scenario_description}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       )}
       

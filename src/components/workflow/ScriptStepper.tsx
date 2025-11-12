@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Maximize2, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { isInstructionLine, renderInstructionLine, renderDialogueLine } from "@/lib/scriptFormatter";
@@ -18,22 +18,6 @@ interface ScriptStepperProps {
   contactMethod?: string; // "Call", "Text", "Email", etc.
   hideStepIndicator?: boolean; // Hide progress bar for single-step stages
   centerContent?: boolean; // Center content vertically and horizontally
-  // Next Steps props
-  showNextSteps?: boolean;
-  nextStepsData?: {
-    onYesNextNode?: string;
-    onNoNextNode?: string;
-    onNoResponseNextNode?: string;
-  };
-  onNavigate?: (nextNodeId: string, action: "yes" | "no" | "no_response") => void;
-  childNodes?: Array<{
-    node_id: string;
-    scenario_title: string;
-    scenario_description: string;
-    stage: string;
-    script_name?: string;
-  }>;
-  onSelectChild?: (nodeId: string) => void;
 }
 
 export const ScriptStepper = ({
@@ -43,11 +27,6 @@ export const ScriptStepper = ({
   contactMethod,
   hideStepIndicator = false,
   centerContent = false,
-  showNextSteps = false,
-  nextStepsData,
-  onNavigate,
-  childNodes = [],
-  onSelectChild,
 }: ScriptStepperProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showFullScript, setShowFullScript] = useState(false);
@@ -74,14 +53,6 @@ export const ScriptStepper = ({
 
   const totalSteps = scriptSegments.length;
   const currentSegment = scriptSegments[currentStep] || "";
-
-  // Determine if we should show action buttons or child cards
-  const nextNodeIds = [nextStepsData?.onYesNextNode, nextStepsData?.onNoNextNode, nextStepsData?.onNoResponseNextNode].filter(Boolean);
-  const childNodeIds = childNodes.map(child => child.node_id);
-  const childrenMatchNextNodes = nextNodeIds.length > 0 && nextNodeIds.every(id => childNodeIds.includes(id!));
-  
-  const showActionButtons = !childrenMatchNextNodes && (nextStepsData?.onYesNextNode || nextStepsData?.onNoNextNode || nextStepsData?.onNoResponseNextNode);
-  const showChildCards = childNodes.length > 0;
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
@@ -200,7 +171,7 @@ export const ScriptStepper = ({
     <div className="space-y-3">
       {/* Instruction Bar - Always visible for call-based interactions */}
       {isCallBasedInteraction && !centerContent && (
-        <div className="flex items-start gap-2.5 py-3 px-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/40 dark:border-blue-800/40">
+        <div className="flex items-start gap-2.5 py-2 px-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/40 dark:border-blue-800/40">
           <Clock className="h-4 w-4 text-blue-600/70 dark:text-blue-400/70 flex-shrink-0 mt-0.5" />
           <p className="text-sm italic text-muted-foreground leading-relaxed">
             Wait for them to answer before speaking.
@@ -210,7 +181,7 @@ export const ScriptStepper = ({
 
       {/* Top Bar: Mode Badge, Progress + Full Script Toggle - Hidden for single-step stages */}
       {!hideStepIndicator && (
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/30">
+        <div className="flex items-center justify-between pb-2 border-b border-border/30">
           <div className="flex items-center gap-3">
             {/* Contact Method Badge */}
             {contactMethod && (
@@ -253,7 +224,7 @@ export const ScriptStepper = ({
 
       {/* Call Context Bar - Hidden for short stages */}
       {!hideStepIndicator && (
-        <div className="flex flex-wrap items-center gap-2 p-2.5 bg-muted/30 rounded-lg border border-border/50 mb-3">
+        <div className="flex flex-wrap items-center gap-2 p-2 bg-muted/30 rounded-lg border border-border/50">
         <span className="text-xs font-medium text-muted-foreground">Call Context:</span>
         <Badge variant="secondary" className="gap-1.5 px-2.5 py-0.5">
           <span className="text-xs text-muted-foreground">Lead:</span>
@@ -283,7 +254,7 @@ export const ScriptStepper = ({
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
           flex: hideStepIndicator ? '1 1 auto' : undefined,
-          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : showNextSteps ? "calc(100vh - 24rem)" : "calc(100vh - 20rem)", 
+          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : "calc(100vh - 26rem)", 
           minHeight: centerContent ? "200px" : hideStepIndicator ? "280px" : "280px",
           height: centerContent ? "200px" : hideStepIndicator ? "auto" : "auto"
         }}
@@ -301,7 +272,7 @@ export const ScriptStepper = ({
             "flex-1 px-8 cursor-pointer flex flex-col items-center text-center",
             // Call scripts: fully centered vertically and horizontally
             // Decision prompts (Choose Contact Method): top-aligned with padding, horizontally centered
-            centerContent ? "overflow-hidden justify-start pt-12" : hideStepIndicator ? "overflow-hidden justify-center" : showNextSteps ? "overflow-y-auto justify-start pt-8 pb-4" : "overflow-y-auto justify-start pt-8 pb-4"
+            centerContent ? "overflow-hidden justify-start pt-12" : hideStepIndicator ? "overflow-hidden justify-center" : "overflow-y-auto justify-start pt-8 pb-4"
           )}
         >
           <div
@@ -324,7 +295,7 @@ export const ScriptStepper = ({
         </div>
 
         {/* Fixed Navigation Controls at Bottom */}
-        <div className="flex-shrink-0 px-8 pb-4 pt-3 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
+        <div className="flex-shrink-0 px-8 pb-4 pt-2 border-t-2 border-dashed border-blue-300/50 dark:border-blue-700/50 bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30">
           <div className="flex flex-col items-center gap-3">
             {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
@@ -386,114 +357,6 @@ export const ScriptStepper = ({
             </div>
           </div>
         </div>
-
-        {/* Next Steps Section - Inside the bordered container */}
-        {showNextSteps && (
-          <div className="flex-shrink-0 px-8 pb-6 pt-4 border-t-2 border-border/30 bg-background">
-            <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">
-              Next Steps
-            </h4>
-            
-            {showActionButtons && onNavigate && (
-              <div className="grid gap-2">
-                {nextStepsData?.onYesNextNode && (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate(nextStepsData.onYesNextNode!, "yes");
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
-                  >
-                    <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">Prospect says YES</div>
-                      <div className="text-xs text-muted-foreground">Continue to next step</div>
-                    </span>
-                  </Button>
-                )}
-                {nextStepsData?.onNoNextNode && (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate(nextStepsData.onNoNextNode!, "no");
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
-                  >
-                    <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">Prospect says NO</div>
-                      <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
-                    </span>
-                  </Button>
-                )}
-                {nextStepsData?.onNoResponseNextNode && (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate(nextStepsData.onNoResponseNextNode!, "no_response");
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2.5 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
-                  >
-                    <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">No Response</div>
-                      <div className="text-xs text-muted-foreground">Follow-up sequence</div>
-                    </span>
-                  </Button>
-                )}
-              </div>
-            )}
-
-            {showChildCards && onSelectChild && (
-              <div className="space-y-2">
-                {childNodes.map((childNode, index) => (
-                  <button
-                    key={childNode.node_id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectChild(childNode.node_id);
-                    }}
-                    className="w-full text-left group animate-in fade-in duration-300"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div className="border-2 rounded-lg p-3 transition-all duration-150 ease-in-out hover:shadow-md hover:border-primary/50 hover:bg-accent/5 hover:-translate-y-0.5 cursor-pointer bg-card">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge 
-                              variant="outline" 
-                              className="font-medium border text-[10px] px-2 py-0.5"
-                            >
-                              {childNode.stage}
-                            </Badge>
-                            {childNode.script_name && (
-                              <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
-                                {childNode.script_name}
-                              </Badge>
-                            )}
-                          </div>
-                          <h4 className="font-semibold text-base mb-1.5 group-hover:text-primary transition-colors">
-                            {childNode.scenario_title}
-                          </h4>
-                          <p className="text-sm text-muted-foreground line-clamp-2 leading-snug">
-                            {childNode.scenario_description}
-                          </p>
-                        </div>
-                        <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
