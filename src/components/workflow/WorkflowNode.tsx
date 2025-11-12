@@ -176,10 +176,10 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
     <Card 
       className={cn(
         "transition-all duration-300 cursor-pointer hover:shadow-lg",
-        isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm"
+        isExpanded && "ring-2 ring-primary max-w-[85%] mx-auto border-border/50 shadow-sm overflow-hidden"
       )}
       style={isExpanded ? {
-        maxHeight: 'calc(100vh - 10rem)',
+        height: 'calc(100vh - 12rem)',
         display: 'flex',
         flexDirection: 'column'
       } : undefined}

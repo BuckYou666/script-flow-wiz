@@ -2,7 +2,7 @@ import { Info } from "lucide-react";
 
 /**
  * Detects if a line is instructional/guidance text vs spoken dialogue
- * Instructions are wrapped in parentheses () or start with //
+ * Instructions are wrapped in parentheses (), start with //, or match specific patterns
  */
 export const isInstructionLine = (line: string): boolean => {
   const trimmed = line.trim();
@@ -19,6 +19,26 @@ export const isInstructionLine = (line: string): boolean => {
   
   // Check for // comments
   if (trimmed.startsWith("//")) {
+    return true;
+  }
+  
+  // Check for conditional statements (If X, Y pattern)
+  if (/^If .+,.+/i.test(trimmed)) {
+    return true;
+  }
+  
+  // Check for CRM-related instructions
+  if (/(schedule|update|create|tag|assign|send|notify|set).*(CRM|status|task|callback|appointment|lead)/i.test(trimmed)) {
+    return true;
+  }
+  
+  // Check for workflow directives
+  if (/(move (straight )?into|proceed to|continue to|end the call|return to|go back to)/i.test(trimmed)) {
+    return true;
+  }
+  
+  // Check for action phrases with "before" or "after"
+  if (/(before|after) (ending|starting|proceeding|continuing)/i.test(trimmed)) {
     return true;
   }
   

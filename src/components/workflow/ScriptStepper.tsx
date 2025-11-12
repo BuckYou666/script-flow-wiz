@@ -244,7 +244,7 @@ export const ScriptStepper = ({
         className="relative bg-gradient-to-br from-gray-50/80 to-blue-50/60 dark:from-gray-900/40 dark:to-blue-950/30 rounded-xl border-2 border-blue-200/50 dark:border-blue-800/50 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
         style={{ 
           flex: hideStepIndicator ? '1 1 auto' : undefined,
-          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : "65vh", 
+          maxHeight: centerContent ? "200px" : hideStepIndicator ? "none" : "calc(100vh - 20rem)", 
           minHeight: centerContent ? "200px" : hideStepIndicator ? "280px" : "280px",
           height: centerContent ? "200px" : hideStepIndicator ? "auto" : "auto"
         }}
