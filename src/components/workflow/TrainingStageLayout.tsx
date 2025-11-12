@@ -94,45 +94,48 @@ export const TrainingStageLayout = ({
   }
 
   return (
-    <section className={cn("stage", className)}>
-      {/* Header */}
-      <header className="stage__header">
-        <div className="stage__header-left">
-          {chips && <div className="stage__chips">{chips}</div>}
-          <div>
-            <h2 className="stage__title">{title}</h2>
-            {subtitle && <p className="stage__subtitle">{subtitle}</p>}
+    <section 
+      className={cn("stage", className)}
+      style={{ height: 'calc(100vh - 160px)' }}
+    >
+      <div className="flex flex-col h-full">
+        {/* Header - fixed at top */}
+        <header className="stage__header flex-shrink-0">
+          <div className="stage__header-left">
+            {chips && <div className="stage__chips">{chips}</div>}
+            <div>
+              <h2 className="stage__title">{title}</h2>
+              {subtitle && <p className="stage__subtitle">{subtitle}</p>}
+            </div>
           </div>
-        </div>
-        {headerRight && <div className="stage__header-right">{headerRight}</div>}
-      </header>
+          {headerRight && <div className="stage__header-right">{headerRight}</div>}
+        </header>
 
-      {/* Mode Bar */}
-      {modeBar && <div className="stage__mode">{modeBar}</div>}
+        {/* Mode Bar - fixed */}
+        {modeBar && <div className="stage__mode flex-shrink-0">{modeBar}</div>}
 
-      {/* Body - script area that grows and centers content */}
-      <div className="stage__body">
-        <div className="stage__script">
+        {/* Script area - grows to fill space but with max height */}
+        <div className="flex-1 flex items-center justify-center max-h-[320px] overflow-y-auto py-4">
           {children}
         </div>
 
-        {/* Footer - always at bottom of card */}
+        {/* Footer - fixed at bottom */}
         {footer && (
-          <div className="stage__footer">
+          <div className="stage__footer flex-shrink-0">
             {footer}
           </div>
         )}
-      </div>
 
-      {/* Next Steps Section - inside border */}
-      {nextSteps && (
-        <div className="flex-shrink-0 pt-4 mt-4 border-t border-border">
-          <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3">
-            Next Steps
-          </h4>
-          {nextSteps}
-        </div>
-      )}
+        {/* Next Steps Section - fixed at bottom */}
+        {nextSteps && (
+          <div className="flex-shrink-0 pt-3 mt-3 border-t border-border">
+            <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
+              Next Steps
+            </h4>
+            {nextSteps}
+          </div>
+        )}
+      </div>
     </section>
   );
 };
