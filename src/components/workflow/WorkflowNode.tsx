@@ -324,6 +324,15 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
                 contactMethod={node.scenario_title}
                 hideStepIndicator={isShortScriptStage}
                 centerContent={node.scenario_title === "Choose Contact Method"}
+                showNextSteps={true}
+                nextStepsData={{
+                  onYesNextNode: node.on_yes_next_node,
+                  onNoNextNode: node.on_no_next_node,
+                  onNoResponseNextNode: node.on_no_response_next_node,
+                }}
+                onNavigate={onNavigate}
+                childNodes={childNodes}
+                onSelectChild={onSelectChild}
               />
 
               {/* Inline Replies Section */}
@@ -466,105 +475,6 @@ export const WorkflowNode = ({ node, onNavigate, isExpanded, onToggle, childNode
             </div>
           )}
           </div>
-
-          {/* Fixed Footer Zone - Next Steps always visible */}
-          {!inlineReplies && !isWebsiteSignupStart && (
-            <div className="flex-shrink-0 pt-3 pb-4 border-t border-border/30 bg-background">
-              <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
-                Next Steps
-              </h4>
-              
-              {showActionButtons && (
-              <div className="grid gap-1.5">
-                {node.on_yes_next_node && (
-                  <Button
-                    onClick={() => onNavigate(node.on_yes_next_node!, "yes")}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#F3FBF6] border-[#9AC9A5] hover:border-[#4A9B5D] hover:bg-[#E8F5ED] transition-colors"
-                  >
-                    <CheckCircle2 className="h-4 w-4 text-[#4A9B5D] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">Prospect says YES</div>
-                      <div className="text-xs text-muted-foreground">Continue to next step</div>
-                    </span>
-                  </Button>
-                )}
-                {node.on_no_next_node && (
-                  <Button
-                    onClick={() => onNavigate(node.on_no_next_node!, "no")}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FDF3F3] border-[#D9A1A1] hover:border-[#C15B5B] hover:bg-[#FBE9E9] transition-colors"
-                  >
-                    <XCircle className="h-4 w-4 text-[#C15B5B] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">Prospect says NO</div>
-                      <div className="text-xs text-muted-foreground">Handle objection or follow-up</div>
-                    </span>
-                  </Button>
-                )}
-                {node.on_no_response_next_node && (
-                  <Button
-                    onClick={() => onNavigate(node.on_no_response_next_node!, "no_response")}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start gap-2 h-auto py-2 px-3 border-2 bg-[#FFF9EC] border-[#DDBF81] hover:border-[#C7922E] hover:bg-[#FFF4DC] transition-colors"
-                  >
-                    <Clock className="h-4 w-4 text-[#C7922E] flex-shrink-0" />
-                    <span className="text-left">
-                      <div className="font-semibold text-xs text-[#333333]">No Response</div>
-                      <div className="text-xs text-muted-foreground">Follow-up sequence</div>
-                    </span>
-                  </Button>
-                )}
-              </div>
-            )}
-
-            {showChildCards && (
-              <div className="space-y-2 mt-2">
-                {childNodes.map((childNode, index) => (
-                  <button
-                    key={childNode.node_id}
-                    onClick={() => onSelectChild?.(childNode.node_id)}
-                    className="w-full text-left group animate-in fade-in duration-300"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div className="border-2 rounded-lg p-3 transition-all duration-150 ease-in-out hover:shadow-md hover:border-primary/50 hover:bg-accent/5 hover:-translate-y-0.5 cursor-pointer bg-card">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge 
-                              variant="outline" 
-                              className={cn(
-                                "font-medium border text-[10px] px-2 py-0.5",
-                                `bg-${getStageLightColor(childNode.stage)} text-${getStageColor(childNode.stage)} border-${getStageColor(childNode.stage)}`
-                              )}
-                            >
-                              {childNode.stage}
-                            </Badge>
-                            {childNode.script_name && (
-                              <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
-                                {childNode.script_name}
-                              </Badge>
-                            )}
-                          </div>
-                          <h4 className="font-semibold text-base mb-1.5 group-hover:text-primary transition-colors">
-                            {childNode.scenario_title}
-                          </h4>
-                          <p className="text-sm text-muted-foreground line-clamp-2 leading-snug">
-                            {childNode.scenario_description}
-                          </p>
-                        </div>
-                        <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-            </div>
-          )}
         </CardContent>
       )}
       
