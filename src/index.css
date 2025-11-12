@@ -199,7 +199,7 @@ All colors MUST be HSL.
 .training-stage {
   display: grid;
   grid-template-rows: auto 1fr auto; /* header | body (flex) | footer */
-  height: calc(100vh - 120px); /* tighter viewport fit */
+  height: calc(100vh - 220px); /* leave room for Next Steps */
   overflow: hidden; /* contain all overflow within card */
   border-radius: 12px;
   border: 1px solid hsl(var(--border));
@@ -248,7 +248,7 @@ All colors MUST be HSL.
 /* Responsive adjustments for smaller screens */
 @media (max-height: 740px) {
   .training-stage {
-    height: calc(100vh - 100px); /* even tighter on small screens */
+    height: calc(100vh - 200px); /* leave room for Next Steps on small screens */
   }
   .stage-header-zone {
     padding: 0.375rem 0.75rem;

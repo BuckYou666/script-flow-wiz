@@ -124,7 +124,7 @@ export const TrainingStageLayout = ({
       <section 
         ref={rootRef}
         className={cn("training-stage", className)}
-        style={{ height: 'calc(100vh - 120px)' }}
+        style={{ height: 'calc(100vh - 220px)' }}
       >
         {/* Header Zone: auto height */}
         <div ref={headerRef} className="stage-header-zone">
